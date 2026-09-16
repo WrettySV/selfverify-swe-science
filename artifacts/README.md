@@ -1,6 +1,6 @@
 # Study artifacts
 
-These files support the results in [REPORT.md](../REPORT.md). Recalculate the tables with `python3 scripts/run_study.py` from the repository root.
+These files support the published study results summarized in the [repository README](../README.md). Recalculate the tables with `python3 scripts/run_study.py` from the repository root.
 
 | Path | Contents |
 |---|---|

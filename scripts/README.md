@@ -9,7 +9,7 @@ Use **[run_study.py](run_study.py)** as the entry point. It either recalculates 
 | [run_study.py](run_study.py) | Coordinates execution and reporting |
 | [analyze_results.py](analyze_results.py) | Verifies artifact hashes, applies the selector and computes tables |
 | [run_verification.py](run_verification.py) | Prepares isolated task runs and executes verification jobs |
-| [build_report.py](build_report.py) | Builds `REPORT.pdf` from `REPORT.md` |
+| [build_report.py](build_report.py) | Optional local utility to render a Markdown draft as PDF |
 
 The study runner copies the recorded implementation from `artifacts/study/implementation/` into each new run directory. The paired A/B controller is `src/selfverify/paired.py` inside that implementation copy. This ensures that replay uses the implementation associated with the published results.
 

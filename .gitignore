@@ -42,3 +42,8 @@ analysis/crosscheck/*
 
 # Packaged task metadata is required by the study checksum manifest.
 !artifacts/study/shards/*/batch-run.json
+
+# Local report drafts are not published with the study bundle.
+REPORT.md
+REPORT.pdf
+docs/archive/REPORT*.md

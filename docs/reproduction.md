@@ -39,12 +39,10 @@ Replace the benchmark path with your local directory. Use a new output directory
 
 Each task starts with three supplied repairs. The command generates new tests, runs them on the repairs, allows A to revise its answer and computes B's selection. Limits are 30 minutes for test generation, 15 minutes for one revision and 60 seconds per test. The complete limits and recorded token usage are in `artifacts/study/data.json`.
 
-## Check the results and build the PDF
+## Check the results
 
 ```bash
 python3 -m unittest discover -s tests -p test_study.py -v
-.venv/bin/python -m pip install -e '.[report]'
-.venv/bin/python scripts/build_report.py
 ```
 
-The last two commands require the virtual environment created above. The PDF is written to `REPORT.pdf`.
+Optional local report rendering (`scripts/build_report.py`) is a development utility and is not part of the published repository contents.
