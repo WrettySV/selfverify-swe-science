@@ -1,0 +1,41 @@
+{
+  "attempts": [
+    {
+      "verdict": {
+        "accept": false,
+        "issues": [
+          "The stated pre-fix failures are not guaranteed by the chosen probes: BNS 231 likely has trivial spatial part, and the BNS 2 origin shift 0.5 is equivalent mod 1 for inversion, so basis-swap/orbit probes may pass unpatched."
+        ],
+        "suggested_fixes": [
+          "Replace BNS 231/2 probe choices with a nontrivial spatial BNS number and a non-half-integer origin shift, then verify at least three probes fail before the patch."
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 9307,
+        "completion_tokens": 22599,
+        "total_tokens": 31906,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 82939
+      }
+    },
+    {
+      "verdict": {
+        "accept": true,
+        "issues": [],
+        "suggested_fixes": []
+      },
+      "usage": {
+        "prompt_tokens": 10437,
+        "completion_tokens": 13682,
+        "total_tokens": 24119,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 55444
+      }
+    }
+  ],
+  "accepted": true
+}

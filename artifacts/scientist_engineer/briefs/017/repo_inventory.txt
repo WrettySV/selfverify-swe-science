@@ -1,0 +1,791 @@
+workdir: /app/task_017
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-017:v0.1.2
+code_files_total: 528
+## directories (file counts)
+source/gammapy/utils: 26
+source/examples/models/spectral: 21
+source/gammapy/utils/tests: 17
+source/examples/tutorials/details: 15
+source/gammapy/data: 14
+source/gammapy/data/tests: 14
+source/gammapy/modeling/models/tests: 12
+source/gammapy/datasets: 11
+source/gammapy/datasets/tests: 10
+source/gammapy/modeling: 10
+source/gammapy/modeling/models: 10
+source/examples/models/spatial: 9
+source/examples/models/temporal: 9
+source/gammapy/maps: 9
+source/gammapy/modeling/tests: 9
+source/docs/user-guide/irf: 8
+source/examples/tutorials/analysis-3d: 8
+source/gammapy/estimators: 8
+source/gammapy/estimators/points/tests: 8
+source/gammapy/estimators/tests: 8
+source/gammapy/makers/tests: 8
+source/gammapy/scripts: 8
+source/gammapy/visualization: 8
+source/gammapy/catalog: 7
+source/gammapy/catalog/tests: 7
+source/gammapy/irf/tests: 7
+source/gammapy/makers: 7
+source/gammapy/maps/tests: 7
+source/gammapy/scripts/tests: 7
+source/gammapy/visualization/tests: 7
+source/examples/tutorials/analysis-1d: 6
+source/examples/tutorials/data: 6
+source/gammapy/estimators/points: 6
+source/gammapy/irf: 6
+source/gammapy/irf/psf: 6
+source/gammapy/maps/hpx: 6
+source/gammapy/stats: 6
+source/dev: 5
+source/examples/tutorials/analysis-time: 5
+source/gammapy/estimators/map: 5
+## terms_from_instruction
+strong: JFactory, PYTHONPATH, arXiv, centre, cosh, dJ_ann, dJ_dec, dOmega, degrees, distance, halo, observer, post_fix_success, pre_fix_expected_failure, runner_failure, theta
+common: scientific, distance, matter, units, calculation, observer, centre, branch, gammapy, integral, profile, density, physical, theta, https, contains, sight, still, annihilation, decay, radial, closest, finite, arxiv, pinned
+## import_reach_from_reproduce.py (path, depth)
+## ranked_source_paths (score, path, matched_terms)
+  21.5  source/gammapy/astro/darkmatter/utils.py  ['JFactory', 'distance', 'halo', 'observer', 'theta']
+  17.0  source/gammapy/astro/population/simulate.py  ['degrees', 'distance', 'observer', 'theta']
+  13.0  source/examples/tutorials/astrophysics/astro_dark_matter.py  ['JFactory', 'distance']
+  12.5  source/examples/tutorials/details/theta_square_plot.py  ['distance', 'theta']
+  12.5  source/gammapy/astro/population/spatial.py  ['degrees', 'distance', 'theta']
+  12.5  source/gammapy/estimators/utils.py  ['degrees', 'distance']
+  12.5  source/gammapy/maps/axes.py  ['distance', 'theta']
+  12.5  source/gammapy/maps/hpx/ndmap.py  ['degrees', 'theta']
+  11.0  source/gammapy/makers/utils.py  ['distance', 'theta']
+  10.5  source/gammapy/makers/background/reflected.py  ['distance', 'theta']
+  10.0  source/examples/tutorials/data/magic.py  ['distance', 'theta']
+  10.0  source/gammapy/estimators/points/core.py  ['degrees', 'distance']
+  10.0  source/gammapy/maps/hpx/geom.py  ['degrees', 'theta']
+  10.0  source/gammapy/modeling/models/spectral.py  ['distance']
+   9.5  source/examples/tutorials/details/mask_maps.py  ['centre', 'degrees']
+   9.5  source/gammapy/utils/random/utils.py  ['distance', 'observer']
+   9.5  source/gammapy/utils/regions.py  ['degrees', 'distance']
+   9.0  source/gammapy/astro/source/snr.py  ['distance', 'theta']
+   9.0  source/gammapy/datasets/utils.py  ['degrees', 'distance']
+   9.0  source/gammapy/maps/coord.py  ['degrees', 'theta']
+   9.0  source/gammapy/maps/hpx/utils.py  ['degrees', 'theta']
+   8.5  source/examples/tutorials/data/veritas.py  ['theta']
+   8.0  source/examples/tutorials/details/catalog.py  ['degrees']
+   8.0  source/gammapy/utils/coordinates/other.py  ['distance', 'theta']
+   7.5  source/gammapy/maps/core.py  ['degrees']
+   7.5  source/gammapy/maps/region/ndmap.py  ['distance']
+   7.5  source/gammapy/maps/wcs/geom.py  ['degrees']
+   7.0  source/examples/tutorials/details/maps.py  ['degrees']
+   7.0  source/gammapy/datasets/map.py  ['degrees']
+   7.0  source/gammapy/maps/region/geom.py  ['distance']
+   7.0  source/gammapy/modeling/models/spatial.py  ['degrees']
+   7.0  source/gammapy/visualization/utils.py  ['distance']
+   6.5  source/examples/tutorials/analysis-3d/flux_profiles.py  ['distance']
+   6.5  source/examples/tutorials/data/cta.py  ['degrees']
+   6.5  source/gammapy/estimators/map/core.py  ['degrees']
+   6.5  source/gammapy/maps/wcs/ndmap.py  []
+   6.0  source/examples/models/spatial/plot_disk.py  ['theta']
+   6.0  source/examples/tutorials/analysis-1d/spectral_analysis_hli.py  ['degrees']
+   6.0  source/examples/tutorials/analysis-2d/ring_background.py  ['degrees']
+   6.0  source/examples/tutorials/details/fitting.py  ['distance']
+   6.0  source/examples/tutorials/starting/analysis_1.py  ['degrees']
+   6.0  source/gammapy/catalog/gammacat.py  ['theta']
+   6.0  source/gammapy/estimators/points/profile.py  ['distance']
+   6.0  source/gammapy/irf/psf/core.py  ['theta']
+   6.0  source/gammapy/modeling/selection/bayesian.py  ['degrees']
+   6.0  source/gammapy/utils/observers.py  []
+   5.5  source/examples/models/spectral/plot_naima.py  ['distance']
+   5.5  source/examples/tutorials/analysis-time/light_curve_flare.py  ['degrees']
+   5.5  source/examples/tutorials/analysis-time/time_resolved_spectroscopy.py  ['degrees']
+   5.5  source/examples/tutorials/data/fermi_lat.py  []
+   5.5  source/examples/tutorials/data/hess.py  ['theta']
+   5.5  source/examples/tutorials/details/nested_sampling_Crab.py  []
+   5.5  source/gammapy/analysis/config.py  ['degrees']
+   5.5  source/gammapy/astro/darkmatter/profiles.py  []
+   5.5  source/gammapy/maps/hpx/core.py  ['degrees']
+   5.5  source/gammapy/maps/wcs/core.py  ['degrees']
+   5.5  source/gammapy/modeling/iminuit.py  ['distance']
+   5.5  source/gammapy/stats/variability.py  ['distance']
+   5.0  source/examples/models/spatial/plot_shell.py  ['theta']
+   5.0  source/examples/models/spatial/plot_shell2.py  ['theta']
+## snippets
+### reproduce.py
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+
+TASK_DIR = Path(__file__).resolve().parent
+OUTPUTS = TASK_DIR / "outputs"
+
+
+def run_case(width: int, height: int, annihilation: bool) -> dict[str, object]:
+    code = f"""
+import json
+import numpy as np
+import astropy.units as u
+from gammapy.astro.darkmatter import JFactory, profiles
+from gammapy.maps import WcsGeom
+
+geom = WcsGeom.create(skydir=(0, 0), width=({width}, {height}), binsz=10, frame='galactic')
+factory = JFactory(
+    geom=geom,
+    profile=profiles.NFWProfile(),
+    distance=8.33 * u.kpc,
+    annihilation={annihilation!r},
+)
+sep = geom.separation(geom.center_skydir).deg
+try:
+    result = factory.compute_differential_jfactor(ndecade=300)
+    finite = bool(np.isfinite(result.value).all())
+    payload = {{
+        'status': 'post_fix_success' if finite else 'pre_fix_expected_failure',
+        'failure_kind': None if finite else 'non_finite_result',
+        'shape': [int(x) for x in result.shape],
+        'finite': finite,
+        'max_separation_deg': float(sep.max()),
+        'pixels': int(result.size),
+    }}
+except Exception as exc:
+    payload = {{
+        'status': 'pre_fix_expected_failure',
+        'failure_kind': 'scientific_exception',
+        'error_type': type(exc).__name__,
+        'error': str(exc),
+        'max_separation_deg': float(sep.max()),
+        'pixels': int(geom.data_shape[0] * geom.data_shape[1]),
+    }}
+print(json.dumps(payload, sort_keys=True))
+"""
+    env = os.environ.copy()
+    env["PYTHONPATH"] = os.pathsep.join(
+        [str(TASK_DIR / "source"), str(TASK_DIR), env.get("PYTHONPATH", "")]
+    )
+    try:
+        completed = subprocess.run(
+            [sys.executable, "-c", code],
+            cwd=TASK_DIR,
+            env=env,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+            timeout=180,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return {
+            "status": "runner_failure",
+            "failure_kind": "timeout",
+            "return_code": None,
+            "output": str(exc),
+        }
+
+    lines = [line for line in completed.stdout.splitlines() if line.startswith("{")]
+    if not lines:
+        return {
+            "status": "runner_failure",
+            "failure_kind": "no_json_result",
+            "return_code": completed.returncode,
+            "output": completed.stdout,
+        }
+    try:
+        result = json.loads(lines[-1])
+    except json.JSONDecodeError as exc:
+        return {
+            "status": "runner_failure",
+            "failure_kind": "invalid_json_result",
+            "return_code": completed.returncode,
+            "error": str(exc),
+            "output": completed.stdout,
+        }
+    result["return_code"] = completed.returncode
+    return result
+
+
+def main() -> int:
+    cases = [
+        {"name": "wide_annihilation", "result": run_case(120, 120, True)},
+        {"name": "wide_decay", "result": run_case(120, 120, False)},
+        {"name": "control", "result": run_case(30, 20, True)},
+    ]
+    runner_failures = [
+        item["name"]
+        for item in cases
+        if item["result"]["status"] == "runner_failure"
+    ]
+    scientific_failures = [
+        item["name"]
+        for item in cases
+        if item["result"]["status"] == "pre_fix_expected_failure"
+    ]
+    payload = {
+        "schema_version": "0.2",
+        "offline": True,
+        "status_contract": {
+            "post_fix_success": "The scientific calculation completed with finite output.",
+            "pre_fix_expected_failure": "The historical scientific failure was reproduced; after a candidate repair this is a regression.",
+            "runner_failure": "The harness, import path, subprocess, or output protocol failed before a scientific result was available.",
+        },
+        "summary": {
+            "post_fix_successes": [
+                item["name"]
+                for item in cases
+                if item["result"]["status"] == "post_fix_success"
+            ],
+            "pre_fix_expected_failures": scientific_failures,
+            "runner_failures": runner_failures,
+        },
+        "cases": cases,
+    }
+    OUTPUTS.mkdir(exist_ok=True)
+    (OUTPUTS / "public_reproduction_report.json").write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0 if not runner_failures and not scientific_failures else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+### reproduction.md
+# Public Reproduction
+
+Run:
+
+```bash
+python reproduce.py
+```
+
+The harness creates deterministic WCS geometries and evaluates the real
+Gammapy `JFactory` workflow with NFW profiles. It prints a JSON report with
+angular coverage, output shape, and whether each calculation completed with
+finite values. The wide-field cases expose the scientific inconsistency; the
+report does not identify a source line or reveal the intended code change.
+
+The report has three deliberately distinct result states:
+
+- `post_fix_success`: the calculation completed and returned finite values.
+- `pre_fix_expected_failure`: the scientific calculation raised an exception
+  or returned a non-finite result. This is the expected state for the pinned
+  historical source; after an Agent edit it indicates a regression.
+- `runner_failure`: the subprocess, import path, timeout, or JSON protocol
+  failed before a scientific result was available.
+
+The script exits with code `0` only when every case is
+`post_fix_success`. A pre-fix run therefore exits nonzero while still emitting
+a structured scientific failure report; a post-fix run exits zero.
+
+The task declares a Python 3.12 dependency runtime with the pinned scientific
+packages. The candidate source remains in the mounted task workspace and is
+prepended to `PYTHONPATH`; it is not installed into the cached dependency
+image. The source snapshot contains a minimal source-tree version fallback so
+imports do not depend on an editable package install. No network or external
+Gammapy data registry is needed.
+### paper.md
+# Offline Scientific Note: Dark-Matter Line-of-Sight Maps
+
+This note gives the background needed to reason about the task without network
+access. It is a compact rendering of the line-of-sight geometry used in
+dark-matter indirect-detection calculations.
+
+## What the map represents
+
+An observer looks through a dark-matter halo. For a direction on the sky, the
+spatial factor in the predicted gamma-ray signal is an integral along that ray:
+
+```text
+dJ_ann / dOmega = integral rho(r(l))^2 dl
+dJ_dec / dOmega = integral rho(r(l)) dl
+```
+
+The first expression is used for annihilation and the second for decay. The
+software supports both modes. The density `rho` is supplied by a profile such
+as NFW, Einasto, or Burkert, and the result carries physical units.
+
+Let `D` be the observer-to-halo-centre distance and let `theta` be the angular
+separation between the ray and the centre direction. The ray's perpendicular
+distance from the halo centre is the impact parameter:
+
+```text
+b = D sin(theta)
+```
+
+This is a geometric distance to a line. It is not the distance obtained by
+extending a right triangle's opposite side to the observer distance.
+
+## Radial form of the integral
+
+Using the distance `r` from the halo centre, one line-of-sight branch has the
+Jacobian
+
+```text
+dl = r / sqrt(r^2 - b^2) dr.
+```
+
+The closest point `r=b` makes the denominator appear singular. The singularity
+is integrable, but evaluating the expression directly at the endpoint is
+numerically fragile. A stable change of variable is:
+
+```text
+r = b cosh(t)
+```
+
+which maps the closest approach to `t=0` and removes the square-root endpoint
+problem from the numerical quadrature. The two sides of the ray before the
+observer-to-centre distance contribute symmetrically; the remaining far branch
+continues beyond that distance. The exact truncation used by the source is part
+of the existing model and should be preserved.
+
+## Branch bookkeeping and limiting cases
+
+For one fixed sightline, `b` is a property of the ray and must remain the same
+in every radial branch. The lower radial bound is a separate quantity: a branch
+may start at `r = D` while its Jacobian still contains the same `b = D sin(theta)`.
+Confusing these two roles changes the physical path length even when the code
+returns a finite array.
+
+The calculation follows the forward ray from the observer. For
+`theta <= 90 degrees`, the ray passes the centre-side closest approach before
+continuing outward, so the `[b, D]` contribution is counted twice and the
+`[D, 4D]` contribution is counted once. For `theta > 90 degrees`, the observer
+itself is already the closest point on the forward ray; there is no doubled
+`[b, D]` contribution, but the far branch still uses the same impact parameter.
+
+At `b = 0`, the `r = b cosh(t)` substitution is degenerate. A correct limiting
+implementation must integrate the original radial interval directly and keep
+its requested lower and upper bounds. It must not silently replace the lower
+bound with an arbitrary value.
+
+## Units and physical modes
+
+`D`, `b`, `r`, and the profile scale radius are quantities with distance units.
+The annihilation result has density-squared times length units, while the decay
+result has density times length units. A correct implementation must preserve
+these units when the same physical distance is expressed in kpc or pc.
+
+If the density normalization is multiplied by `q`, the annihilation map scales
+as `q^2` and the decay map scales as `q`. This is a useful physical sanity
+## outlines_of_top_modules
+### source/gammapy/astro/darkmatter/utils.py
+L11: class JFactory
+  L30: def __init__(self, geom, profile, distance, annihilation=True)
+  L36: def _repr_html_(self)
+  L42: def compute_differential_jfactor(self, ndecade=10000.0)
+  L128: def compute_jfactor(self, ndecade=10000.0)
+### source/gammapy/astro/population/simulate.py
+L39: def make_catalog_random_positions_cube(size=100, dimension=3, distance_max='1 pc', random_state='random-seed')
+L94: def make_catalog_random_positions_sphere(size=100, distance_min='0 pc', distance_max='1 pc', random_state='random-seed')
+L135: def make_base_catalog_galactic(n_sources, rad_dis='YK04', vel_dis='H05', max_age='1e6 yr', spiralarms=True, n_ISM='1 cm-3', random_state='random-seed')
+L267: def add_snr_parameters(table)
+L305: def add_pulsar_parameters(table, B_mean=12.05, B_stdv=0.55, P_mean=0.3, P_stdv=0.15, random_state='random-seed')
+L373: def add_pwn_parameters(table)
+L414: def add_observed_parameters(table, obs_pos=None)
+### source/examples/tutorials/astrophysics/astro_dark_matter.py
+### source/examples/tutorials/details/theta_square_plot.py
+### source/gammapy/astro/population/spatial.py
+L29: class Paczynski1990
+  L59: def __init__(self, amplitude=1, r_exp=4.5, **kwargs)
+  L63: def evaluate(r, amplitude, r_exp)
+L68: class CaseBattacharya1998
+  L102: def __init__(self, amplitude=1.0, alpha=2, beta=3.53, **kwargs)
+  L106: def evaluate(r, amplitude, alpha, beta)
+L114: class YusifovKucuk2004
+  L153: def __init__(self, amplitude=1, a=1.64, b=4.01, r_1=0.55, **kwargs)
+  L157: def evaluate(r, amplitude, a, b, r_1)
+L165: class YusifovKucuk2004B
+  L201: def __init__(self, amplitude=1, a=4, b=6.8, **kwargs)
+  L205: def evaluate(r, amplitude, a, b)
+L211: class FaucherKaspi2006
+  L246: def __init__(self, amplitude=1, r_0=7.04, sigma=1.83, **kwargs)
+  L250: def evaluate(r, amplitude, r_0, sigma)
+L257: class Lorimer2006
+  L291: def __init__(self, amplitude=1, B=1.9, C=5.0, **kwargs)
+  L295: def evaluate(r, amplitude, B, C)
+L303: class Exponential
+  L329: def __init__(self, amplitude=1, z_0=0.05, **kwargs)
+  L333: def evaluate(z, amplitude, z_0)
+L338: class LogSpiral
+  L344: def xy_position(self, theta=None, radius=None, spiralarm_index=0)
+  L373: def radius(self, theta, spiralarm_index)
+  L395: def theta(self, radius, spiralarm_index)
+L418: class FaucherSpiral
+  L431: def _blur(radius, theta, amount=0.07, random_state='random-seed')
+  L461: def _gc_correction(radius, theta, r_corr=Quantity(2.857, 'kpc'), random_state='random-seed')
+  L488: def __call__(self, radius, blur=True, random_state='random-seed')
+L525: class ValleeSpiral
+  L541: def __init__(self)
+#### source/gammapy/astro/population/spatial.py::LogSpiral.theta (L395)
+    def theta(self, radius, spiralarm_index):
+        """Angle for a given radius.
+
+        Parameters
+        ----------
+        radius : `~astropy.units.Quantity`
+            Radius (kpc).
+        spiralarm_index : int
+            Spiral arm index.
+
+        Returns
+        -------
+        theta : `~numpy.ndarray`
+            Angle (deg).
+        """
+        k = self.k[spiralarm_index]
+        r_0 = self.r_0[spiralarm_index]
+        theta_0 = self.theta_0[spiralarm_index]
+        theta_0 = np.radians(theta_0)
+        theta = k * np.log(radius / r_0) + theta_0
+        return np.degrees(theta)
+### source/gammapy/estimators/utils.py
+L47: def find_peaks(image, threshold, min_distance=1)
+L156: def find_peaks_in_flux_map(maps, threshold, min_distance=1)
+L249: def estimate_exposure_reco_energy(dataset, spectral_model=None, normalize=True)
+L320: def _satisfies_conditions(info_dict, conditions)
+L327: def resample_energy_edges(dataset, conditions={})
+L407: def compute_lightcurve_fvar(lightcurve, flux_quantity='flux')
+L458: def compute_lightcurve_fpp(lightcurve, flux_quantity='flux')
+L508: def compute_lightcurve_doublingtime(lightcurve, flux_quantity='flux')
+L592: def compute_lightcurve_discrete_correlation(lightcurve1, lightcurve2=None, flux_quantity='flux', tau=None)
+L690: def get_edges_fixed_bins(fluxpoint, group_size, axis_name='energy')
+L721: def get_edges_min_ts(fluxpoint, ts_threshold, axis_name='energy')
+L774: def get_rebinned_axis(fluxpoint, axis_name='energy', method=None, **kwargs)
+L844: def combine_significance_maps(maps)
+L905: def get_combined_significance_maps(estimator, datasets)
+L966: def combine_flux_maps(maps, method='gaussian_errors', reference_model=None, dnde_scan_axis=None)
+L1100: def get_combined_flux_maps(estimator, datasets, method='gaussian_errors', reference_model=None, dnde_scan_axis=None)
+L1187: def _default_scan_map(flux_map, dnde_scan_axis=None)
+L1202: def interpolate_profile_map(flux_map, dnde_scan_axis=None)
+L1237: def approximate_profile_map(flux_map, dnde_scan_axis=None, sqrt_ts_threshold_ul='ignore')
+L1327: def get_flux_map_from_profile(flux_map, n_sigma=1, n_sigma_ul=2, reference_model=None, meta=None, gti=None)
+L1419: def _generate_scan_values(power_min=-6, power_max=2, relative_error=0.01)
+L1435: def _get_default_norm(norm, scan_min=0.2, scan_max=5, scan_n_values=11, scan_n_sigma=2, scan_values=None, interp='lin')
+L1474: def _get_norm_scan_values(norm, result)
+L1498: def apply_threshold_sensitivity(background, excess_counts, gamma_min=10, bkg_syst_fraction=0.05)
+#### source/gammapy/estimators/utils.py::interpolate_profile_map (L1202)
+def interpolate_profile_map(flux_map, dnde_scan_axis=None):
+    """Interpolate sparse likelihood profile to regular grid.
+
+    Parameters
+    ----------
+    flux_map : `~gammapy.estimators.FluxMaps`
+        Flux map.
+    dnde_scan_axis : `~gammapy.maps.MapAxis`
+        Map axis providing the dnde values used to compute the profile.
+        Default is None and it will be derived from the flux_map.
+
+    Returns
+    -------
+    scan_map: `~gammapy.estimators.Maps`
+        Likelihood profile map.
+
+    """
+    stat_scan = _default_scan_map(flux_map, dnde_scan_axis)
+    dnde_scan_axis = stat_scan.geom.axes["dnde"]
+
+    mask_valid = ~np.isnan(flux_map.dnde.data)
+    dnde_scan_values = flux_map.dnde_scan_values.quantity.to_value(dnde_scan_axis.unit)
+
+    for ij, il, ik in zip(*np.nonzero(mask_valid)):
+        spline = InterpolatedUnivariateSpline(
+            dnde_scan_values[ij, :, il, ik],
+            flux_map.stat_scan.data[ij, :, il, ik],
+            k=1,
+            ext="raise",
+            check_finite=True,
+        )
+        stat_scan.data[ij, :, il, ik] = spline(dnde_scan_axis.center)
+    return stat_scan
+#### source/gammapy/estimators/utils.py::approximate_profile_map (L1237)
+def approximate_profile_map(
+    flux_map, dnde_scan_axis=None, sqrt_ts_threshold_ul="ignore"
+):
+    """Likelihood profile approximation.
+
+    This assumes that probabilities distributions for flux points correspond to
+    asymmetric gaussians and for upper limits to complementary error functions.
+    Use available quantities among dnde, dnde_err, dnde_errp, dnde_errn, dnde_ul and ts.
+
+    Parameters
+    ----------
+    flux_map : `~gammapy.estimators.FluxMaps`
+        Flux map.
+    dnde_scan_axis : `~gammapy.maps.MapAxis`
+        Map axis providing the dnde values used to compute the profile.
+        Default is None and it will be derived from the flux_map.
+    sqrt_ts_threshold_ul : int
+        Threshold value in sqrt(TS) for upper limits.
+        Default is `ignore` and no threshold is applied.
+        Setting to `None` will use the one of `flux_map`.
+
+    Returns
+    -------
+    scan_map: `~gammapy.estimators.Maps`
+        Likelihood profile map.
+    """
+    stat_approx = _default_scan_map(flux_map, dnde_scan_axis)
+    dnde_coord = stat_approx.geom.get_coord()["dnde"].value
+
+    if sqrt_ts_threshold_ul is None:
+        sqrt_ts_threshold_ul = flux_map.sqrt_ts_threshold_ul
+
+    mask_valid = ~np.isnan(flux_map.dnde.data)
+    ij, il, ik = np.nonzero(mask_valid)
+    loc = flux_map.dnde.data[mask_valid][:, None]
+    value = dnde_coord[ij, :, il, ik]
+    try:
+        mask_p = dnde_coord >= flux_map.dnde.data
+        mask_p2d = mask_p[ij, :, il, ik]
+        new_axis = np.ones(mask_p2d.shape[1], dtype=bool)[None, :]
+        scale = np.zeros(mask_p2d.shape)
+        scale[mask_p2d] = (flux_map.dnde_errp.data[mask_valid][:, None] * new_axis)[
+            mask_p2d
+        ]
+        scale[~mask_p2d] = (flux_map.dnde_errn.data[mask_valid][:, None] * new_axis)[
+            ~mask_p2d
+        ]
+    except AttributeError:
+        scale = flux_map.dnde_err.data[mask_valid]
+        scale = scale[:, None]
+    stat_approx.data[ij, :, il, ik] = ((value - loc) / scale) ** 2
+
+    try:
+        invalid_value = 999
+        stat_min_p = (stat_approx.data + invalid_value * (~mask_p)).min(
+            axis=1, keepdims=True
+        )
+        stat_min_m = (stat_approx.data + invalid_value * mask_p).min(
+            axis=1, keepdims=True
+        )
+
+        mask_minp = mask_p & (stat_min_p > stat_min_m)
+        stat_approx.data[mask_minp] = (stat_approx.data + stat_min_m - stat_min_p)[
+            mask_minp
+        ]
+        mask_minn = ~mask_p & (stat_min_m >= stat_min_p)
+        stat_ap
+#### source/gammapy/estimators/utils.py::get_flux_map_from_profile (L1327)
+def get_flux_map_from_profile(
+    flux_map, n_sigma=1, n_sigma_ul=2, reference_model=None, meta=None, gti=None
+):
+    """Create a new flux map using the likelihood profile (stat_scan).
+
+    This provides the computation of the quantities:
+    ts, dnde, dnde_err, dnde_errp, dnde_errn, and dnde_ul.
+
+    Parameters
+    ----------
+    flux_map : `~gammapy.estimators.FluxMaps` or dict of `~gammapy.maps.WcsNDMap`
+        Flux map or dict containing  a `stat_scan` entry
+    n_sigma : float, optional
+        Number of sigma for flux error. Must be a positive value. Default is 1.
+    n_sigma_ul : float, optional
+        Number of sigma for flux upper limits. Must be a positive value. Default is 2.
+    reference_model : `~gammapy.modeling.models.SkyModel`, optional
+        The reference model to use for conversions. If None, a model consisting
+        of a point source with a power law spectrum of index 2 is assumed.
+        Default is None and the one of `flux_map` will be used if available
+    meta : dict, optional
+        Dictionary of metadata.
+        Default is None and the one of `flux_map` will be used if available
+    gti : `~gammapy.data.GTI`, optional
+        Maps GTI information.
+        Default is None and the one of `flux_map` will be used if available
+
+    Returns
+    -------
+    flux_maps : `~gammapy.estimators.FluxMaps`
+        Flux map.
+    """
+    if isinstance(flux_map, dict):
+        output_maps = flux_map
+    else:
+        if reference_model is None:
+            reference_model = flux_map.reference_model
+        if gti is None:
+            gti = flux_map.gti
+        if meta is None:
+            meta = flux_map.meta
+
+        output_maps = dict(
+            stat_scan=flux_map.stat_scan, dnde_scan_values=flux_map.dnde_scan_values
+        )
+
+    if getattr(flux_map, "dnde_scan_values", False):
+        dnde_coord = flux_map["dnde_scan_values"].quantity
+    else:
+        dnde_coord = flux_map["stat_scan"].geom.get_coord()["dnde"]
+
+    geom = (
+        flux_map["stat_scan"]
+        .geom.to_image()
+        .to_cube([flux_map["stat_scan"].geom.axes["energy"]])
+    )
+
+    ts = -flux_map["stat_scan"].data.min(axis=1) * u.Unit("")
+    ind = flux_map["stat_scan"].data.argmin(axis=1)
+    ij, ik, il = np.indices(ind.shape)
+    dnde = dnde_coord[ij, ind, ik, il]
+
+    maskp = dnde_coord > dnde
+    stat_diff = flux_map["stat_scan"].data - flux_map["stat_scan"].data.min(axis=1)
+
+    invalid_value = 999
+    ind = np.abs(stat_diff + invalid_value * maskp - n_sigm
+### source/gammapy/maps/axes.py
+L26: def flat_if_equal(array)
+L33: class BoundaryEnum
+L38: class AxisCoordInterpolator
+  L41: def __init__(self, edges, interp='lin')
+  L52: def coord_to_pix(self, coord)
+  L59: def pix_to_coord(self, pix)
+L82: class MapAxis
+  L121: def __init__(self, nodes, interp='lin', name='', node_type='edges', unit='', boundary_type='monotonic')
+  L175: def _repr_html_(self)
+  L181: def assert_name(self, required_name)
+  L194: def is_aligned(self, other, atol=0.02)
+  L218: def is_allclose(self, other, **kwargs)
+  L253: def __eq__(self, other)
+  L259: def __ne__(self, other)
+  L262: def __hash__(self)
+  L266: def _transform(self)
+  L271: def is_energy_axis(self)
+  L276: def interp(self)
+  L281: def name(self)
+  L286: def edges(self)
+  L292: def edges_min(self)
+  L297: def edges_max(self)
+  L302: def bounds(self)
+  L311: def as_plot_xerr(self)
+  L319: def use_center_as_plot_labels(self)
+  L327: def use_center_as_plot_labels(self, value)
+  L332: def as_plot_labels(self)
+  L344: def as_plot_edges(self)
+  L349: def as_plot_center(self)
+  L354: def as_plot_scale(self)
+  L360: def to_node_type(self, node_type)
+  L388: def rename(self, new_name)
+  L403: def format_plot_xaxis(self, ax)
+  L428: def format_plot_yaxis(self, ax)
+  L452: def iter_by_edges(self)
+  L458: def center(self)
+  L464: def bin_width(self)
+  L469: def nbin(self)
+  L474: def nbin_per_decade(self)
+  L488: def node_type(self)
+  L493: def unit(self)
+  L498: def from_bounds(cls, lo_bnd, hi_bnd, nbin, **kwargs)
+  L543: def from_energy_edges(cls, energy_edges, unit=None, name=None, interp='log')
+  L578: def from_energy_bounds(cls, energy_min, energy_max, nbin, unit=None, per_decade=False, name=None, node_type='edges', strict_bounds=True)
+  L660: def from_nodes(cls, nodes, **kwargs)
+  L685: def from_edges(cls, edges, **kwargs)
+  L707: def concatenate(self, axis)
+  L743: def pad(self, pad_width)
+  L772: def from_stack(cls, axes)
+  L795: def pix_to_coord(self, pix)
+  L812: def wrap_coord(self, coord)
+  L829: def pix_to_idx(self, pix, clip=False)
+  L854: def coord_to_pix(self, coord)
+  L873: def coord_to_idx(self, coord, clip=False)
+  L906: def slice(self, idx)
+  L943: def squash(self)
+  L960: def __repr__(self)
+  L974: def _init_copy(self, **kwargs)
+  L986: def copy(self, **kwargs)
+  L1001: def round(self, coord, clip=False)
+  L1026: def group_table(self, edges)
+  L1084: def upsample(self, factor)
+  L1116: def downsample(self, factor, strict=True)
+  L1161: def to_header(self, format='ogip', idx=0)
+  L1212: def to_table(self, format='ogip')
+  L1286: def to_table_hdu(self, format='ogip')
+  L1318: def from_table(cls, table, format='ogip', idx=0, column_prefix='')
+  L1461: def from_table_hdu(cls, hdu, format='ogip', idx=0)
+L1482: class MapAxes
+  L1491: def __init__(self, axes, n_spatial_axes=None)
+  L1504: def _repr_html_(self)
+  L1511: def primary_axis(self)
+  L1524: def is_flat(self)
+  L1530: def is_unidimensional(self)
+  L1537: def reverse(self)
+  L1542: def iter_with_reshape(self)
+  L1559: def get_coord(self, mode='center', axis_name=None)
+  L1585: def bin_volume(self)
+  L1601: def shape(self)
+  L1606: def names(self)
+  L1610: def index(self, axis_name)
+  L1614: def index_data(self, axis_name)
+  L1630: def __len__(self)
+  L1633: def __add__(self, other)
+  L1636: def upsample(self, factor, axis_name)
+  L1661: def replace(self, axis)
+  L1686: def resample(self, axis)
+  L1725: def downsample(self, factor, axis_name)
+  L1751: def squash(self, axis_name)
+  L1773: def pad(self, axis_name, pad_width)
+  L1797: def drop(self, axis_name)
+  L1818: def __getitem__(self, idx)
+  L1840: def coord_to_idx(self, coord, clip=True)
+  L1859: def coord_to_pix(self, coord)
+  L1874: def pix_to_coord(self, pix)
+  L1889: def pix_to_idx(self, pix, clip=False)
+  L1913: def slice_by_idx(self, slices)
+  L1956: def to_header(self, format='gadf')
+  L1977: def to_table(self, format='gadf')
+  L2032: def to_table_hdu(self, format='gadf', hdu_bands=None)
+  L2065: def from_table_hdu(cls, hdu, format='gadf')
+  L2088: def from_table(cls, table, format='gadf')
+  L2162: def from_default(cls, axes, n_spatial_axes=None)
+  L2192: def assert_names(self, required_names, allow_extra=False)
+  L2217: def rename_axes(self, names, new_names)
+  L2242: def center_coord(self)
+  L2246: def is_allclose(self, other, **kwargs)
+  L2271: def __eq__(self, other)
+  L2277: def __ne__(self, other)
+  L2280: def copy(self)
+L2285: class TimeMapAxis
+  L2310: def __init__(self, edges_min, edges_max, reference_time, name='time', interp='lin')
+  L2357: def _repr_html_(self)
+  L2364: def is_contiguous(self)
+  L2368: def to_contiguous(self)
+  L2386: def unit(self)
+  L2391: def interp(self)
+  L2396: def reference_time(self)
+  L2401: def name(self)
+  L2406: def nbin(self)
+### source/gammapy/maps/hpx/ndmap.py
+L24: class HpxNDMap
+  L52: def __init__(self, geom, data=None, dtype='float32', meta=None, unit='')
+  L61: def _make_default_data(geom, shape_np, dtype)
+  L72: def from_wcs_tiles(cls, wcs_tiles, nest=True)
+  L117: def to_wcs_tiles(self, nside_tiles=4, margin='0 deg', method='nearest', oversampling_factor=1)
+  L152: def from_hdu(cls, hdu, hdu_bands=None, format=None, colname=None)
+  L231: def to_wcs(self, sum_bands=False, normalize=True, proj='AIT', oversample=2, width_pix=None, hpx2wcs=None, fill_nan=True)
+  L280: def _pad_spatial(self, pad_width, mode='constant', cval=0)
+  L297: def crop(self, crop_width)
+  L303: def upsample(self, factor, order=0, preserve_counts=True, axis_name=None)
+  L323: def downsample(self, factor, preserve_counts=True, axis_name=None)
+  L341: def to_nside(self, nside, preserve_counts=True)
+  L375: def interp_by_coord(self, coords, method='linear', fill_value=None)
+  L386: def interp_by_pix(self, pix, method=None, fill_value=None)
+  L390: def cutout(self, position, width, *args, **kwargs)
+  L415: def _cutout_view(self, position, width, *args, **kwargs)
+  L425: def stack(self, other, weights=None, nan_to_num=True)
+  L470: def smooth(self, width, kernel='gauss')
+  L558: def convolve(self, kernel, convolution_method='wcs-tan', **kwargs)
+  L595: def convolve_wcs(self, kernel, **kwargs)
+  L664: def convolve_full(self, kernel)
+  L753: def get_by_idx(self, idx)
+  L759: def _interp_by_coord(self, coords)
+  L797: def _resample_by_idx(self, idx, weights=None, preserve_counts=False, smooth=False)
+  L819: def fill_by_idx(self, idx, weights=None)
+  L822: def set_by_idx(self, idx, vals)
+  L827: def _make_cols(self, header, conv)
+  L857: def to_swapped(self)
+  L877: def to_region_nd_map(self, region, func=np.nansum, weights=None, method='nearest')
+  L930: def plot(self, method='raster', ax=None, normalize=False, proj='AIT', oversample=2, width_pix=1000, **kwargs)
+  L990: def _plot_poly(self, proj='AIT', step=1, ax=None)
+  L1076: def plot_mask(self, method='raster', ax=None, proj='AIT', oversample=2, width_pix=1000, **kwargs)
+  L1135: def sample_coord(self, n_events, random_state=0)

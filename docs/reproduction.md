@@ -46,3 +46,23 @@ python3 -m unittest discover -s tests -p test_study.py -v
 ```
 
 Optional local report rendering (`scripts/build_report.py`) is a development utility and is not part of the published repository contents.
+
+## Scientist→Engineer side comparison (optional)
+
+Same nine tasks; generation-time role split reported in REPORT.md §5 Table 3.
+Packaged briefs and metrics: `artifacts/scientist_engineer/`.
+
+```bash
+.venv/bin/python -m pip install -e '.[scientist-engineer]'
+# materialize tasks 001,007,008,017,024,039,053,094,107 into work/tasks-scientist-engineer-9
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 DATA_PARALLEL_SIZE=8 \
+  ./scripts/start_vllm_qwen38_se.sh   # or any Qwen3.8 endpoint in model.env
+.venv/bin/python scripts/run_se_experiment.py --condition se \
+  --tasks work/tasks-scientist-engineer-9 \
+  --env-file model.env \
+  --job-name se-rerun \
+  --scientist-model Qwen3.8-27B --model Qwen3.8-27B \
+  --n-concurrent 8 --n-attempts 2
+```
+
+This path is separate from `run_study.py` (A/B verification).

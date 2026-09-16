@@ -1,0 +1,43 @@
+{
+  "title": "Scientist→Engineer generation-time side comparison (same nine tasks)",
+  "note": "Descriptive contrast for REPORT.md §5 Table 3. Not part of A/B verification protocol. Do not mix with the three-attempt baseline in Tables 1–2.",
+  "model": "Qwen3.8-27B",
+  "n_attempts_per_task": 2,
+  "n_tasks": 9,
+  "task_ids": ["001", "007", "008", "017", "024", "039", "053", "094", "107"],
+  "single_agent_frozen_n2_prefix": {
+    "source": "historical Qwen3.8 baseline, first two completed attempts per task",
+    "n_trials": 18,
+    "n_correct": 9,
+    "mean_pass1": 0.5,
+    "per_task_correct_over_2": {
+      "001": 0,
+      "007": 1,
+      "008": 0,
+      "017": 2,
+      "024": 2,
+      "039": 0,
+      "053": 2,
+      "094": 0,
+      "107": 2
+    }
+  },
+  "scientist_engineer": {
+    "job": "se3-qwen38-main9-n2",
+    "results_path": "artifacts/scientist_engineer/job_result.json",
+    "n_trials": 18,
+    "n_correct": 7,
+    "mean_pass1": 0.3888888888888889,
+    "per_task_correct_over_2": {
+      "001": 0,
+      "007": 0,
+      "008": 0,
+      "017": 2,
+      "024": 2,
+      "039": 0,
+      "053": 2,
+      "094": 0,
+      "107": 1
+    }
+  }
+}

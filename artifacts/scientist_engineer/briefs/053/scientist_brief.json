@@ -1,0 +1,62 @@
+{
+  "task_id": "053",
+  "scientific_principle": "The normalized surface Dice coefficient measures the fraction of two organ boundaries that lie within a physical tolerance tau of each other, defined as (measure of S_ref within tau of S_pred + measure of S_pred within tau of S_ref) / (measure of S_ref + measure of S_pred). In a sampled voxel grid, 'measure' is a geometric quantity\u2014edge length in 2-D, face area in 3-D\u2014not a voxel count. The directed distances from each boundary sample to the opposite boundary must be evaluated in physical units (the Euclidean path already does this via distance_transform_edt with sampling=spacing). For the ratio to be representation-consistent, each boundary sample must also be weighted by the physical surface element it represents (sum of adjacent edge lengths in 2-D, sum of adjacent face areas in 3-D), so that the numerator and denominator are Riemann sums of the same geometric measure. Without this weighting, the count-based ratio depends on voxel resolution and anisotropy, violating the paper's physical interpretation.",
+  "violated_invariant": "Boundary samples are accumulated with unit count weight rather than being weighted by their physical surface element (edge length in 2-D, face area in 3-D), so the normalized surface-Dice ratio is not invariant to voxel-grid resolution or spacing anisotropy even though the directed Euclidean distances are already in physical units.",
+  "observable_symptom": "The same physical study represented on a fine and a coarse voxel grid yields surface-Dice scores whose absolute spread exceeds the documented consistency tolerance, while the workflow itself completes with finite values.",
+  "suspected_loci": [
+    "source/monai/metrics/surface_dice.py::compute_surface_dice",
+    "source/monai/metrics/utils.py::get_mask_edges",
+    "source/monai/metrics/utils.py::get_surface_distance"
+  ],
+  "acceptance_checks": [
+    "For a fixed physical boundary pair and a fixed physical tolerance, the surface-Dice score must be approximately invariant when the same physical study is sampled on a finer or coarser voxel grid with correspondingly scaled spacing.",
+    "The surface-Dice score must be invariant under simultaneous permutation of image spatial axes and the corresponding spacing entries.",
+    "For 2-D inputs the boundary measure must scale with edge length (spacing), and for 3-D inputs with face area (product of two spacings), so that anisotropic spacings produce correctly weighted numerators and denominators.",
+    "For non-empty foreground classes the score must lie in [0, 1]; for a class absent from both inputs the score must be NaN; for a class present in only one input the score must be 0.",
+    "When the caller does not supply a spacing (spacing=None), the metric must retain the legacy unit-grid counting behavior and still return a finite score in [0, 1] for non-empty inputs.",
+    "The metric must accept batch-first one-hot tensors of shape [B,C,H,W] (2-D) and [B,C,H,W,D] (3-D) with per-batch or shared spacing, and the reduction modes (none, mean, sum, etc.) must behave as documented."
+  ],
+  "metamorphic_probes": [
+    {
+      "name": "anisotropic_3d_resolution_invariance",
+      "relation": "Resampling the same physical box pair (reference and a 4-mm x-offset prediction) from a 20^3 grid with spacing (1,2,3) to a 10^3 grid with spacing (2,4,6) must leave the surface-Dice score unchanged within tolerance, because both the directed distances and the boundary measure are physical.",
+      "code": "import numpy as np, torch, sys\nsys.path.insert(0, 'source')\nfrom monai.metrics import SurfaceDiceMetric\n\ndef box3d(sh, x0,x1,y0,y1,z0,z1):\n    m = np.zeros(sh, dtype=np.int64); m[x0:x1,y0:y1,z0:z1]=1; return m\n\ndef ohot(m):\n    t = torch.as_tensor(m[None,...], dtype=torch.int64)\n    return torch.nn.functional.one_hot(t, num_classes=2).permute(0,4,1,2,3)\n\n# Physical box 10x20x30 mm; prediction shifted +4 mm in x; tolerance 3 mm\nref_f  = box3d((20,20,20), 5,15, 5,15, 5,15)\npred_f = box3d((20,20,20), 9,19, 5,15, 5,15)   # +4 vox * 1 mm = +4 mm\nref_c  = box3d((10,10,10), 3,8,  3,8,  3,8)\npred_c = box3d((10,10,10), 5,10, 3,8,  3,8)   # +2 vox * 2 mm = +4 mm\n\nmet = SurfaceDiceMetric(class_thresholds=[3.0], include_background=False, reduction='none')\nsf = float(met(ohot(pred_f), ohot(ref_f), spacing=(1.0,2.0,3.0)).detach().cpu().reshape(-1)[0])\nsc = float(met(ohot(pred_c), ohot(ref_c), spacing=(2.0,4.0,6.0)).detach().cpu().reshape(-1)[0])\nprint(f\"fine={sf:.4f} coarse={sc:.4f} diff={abs(sf-sc):.4f}\")\nassert abs(sf - sc) < 0.12, f\"FAIL: {sf} vs {sc}\"\nprint(\"PASS\")"
+    },
+    {
+      "name": "anisotropic_2d_resolution_invariance",
+      "relation": "Resampling the same physical 2-D rectangle pair (reference and a 4-mm x-offset prediction) from a 20x20 grid with spacing (1,2) to a 10x10 grid with spacing (2,4) must leave the surface-Dice score unchanged within tolerance, verifying edge-length weighting in 2-D.",
+      "code": "import numpy as np, torch, sys\nsys.path.insert(0, 'source')\nfrom monai.metrics import SurfaceDiceMetric\n\ndef rect2d(sh, x0,x1,y0,y1):\n    m = np.zeros(sh, dtype=np.int64); m[x0:x1,y0:y1]=1; return m\n\ndef ohot2d(m):\n    t = torch.as_tensor(m[None,...], dtype=torch.int64)\n    return torch.nn.functional.one_hot(t, num_classes=2).permute(0,3,1,2)\n\n# Physical rectangle 10x20 mm; prediction shifted +4 mm in x; tolerance 3 mm\nref_f  = rect2d((20,20), 5,15, 5,15)\npred_f = rect2d((20,20), 9,19, 5,15)   # +4 vox * 1 mm = +4 mm\nref_c  = rect2d((10,10), 3,8,  3,8)\npred_c = rect2d((10,10), 5,10, 3,8)   # +2 vox * 2 mm = +4 mm\n\nmet = SurfaceDiceMetric(class_thresholds=[3.0], include_background=False, reduction='none')\nsf = float(met(ohot2d(pred_f), ohot2d(ref_f), spacing=(1.0,2.0)).detach().cpu().reshape(-1)[0])\nsc = float(met(ohot2d(pred_c), ohot2d(ref_c), spacing=(2.0,4.0)).detach().cpu().reshape(-1)[0])\nprint(f\"fine={sf:.4f} coarse={sc:.4f} diff={abs(sf-sc):.4f}\")\nassert abs(sf - sc) < 0.12, f\"FAIL: {sf} vs {sc}\"\nprint(\"PASS\")"
+    },
+    {
+      "name": "spacing_axis_permutation_3d",
+      "relation": "Simultaneously permuting the spatial axes of a 3-D mask pair and the corresponding spacing entries must leave the surface-Dice score unchanged, because the physical geometry is identical.",
+      "code": "import numpy as np, torch, sys\nsys.path.insert(0, 'source')\nfrom monai.metrics import SurfaceDiceMetric\n\ndef box3d(sh, x0,x1,y0,y1,z0,z1):\n    m = np.zeros(sh, dtype=np.int64); m[x0:x1,y0:y1,z0:z1]=1; return m\n\ndef ohot(m):\n    t = torch.as_tensor(m[None,...], dtype=torch.int64)\n    return torch.nn.functional.one_hot(t, num_classes=2).permute(0,4,1,2,3)\n\n# Original: shape (10,20,30), spacing (1,2,3); pred shifted +2 mm in x\nref  = box3d((10,20,30), 2,8, 4,16, 6,24)\npred = box3d((10,20,30), 4,10, 4,16, 6,24)\n# Permuted axes (1,2,0): shape (20,30,10), spacing (2,3,1); offset now in new-z\nref_p  = np.transpose(ref,  (1,2,0))\npred_p = np.transpose(pred, (1,2,0))\n\nmet = SurfaceDiceMetric(class_thresholds=[3.0], include_background=False, reduction='none')\ns1 = float(met(ohot(pred),  ohot(ref),  spacing=(1.0,2.0,3.0)).detach().cpu().reshape(-1)[0])\ns2 = float(met(ohot(pred_p), ohot(ref_p), spacing=(2.0,3.0,1.0)).detach().cpu().reshape(-1)[0])\nprint(f\"orig={s1:.4f} perm={s2:.4f} diff={abs(s1-s2):.4f}\")\nassert abs(s1 - s2) < 0.02, f\"FAIL: {s1} vs {s2}\"\nprint(\"PASS\")"
+    },
+    {
+      "name": "empty_class_contract",
+      "relation": "A class absent from both prediction and reference must yield NaN; a class present in only one input must yield 0, preserving the documented empty-class behavior.",
+      "code": "import numpy as np, torch, sys\nsys.path.insert(0, 'source')\nfrom monai.metrics import SurfaceDiceMetric\n\ndef ohot(m):\n    t = torch.as_tensor(m[None,...], dtype=torch.int64)\n    return torch.nn.functional.one_hot(t, num_classes=2).permute(0,4,1,2,3)\n\nsh = (16,16,16)\nempty = np.zeros(sh, dtype=np.int64)\nfull  = np.zeros(sh, dtype=np.int64); full[4:12,4:12,4:12]=1\n\nmet = SurfaceDiceMetric(class_thresholds=[1.0], include_background=False, reduction='none')\ns_ee = float(met(ohot(empty), ohot(empty), spacing=(1.0,1.0,1.0)).detach().cpu().reshape(-1)[0])\nassert np.isnan(s_ee), f\"Expected NaN for both-empty, got {s_ee}\"\ns_fe = float(met(ohot(full), ohot(empty), spacing=(1.0,1.0,1.0)).detach().cpu().reshape(-1)[0])\nassert abs(s_fe) < 1e-6, f\"Expected 0 for one-empty, got {s_fe}\"\nprint(\"PASS\")"
+    },
+    {
+      "name": "unit_spacing_legacy_finite",
+      "relation": "When no spacing is supplied (spacing=None), the metric must fall back to the legacy unit-grid behavior and still return a finite score in [0, 1] for a non-empty, non-identical pair.",
+      "code": "import numpy as np, torch, sys\nsys.path.insert(0, 'source')\nfrom monai.metrics import SurfaceDiceMetric\n\ndef ohot(m):\n    t = torch.as_tensor(m[None,...], dtype=torch.int64)\n    return torch.nn.functional.one_hot(t, num_classes=2).permute(0,4,1,2,3)\n\nsh = (16,16,16)\nref  = np.zeros(sh, dtype=np.int64); ref[4:12,4:12,4:12]=1\npred = np.zeros(sh, dtype=np.int64); pred[5:13,4:12,4:12]=1  # +1 voxel shift\n\nmet = SurfaceDiceMetric(class_thresholds=[2.0], include_background=False, reduction='none')\ns = float(met(ohot(pred), ohot(ref)).detach().cpu().reshape(-1)[0])\nassert np.isfinite(s) and 0.0 <= s <= 1.0, f\"Score out of range or non-finite: {s}\"\nprint(f\"score={s:.4f}\")\nprint(\"PASS\")"
+    }
+  ],
+  "anti_hardcoding": [
+    "Hard-coding the surface-Dice score or the fine/coarse spread for the specific fixture shapes, spacings, or tolerance in the public reproduction.",
+    "Ignoring the spacing parameter entirely and always using unit-voxel counting, which would pass the unit-spacing legacy probe but fail the anisotropic resolution-invariance probes.",
+    "Assigning a fixed or shape-independent boundary weight (e.g., always 1.0 or a constant derived from the image size) instead of computing per-sample weights from the local grid geometry and spacing.",
+    "Special-casing the exact grid shapes (20^3 vs 10^3, 20x20 vs 10x10) or the specific offset/tolerance values used in the probes or the public fixture.",
+    "Returning a constant score (e.g., 0.5 or 1.0) for all non-empty inputs to satisfy the range check without performing any boundary or distance computation."
+  ],
+  "confidence": 0.82,
+  "evidence_notes": [
+    "reproduce.py scores the same physical study on 'fine' and 'coarse' grids via SurfaceDiceMetric with per-grid spacing and checks that the absolute spread is <= 0.12; the instruction states this spread is too large pre-fix.",
+    "get_surface_distance (utils.py L176) already passes spacing to distance_transform_edt for the Euclidean path, so directed distances are in physical units; the critic confirms the main defect is the unweighted count in the ratio, not missing distance scaling.",
+    "compute_surface_dice (surface_dice.py L134) computes |D'|/|D| as a count of boundary samples whose directed distance is <= threshold; there is no visible per-sample physical surface-element weight in the inventory, which is the locus where the weighting must be introduced.",
+    "get_mask_edges (utils.py L112) extracts the binary boundary masks; it is the natural place to also return (or compute downstream) the per-sample physical surface element (edge length in 2-D, face area in 3-D) given the spacing.",
+    "Expected pre-fix failures: anisotropic_3d_resolution_invariance and anisotropic_2d_resolution_invariance should fail because the count-based ratio is not proportional to the physical area/length ratio under anisotropic spacing and different resolutions; spacing_axis_permutation_3d may also fail for the same reason. empty_class_contract and unit_spacing_legacy_finite are expected to pass both pre- and post-fix (they guard the API contract, not the physical weighting).",
+    "The full body of compute_surface_dice and get_mask_edges is not visible in the inventory (only signatures and docstrings), so the exact line where the count is accumulated is inferred from the docstring formula and the get_surface_distance call pattern; confidence is reduced accordingly."
+  ]
+}

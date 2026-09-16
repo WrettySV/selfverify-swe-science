@@ -16,6 +16,7 @@ These files support the published study results summarized in the [repository RE
 | [model_config.json](model_config.json) | Model revision and inference configuration |
 | [refinement_audit.json](refinement_audit.json) | Input/output patch hashes and revision records |
 | [report_manifest.json](report_manifest.json) | Report metrics and hashes of publication files |
+| [scientist_engineer/](scientist_engineer/) | Side comparison: Scientist→Engineer briefs and matched n=2 metrics (REPORT §5 Table 3) |
 
 The `study/` bundle preserves the executed code and observations unchanged. New runs write to a separate output directory; they do not overwrite the published evidence. The baseline table and the A/B patch identities are recorded separately and should not be joined by table position.
 

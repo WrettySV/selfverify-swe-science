@@ -1,0 +1,429 @@
+workdir: /app/task_094
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-094:v0.1.2
+code_files_total: 20
+## directories (file counts)
+source/pymatgen/symmetry: 4
+.: 3
+source/monty: 3
+source/pymatgen/core: 2
+source/pymatgen/io: 2
+workflow: 2
+fixtures: 1
+source/pymatgen: 1
+source/pymatgen/electronic_structure: 1
+source/pymatgen/util: 1
+## terms_from_instruction
+strong: public_reproduction_report, writes
+common: magnetic, materials, records, archive, operation, conventions, retained, scientific, python, analysis, space, across, symmetry, diagnostic, record, finite, downstream, producer, group, operations, archived, coordinate, family, preserve, meaning
+## import_reach_from_reproduce.py (path, depth)
+source/monty/json.py  (depth 1)
+workflow/magnetic_catalogue.py  (depth 1)
+source/pymatgen/io/cif.py  (depth 2)
+source/pymatgen/symmetry/maggroups.py  (depth 3)
+source/monty/design_patterns.py  (depth 4)
+source/pymatgen/core/operations.py  (depth 4)
+source/pymatgen/electronic_structure/core.py  (depth 4)
+source/pymatgen/symmetry/groups.py  (depth 4)
+source/pymatgen/util/string.py  (depth 4)
+## ranked_source_paths (score, path, matched_terms)
+  14.5  workflow/magnetic_catalogue.py  []
+  13.0  source/monty/json.py  []
+  10.0  source/pymatgen/symmetry/maggroups.py  []
+   8.5  source/pymatgen/io/cif.py  []
+   6.0  source/pymatgen/core/operations.py  []
+   4.5  source/pymatgen/symmetry/settings.py  []
+   4.0  source/pymatgen/electronic_structure/core.py  []
+   3.0  source/pymatgen/util/string.py  []
+   1.5  source/pymatgen/symmetry/generate_benchmark_catalogue.py  []
+   1.5  source/pymatgen/symmetry/groups.py  []
+   1.0  fixtures/README.md  []
+   1.0  source/monty/design_patterns.py  []
+   0.6  source/pymatgen/__init__.py  []
+   0.0  source/monty/__init__.py  []
+   0.0  source/pymatgen/core/__init__.py  []
+   0.0  source/pymatgen/io/__init__.py  []
+   0.0  workflow/__init__.py  []
+## snippets
+### reproduce.py
+from __future__ import annotations
+
+import json
+import os
+import sys
+from pathlib import Path
+from typing import Any
+
+
+TASK_ROOT = Path(__file__).resolve().parent
+SOURCE_ROOT = TASK_ROOT / "source"
+REPORT = TASK_ROOT / "outputs" / "public_reproduction_report.json"
+FIXTURE = TASK_ROOT / "fixtures" / "magnetic_setting_records.json"
+
+
+def _write_report(payload: dict[str, Any]) -> int:
+    REPORT.parent.mkdir(exist_ok=True)
+    text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    REPORT.write_text(text, encoding="utf-8")
+    print(text, end="")
+    return {"workflow_completed": 0, "runner_failure": 2}[payload["status"]]
+
+
+def main() -> int:
+    os.environ.setdefault("PYTHONHASHSEED", "0")
+    sys.path.insert(0, str(SOURCE_ROOT))
+    sys.path.insert(0, str(TASK_ROOT))
+
+    try:
+        from workflow.magnetic_catalogue import catalogue_report, load_records
+
+        report = catalogue_report(load_records(FIXTURE))
+        return _write_report(
+            {
+                "schema_version": "1.0",
+                "status": "workflow_completed",
+                "observations": {
+                    "record_count": report["record_count"],
+                    "resolved_count": report["resolved_count"],
+                    "failure_count": len(report["failures"]),
+                    "operation_counts": [
+                        item["operation_count"] for item in report["batch_observations"]
+                    ],
+                    "finite_summaries": len(report["batch_observations"]),
+                },
+            }
+        )
+    except Exception as exc:
+        return _write_report(
+            {
+                "schema_version": "1.0",
+                "status": "runner_failure",
+                "error_type": type(exc).__name__,
+                "error": str(exc)[:240],
+            }
+        )
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+### reproduction.md
+# Public Reproduction
+
+The public reproducer loads a magnetic archive record and asks the retained
+source snapshot to produce the magnetic operation family used by downstream
+catalogue analysis.
+
+Expected pre-fix behavior:
+
+```bash
+python reproduce.py
+```
+
+returns exit code `0` and writes `outputs/public_reproduction_report.json` with
+finite archive observations.
+
+The public status is diagnostic only.  It does not decide the complete
+correctness contract for generalized magnetic-operation semantics.
+### paper.md
+# Scientific Context
+
+This task uses a retained subset of pymatgen, an open-source materials-analysis
+library described in:
+
+- Shyue Ping Ong et al., "Python Materials Genomics (pymatgen): A robust,
+  open-source python library for materials analysis", Computational Materials
+  Science 68, 314-319, 2013. DOI: 10.1016/j.commatsci.2012.10.028.
+
+Magnetic space groups extend crystallographic symmetry operations with
+time-reversal labels used to describe magnetic structures.  Materials archives
+may store records in different coordinate conventions.  A scientific workflow
+that reconstructs operation families from archive records should preserve the
+meaning of valid producer records through downstream analysis.
+
+The retained source includes the project code and magnetic-space-group database
+needed for the offline reproduction.
+## outlines_of_top_modules
+### workflow/magnetic_catalogue.py
+L13: class MagneticRecord
+L20: def load_records(path: Path)
+L33: def _setting_matrix(text: str)
+L54: def _catalogue_coordinates(xyz: list[float], setting: str)
+L59: def operation_family(record: MagneticRecord)
+L89: def catalogue_report(records: list[MagneticRecord])
+#### workflow/magnetic_catalogue.py::load_records (L20)
+def load_records(path: Path) -> list[MagneticRecord]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return [
+        MagneticRecord(
+            record_id=item["record_id"],
+            bns_number=tuple(item["bns_number"]),
+            archive_basis=item["archive_basis"],
+            probe_fractional_site=np.array(item["probe_fractional_site"], dtype=float),
+        )
+        for item in payload["records"]
+    ]
+#### workflow/magnetic_catalogue.py::_catalogue_coordinates (L54)
+def _catalogue_coordinates(xyz: list[float], setting: str) -> list[float]:
+    matrix, origin = _setting_matrix(setting)
+    return [round(float(value), 8) for value in np.mod(matrix @ np.array(xyz) + origin, 1.0)]
+#### workflow/magnetic_catalogue.py::operation_family (L59)
+def operation_family(record: MagneticRecord) -> dict[str, object]:
+    from pymatgen.io.cif import CifParser, MagneticCifBlock
+
+    block = MagneticCifBlock(
+        {
+            "_space_group_magn.number_BNS": ".".join(str(part) for part in record.bns_number),
+            "_space_group_magn.transform_BNS_Pp_abc": record.archive_basis,
+        }
+    )
+    ops = CifParser().get_magsymops(block)
+    if isinstance(ops, Exception):
+        raise ops
+    transformed = []
+    for op in ops:
+        xyz = np.mod(op.operate(record.probe_fractional_site), 1.0)
+        transformed.append(
+            {
+                "xyz": [round(float(value), 8) for value in xyz],
+                "catalogue_xyz": _catalogue_coordinates(xyz, record.archive_basis),
+                "time": int(op.time_reversal),
+            }
+        )
+    transformed.sort(key=lambda item: (item["time"], item["xyz"]))
+    return {
+        "record_id": record.record_id,
+        "operation_count": len(transformed),
+        "probe_orbit": transformed,
+    }
+### source/monty/json.py
+L1: class MSONable
+  L4: def as_dict(self)
+### source/pymatgen/symmetry/maggroups.py
+L36: class MagneticSpaceGroup
+  L40: def __init__(self, id)
+  L252: def from_og(cls, id)
+  L272: def __eq__(self, other)
+  L276: def crystal_system(self)
+  L297: def sg_symbol(self)
+  L304: def symmetry_ops(self)
+  L330: def get_orbit(self, p, m, tol=1e-05)
+  L357: def is_compatible(self, lattice, tol=1e-05, angle_tol=5)
+  L396: def data_str(self, include_og=True)
+  L474: def __str__(self)
+L484: def _write_all_magnetic_space_groups_to_file(filename)
+#### source/pymatgen/symmetry/maggroups.py::MagneticSpaceGroup.symmetry_ops (L304)
+    def symmetry_ops(self):
+        """
+        Retrieve magnetic symmetry operations of the space group.
+        :return: List of :class:`pymatgen.core.operations.MagSymmOp`
+        """
+        ops = [op_data['op'] for op_data in self._data['bns_operators']]
+
+        # add lattice centerings
+        centered_ops = []
+        lattice_vectors = [l['vector'] for l in self._data['bns_lattice']]
+
+        for vec in lattice_vectors:
+            if not (np.array_equal(vec, [1, 0, 0])
+                    or np.array_equal(vec, [0, 1, 0])
+                    or np.array_equal(vec, [0, 0, 1])):
+                for op in ops:
+                    new_vec = op.translation_vector + vec
+                    new_op = MagSymmOp.from_rotation_and_translation_and_time_reversal(op.rotation_matrix,
+                                                                                       translation_vec=new_vec,
+                                                                                       time_reversal=op.time_reversal)
+                    centered_ops.append(new_op)
+
+        ops = ops + centered_ops
+
+        return ops
+#### source/pymatgen/symmetry/maggroups.py::_write_all_magnetic_space_groups_to_file (L484)
+def _write_all_magnetic_space_groups_to_file(filename):
+    """
+    Write all magnetic space groups to a human-readable text file.
+    Should contain same information as text files provided by ISO-MAG.
+    :param filename:
+    :return:
+    """
+    s = ('Data parsed from raw data from:\n'
+         'ISO-MAG, ISOTROPY Software Suite, iso.byu.edu\n'
+         'http://stokes.byu.edu/iso/magnetic_data.txt\n'
+         'Used with kind permission from Professor Branton Campbell, BYU\n\n')
+    all_msgs = []
+    for i in range(1, 1652):
+        all_msgs.append(MagneticSpaceGroup(i))
+    for msg in all_msgs:
+        s += '\n{}\n\n--------\n'.format(msg.data_str())
+    f = open(filename, 'w')
+    f.write(s)
+    f.close()
+### source/pymatgen/io/cif.py
+L6: class MagneticCifBlock
+  L7: def __init__(self, data)
+L11: class CifParser
+  L14: def get_magsymops(self, data)
+### source/pymatgen/core/operations.py
+L30: class SymmOp
+  L41: def __init__(self, affine_transformation_matrix, tol=0.01)
+  L60: def from_rotation_and_translation(rotation_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), translation_vec=(0, 0, 0), tol=0.1)
+  L87: def __eq__(self, other)
+  L91: def __hash__(self)
+  L94: def __repr__(self)
+  L97: def __str__(self)
+  L102: def operate(self, point)
+  L115: def operate_multi(self, points)
+  L130: def apply_rotation_only(self, vector)
+  L140: def transform_tensor(self, tensor)
+  L163: def are_symmetrically_related(self, point_a, point_b, tol=0.001)
+  L182: def rotation_matrix(self)
+  L189: def translation_vector(self)
+  L195: def __mul__(self, other)
+  L204: def inverse(self)
+  L212: def from_axis_angle_and_translation(axis, angle, angle_in_radians=False, translation_vec=(0, 0, 0))
+  L254: def from_origin_axis_angle(origin, axis, angle, angle_in_radians=False)
+  L312: def reflection(normal, origin=(0, 0, 0))
+  L348: def inversion(origin=(0, 0, 0))
+  L365: def rotoreflection(axis, angle, origin=(0, 0, 0))
+  L383: def as_dict(self)
+  L391: def as_xyz_string(self)
+  L404: def from_xyz_string(xyz_string)
+  L435: def from_dict(cls, d)
+L443: class MagSymmOp
+  L452: def __init__(self, affine_transformation_matrix, time_reversal, tol=0.01)
+  L473: def __eq__(self, other)
+  L477: def __str__(self)
+  L480: def __repr__(self)
+  L486: def __hash__(self)
+  L491: def operate_magmom(self, magmom)
+  L516: def from_symmop(cls, symmop, time_reversal)
+  L531: def from_rotation_and_translation_and_time_reversal(rotation_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), translation_vec=(0, 0, 0), time_reversal=1, tol=0.1)
+  L553: def from_xyzt_string(xyzt_string)
+  L568: def as_xyzt_string(self)
+  L576: def as_dict(self)
+  L586: def from_dict(cls, d)
+### source/pymatgen/symmetry/settings.py
+L24: class JonesFaithfulTransformation
+  L25: def __init__(self, P, p)
+  L58: def from_transformation_string(cls, transformation_string='a,b,c;0,0,0')
+  L70: def from_origin_shift(cls, origin_shift='0,0,0')
+  L76: def parse_transformation_string(transformation_string='a,b,c;0,0,0')
+  L102: def P(self)
+  L109: def p(self)
+  L117: def inverse(self)
+  L126: def transformation_string(self)
+  L133: def _get_transformation_string_from_Pp(P: List[List[float]], p: List[float])
+  L139: def transform_symmop(self, symmop: Union[SymmOp, MagSymmOp])
+  L160: def transform_coords(self, coords: List[List[float]])
+  L174: def transform_lattice(self, lattice)
+  L183: def __eq__(self, other)
+  L186: def __str__(self)
+  L189: def __repr__(self)
+### source/pymatgen/electronic_structure/core.py
+L24: class Spin
+  L31: def __int__(self)
+  L34: def __float__(self)
+  L37: def __str__(self)
+L42: class OrbitalType
+  L53: def __str__(self)
+L58: class Orbital
+  L81: def __int__(self)
+  L84: def __str__(self)
+  L88: def orbital_type(self)
+L95: class Magmom
+  L140: def __init__(self, moment, saxis=(0, 0, 1))
+  L163: def from_global_moment_and_saxis(cls, global_moment, saxis)
+  L179: def _get_transformation_matrix(self, saxis)
+  L197: def _get_transformation_matrix_inv(self, saxis)
+  L215: def get_moment(self, saxis=(0, 0, 1))
+  L240: def global_moment(self)
+  L249: def projection(self)
+  L258: def get_xyz_magmom_with_001_saxis(self)
+  L267: def get_00t_magmom_with_xyz_saxis(self)
+  L307: def have_consistent_saxis(magmoms)
+  L327: def get_consistent_set_and_saxis(magmoms, saxis=None)
+  L345: def get_suggested_saxis(magmoms)
+  L371: def are_collinear(magmoms)
+  L398: def from_moment_relative_to_crystal_axes(cls, moment, lattice)
+  L415: def get_moment_relative_to_crystal_axes(self, lattice)
+  L432: def __getitem__(self, key)
+  L435: def __iter__(self)
+  L438: def __abs__(self)
+  L441: def __eq__(self, other)
+  L448: def __ne__(self, other)
+  L451: def __lt__(self, other)
+  L454: def __neg__(self)
+  L457: def __hash__(self)
+  L460: def __float__(self)
+  L483: def __str__(self)
+  L486: def __repr__(self)
+### source/pymatgen/util/string.py
+L11: def str_delimited(results, header=None, delimiter='\t')
+L34: def formula_double_format(afloat, ignore_ones=True, tol=1e-08)
+L55: def latexify(formula)
+L69: def htmlify(formula)
+L80: def unicodeify(formula)
+L101: def latexify_spacegroup(spacegroup_symbol)
+L116: def unicodeify_spacegroup(spacegroup_symbol)
+L160: def unicodeify_species(specie_string)
+L196: def stream_has_colours(stream)
+L213: def transformation_to_string(matrix, translation_vec=(0, 0, 0), components=('x', 'y', 'z'), c='', delim=',')
+L248: def disordered_formula(disordered_struct, symbols=('x', 'y', 'z'), fmt='plain')
+L359: class StringColorizer
+  L372: def __init__(self, stream)
+  L378: def __call__(self, string, colour)
+#### source/pymatgen/util/string.py::latexify_spacegroup (L101)
+def latexify_spacegroup(spacegroup_symbol):
+    r"""
+    Generates a latex formatted spacegroup. E.g., P2_1/c is converted to
+    P2$_{1}$/c and P-1 is converted to P$\\overline{1}$.
+
+    Args:
+        spacegroup_symbol (str): A spacegroup symbol
+
+    Returns:
+        A latex formatted spacegroup with proper subscripts and overlines.
+    """
+    sym = re.sub(r"_(\d+)", r"$_{\1}$", spacegroup_symbol)
+    return re.sub(r"-(\d)", r"$\\overline{\1}$", sym)
+#### source/pymatgen/util/string.py::unicodeify_spacegroup (L116)
+def unicodeify_spacegroup(spacegroup_symbol):
+    r"""
+    Generates a unicode formatted spacegroup. E.g., P2$_{1}$/c is converted to
+    P2₁/c and P$\\overline{1}$ is converted to P̅1.
+
+    Args:
+        spacegroup_symbol (str): A spacegroup symbol as LaTeX
+
+    Returns:
+        A unicode spacegroup with proper subscripts and overlines.
+    """
+
+    if not spacegroup_symbol:
+        return ""
+
+    subscript_unicode_map = {
+        0: "₀",
+        1: "₁",
+        2: "₂",
+        3: "₃",
+        4: "₄",
+        5: "₅",
+        6: "₆",
+        7: "₇",
+        8: "₈",
+        9: "₉",
+    }
+
+    symbol = latexify_spacegroup(spacegroup_symbol)
+
+    for number, unicode_number in subscript_unicode_map.items():
+        symbol = symbol.replace("$_{" + str(number) + "}$", unicode_number)
+        symbol = symbol.replace("_" + str(number), unicode_number)
+
+    overline = "\u0305"  # u"\u0304" (macron) is also an option
+
+    symbol = symbol.replace("$\\overline{", overline)
+    symbol = symbol.replace("$", "")
+    symbol = symbol.replace("{", "")
+    symbol = symbol.replace("}", "")
+
+    return symbol

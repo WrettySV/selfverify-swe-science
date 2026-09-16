@@ -1,0 +1,1178 @@
+workdir: /app/task_008
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-008:v0.1.2
+code_files_total: 25
+## directories (file counts)
+source/desc/stability/terpsichore: 16
+.: 3
+source/tests: 2
+paper_assets: 1
+source: 1
+source/desc: 1
+source/desc/stability: 1
+## terms_from_instruction
+strong: VACMET, ivac, omega2, pre_fix_expected_failure, reproduction_report, reproduction_report.json, runner_failure, workflow_completed
+common: region, vacuum, external, energy, reduced, plasma, geometry, capability, internal, conducting, metric, outer, interval, explicit, stability, first, analysis, snapshot, pseudo, operator, level, chain, sensitive, native, context
+## import_reach_from_reproduce.py (path, depth)
+source/desc/stability/terpsichore/demo_case.py  (depth 1)
+source/desc/stability/terpsichore/external_region.py  (depth 1)
+source/desc/stability/terpsichore/assembly.py  (depth 2)
+source/desc/stability/terpsichore/energy.py  (depth 2)
+source/desc/stability/terpsichore/equilibrium.py  (depth 2)
+source/desc/stability/terpsichore/modes.py  (depth 2)
+source/desc/stability/terpsichore/outer_region.py  (depth 2)
+source/desc/stability/terpsichore/radial.py  (depth 2)
+source/desc/stability/terpsichore/trig.py  (depth 2)
+source/desc/stability/terpsichore/vacuum.py  (depth 2)
+source/desc/stability/terpsichore/blocks.py  (depth 3)
+source/desc/stability/terpsichore/coefficients.py  (depth 3)
+source/desc/stability/terpsichore/geometry.py  (depth 3)
+source/desc/stability/terpsichore/result.py  (depth 3)
+## ranked_source_paths (score, path, matched_terms)
+  17.0  source/desc/stability/terpsichore/assembly.py  ['ivac']
+  16.5  source/desc/stability/terpsichore/demo_case.py  ['ivac']
+  16.0  source/desc/stability/terpsichore/external_region.py  []
+  15.5  source/desc/stability/terpsichore/vacuum.py  ['VACMET', 'ivac']
+  14.5  source/desc/stability/terpsichore/energy.py  ['omega2']
+  12.0  source/desc/stability/terpsichore/radial.py  ['ivac']
+  11.5  source/desc/stability/terpsichore/equilibrium.py  ['ivac']
+  10.5  source/desc/stability/terpsichore/coefficients.py  []
+  10.0  source/README.md  []
+   8.5  source/desc/stability/terpsichore/outer_region.py  []
+   8.0  source/desc/stability/terpsichore/modes.py  []
+   8.0  source/desc/stability/terpsichore/options.py  ['ivac']
+   8.0  source/desc/stability/terpsichore/result.py  ['omega2']
+   7.5  source/desc/stability/terpsichore/trig.py  []
+   5.0  source/desc/stability/terpsichore/geometry.py  []
+   4.5  source/desc/stability/terpsichore/blocks.py  []
+   1.0  source/tests/test_vacuum_smoke.py  ['ivac']
+   0.9  source/desc/stability/__init__.py  []
+   0.9  source/desc/stability/terpsichore/__init__.py  []
+   0.6  source/desc/__init__.py  []
+   0.5  paper_assets/README.md  []
+   0.0  source/tests/conftest.py  []
+## snippets
+### reproduce.py
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+
+ROOT = Path(__file__).resolve().parent
+SOURCE = ROOT / "source"
+OUTPUTS = ROOT / "outputs"
+EXIT_CODES = {
+    "workflow_completed": 0,
+    "post_fix_success": 0,
+    "pre_fix_expected_failure": 1,
+    "runner_failure": 2,
+}
+
+
+def add_source_root() -> None:
+    path = str(SOURCE)
+    if path not in sys.path:
+        sys.path.insert(0, path)
+
+
+def stability_observations(payload: dict) -> np.ndarray:
+    result = payload["result"]
+    return np.asarray(
+        [result.wp, result.omega2, result.growth_rate],
+        dtype=float,
+    )
+
+
+def summarize_stability(payload: dict) -> dict[str, float]:
+    result = payload["result"]
+    return {
+        "potential_energy": float(result.wp),
+        "kinetic_energy": float(result.wk),
+        "omega2": float(result.omega2),
+        "growth_rate": float(result.growth_rate),
+    }
+
+
+def absolute_difference(left: np.ndarray, right: np.ndarray) -> dict[str, float]:
+    difference = np.abs(left - right)
+    return {
+        "potential_energy": float(difference[0]),
+        "omega2": float(difference[1]),
+        "growth_rate": float(difference[2]),
+    }
+
+
+def within_machine_resolution(left: np.ndarray, right: np.ndarray) -> bool:
+    left = np.asarray(left, dtype=float)
+    right = np.asarray(right, dtype=float)
+    if left.shape != right.shape or not np.all(
+        np.isfinite(np.concatenate([left, right]))
+    ):
+        return False
+    resolution = np.maximum(np.spacing(np.abs(left)), np.spacing(np.abs(right)))
+    return bool(np.all(np.abs(left - right) <= resolution))
+
+
+def run_workflow() -> dict[str, object]:
+    add_source_root()
+    from desc.stability.terpsichore.demo_case import (
+        build_demo_case,
+        build_wall_variants,
+    )
+    from desc.stability.terpsichore.external_region import build_external_region_payload
+
+    case = build_demo_case()
+    eq_data = case["equilibrium_data"]
+    mode_table = case["mode_table"]
+    trig_table = case["trig_table"]
+    xi = case["xi"]
+    eta = case["eta"]
+    wall_a, wall_b = build_wall_variants(eq_data, wall_scale=1.3, nowall=1)
+
+    report_a = build_external_region_payload(
+        eq_data,
+        mode_table=mode_table,
+        trig_table=trig_table,
+        xi=xi,
+        eta=eta,
+        wall=wall_a,
+        wall_scale=1.3,
+        nowall=1,
+    )
+    report_b = build_external_region_payload(
+        eq_data,
+        mode_table=mode_table,
+        trig_table=trig_table,
+        xi=xi,
+        eta=eta,
+        wall=wall_b,
+        wall_scale=1.3,
+        nowall=1,
+    )
+    scaled_report = build_external_region_payload(
+        eq_data,
+        mode_table=mode_table,
+        trig_table=trig_table,
+        xi=xi,
+        eta=eta,
+        wall=None,
+        wall_scale=1.3,
+        nowall=-1,
+    )
+
+    observations_a = stability_observations(report_a)
+    observations_b = stability_observations(report_b)
+    scaled_observations = stability_observations(scaled_report)
+    all_observations = np.concatenate(
+        [
+            np.asarray(list(summarize_stability(report_a).values()), dtype=float),
+            np.asarray(list(summarize_stability(report_b).values()), dtype=float),
+            np.asarray(list(summarize_stability(scaled_report).values()), dtype=float),
+        ]
+    )
+    outputs_are_finite = bool(np.all(np.isfinite(all_observations)))
+    top_level_wall_response_collapsed = within_machine_resolution(
+        observations_a, observations_b
+    )
+    status = (
+        "workflow_completed"
+        if outputs_are_finite and not top_level_wall_response_collapsed
+        else "pre_fix_expected_failure"
+    )
+
+    report = {
+        "workflow": "reduced TERPSICHORE-native first vacuum-plus-wall capability comparison",
+        "scientific_expectation": (
+            "Materially different conducting walls should produce finite, distinct "
+            "global potential-energy and stability observations, while the scaled "
+            "no-explicit-wall fallback remains runnable."
+        ),
+        "wall_a": summarize_stability(report_a),
+        "wall_b": summarize_stability(report_b),
+        "scaled_fallback": summarize_stability(scaled_report),
+        "wall_a_vs_wall_b_absolute_difference": absolute_difference(
+            observations_a, observations_b
+        ),
+        "wall_a_vs_scaled_fallback_absolute_difference": absolute_difference(
+            observations_a, scaled_observations
+        ),
+        "outputs_are_finite": outputs_are_finite,
+        "top_level_wall_response_collapsed_within_machine_resolution": (
+            top_level_wall_response_collapsed
+        ),
+        "status": status,
+    }
+    if not outputs_are_finite:
+        report["failure_kind"] = "non_finite_top_level_observation"
+    elif top_level_wall_response_collapsed:
+        report["failure_kind"] = "top_level_wall_response_collapsed"
+    return report
+
+
+def emit_report(report: dict[str, object]) -> None:
+    payload = json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    OUTPUTS.mkdir(exist_ok=True)
+    (OUTPUTS / "reproduction_report.json").write_text(payload, encoding="utf-8")
+    print(payload, end="")
+
+
+def main() -> int:
+    try:
+        report = run_workflow()
+    except Exception as exc:
+        report = {
+            "workflow": "reduced TERPSICHORE-native first vacuum-plus-wall capability comparison",
+            "status": "runner_failure",
+            "error_type": type(exc).__name__,
+            "error": str(exc),
+        }
+
+    emit_report(report)
+    return EXIT_CODES[report["status"]]
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+### reproduction.md
+Run the public reproduction from the task root:
+
+```bash
+python reproduce.py
+```
+
+The script builds one reduced vacuum-plus-wall external-region case, compares
+two materially different explicit conducting walls, and writes
+`outputs/reproduction_report.json`.
+
+Before the task is solved, the report shows that the external-region coupling
+remains too incomplete: all three named top-level wall observations - total
+potential energy, normalized `omega2`, and growth rate - collapse to the same
+values for two materially different explicit walls.
+
+The public diagnostic reports `pre_fix_expected_failure` only when those named
+observations all collapse exactly or within one floating-point representable
+step, or when a top-level observation is non-finite. Otherwise it reports
+`workflow_completed`; private tests remain authoritative for the full geometry,
+outer-region blocks, interval energy, and stability chain. Import and execution
+exceptions are reported as `runner_failure`. Every report is strict JSON.
+### paper.md
+# Method Context: First Vacuum-Plus-Wall External-Region Capability
+
+This task does not use a single journal paper. Instead, it provides condensed
+method context extracted from the TERPSICHORE to DESC native migration work
+used to author the benchmark.
+
+## Scientific setting
+
+The relevant transition is:
+
+- from plasma-only internal stability analysis;
+- to plasma plus vacuum-region analysis;
+- and then to plasma plus vacuum plus conducting-wall analysis.
+
+Task 008 is about the first stable step in that transition: moving from a
+reduced internal-only setting to a vacuum-plus-wall external-region setting.
+Once a conducting wall is part of the problem, the native code must not only
+carry more geometry. It must represent a different external region.
+
+## Key ideas
+
+1. The vacuum region is modeled as a pressureless, shearless pseudo-plasma.
+2. The vacuum region uses extra pseudo-flux surfaces `ivac`.
+3. The plasma-vacuum interface must remain geometrically consistent.
+4. The wall enters the external-region geometry rather than acting as a
+   cosmetic flag.
+5. Wall geometry changes the vacuum metric reconstruction.
+6. The vacuum metric feeds an outer-region operator path.
+7. That operator path must influence reduced response assembly and therefore the
+   interval-level energy accounting.
+
+## Reduced outer-region chain
+
+For this reduced benchmark slice, the outer-region capability can be thought of
+as three consecutive translations:
+
+1. `VACMET`-style geometry reconstruction produces wall-sensitive metric fields
+   on the pseudo-vacuum intervals.
+2. Those metric fields are projected into reduced modal families that carry
+   the wall-sensitive Fourier content of the vacuum region.
+3. The reduced families are then assembled into outer-shell interval matrices
+   that feed the same global energy reduction used by the internal plasma
+   path.
+
+The important benchmark point is that changing the wall should not stop at step
+1. It must propagate through all three translations and survive into the final
+interval-energy accounting.
+
+## Structural cues in the source
+
+The public source snapshot intentionally retains the plasma-side analogs for
+the same kinds of operations:
+
+- modal lookup and sum/difference indexing in the coefficient path;
+- block-level potential assembly in the plasma path;
+- final global energy reduction from interval blocks.
+
+The missing outer-region capability is therefore not "invent a brand new
+solver." It is "rebuild the external-region translation path so wall-sensitive
+geometry actually reaches the operator and energy layers."
+
+## Why this matters
+
+If adding a vacuum region plus wall still leaves the code behaving like the
+internal-only scaffold, then the external-region capability has not actually
+been established. The physical issue is not just one geometry array. It is the
+missing propagation from wall-coupled external geometry into the vacuum-side
+metric, operator, and energy chain.
+
+## What the source snapshot contains
+
+The reduced snapshot keeps a real package shape for:
+
+- radial grids and mode tables;
+- equilibrium-to-boundary adaptation;
+- VACMET-style pseudo-vacuum metric construction;
+- vacuum coefficient mapping;
+- plasma/vacuum block assembly;
+- interval-energy reduction.
+
+The task is to restore the first wall-sensitive external-region capability in
+that chain without hard-coding one reproduction case.
+## outlines_of_top_modules
+### source/desc/stability/terpsichore/assembly.py
+L12: def assemble_potential_blocks(equilibrium_data, mode_table, radial_grid, options)
+L64: def _get_coefficients(equilibrium_data)
+L71: def _profile_value(values, interval)
+L80: def _validate_coefficient_arrays(arrays, expected)
+L86: def assemble_potential_blocks_from_coefficients(*, c0, c1, c2, c4, c5, c6, c9, ftp, fpp, ftpp, fppp, ci, cj, radial_grid, mode_table, fixed_boundary=True, igreen=0)
+L265: def _assemble_outer_shell_potential_blocks_from_modal_terms(*, c1, c2, c3, c4, c5, c6, ftp_edge, fpp_edge, radial_grid, mode_table)
+L354: def _zero_outer_shell_kinetic_blocks(radial_grid, mode_table)
+L372: def assemble_kinetic_blocks(equilibrium_data, mode_table, radial_grid, options)
+L399: def assemble_kinetic_blocks_from_coefficients(*, c8, c10, c11, radial_grid, mode_table, fixed_boundary=True, igreen=0, zero_outer_bb=True)
+L480: def _interval_block(block, interval_index)
+L491: def _add_quadratic(matrix, left, right, coeff)
+L497: def variable_slices(lmns, n_intervals)
+L506: def assemble_potential_matrix(potential_blocks, radial_grid, mode_table)
+L536: def assemble_kinetic_matrix(kinetic_blocks, radial_grid, mode_table)
+L560: def assemble_global_matrices(potential_blocks, kinetic_blocks, radial_grid, mode_table)
+L569: def concatenate_potential_blocks(plasma_blocks, vacuum_blocks)
+L584: def concatenate_kinetic_blocks(plasma_blocks, vacuum_blocks)
+#### source/desc/stability/terpsichore/assembly.py::_assemble_outer_shell_potential_blocks_from_modal_terms (L265)
+def _assemble_outer_shell_potential_blocks_from_modal_terms(
+    *, c1, c2, c3, c4, c5, c6, ftp_edge, fpp_edge, radial_grid, mode_table
+):
+    """Assemble reduced outer-shell potential blocks from modal coefficient terms."""
+
+    arrays = {
+        "c1": np.asarray(c1, dtype=float),
+        "c2": np.asarray(c2, dtype=float),
+        "c3": np.asarray(c3, dtype=float),
+        "c4": np.asarray(c4, dtype=float),
+        "c5": np.asarray(c5, dtype=float),
+        "c6": np.asarray(c6, dtype=float),
+    }
+    lmns = mode_table.size
+    ivac = radial_grid.ivac
+    expected = (lmns, lmns, ivac)
+    _validate_coefficient_arrays(arrays, expected)
+    shape = expected
+    A = np.zeros(shape)
+    B = np.zeros(shape)
+    C = np.zeros(shape)
+    D = np.zeros(shape)
+    E = np.zeros(shape)
+    F = np.zeros(shape)
+    G = np.zeros(shape)
+    H = np.zeros(shape)
+    BL = np.zeros(shape)
+    BU = np.zeros(shape)
+    ms = np.asarray(mode_table.m, dtype=float)
+    ns = np.asarray(mode_table.n, dtype=float)
+    ftp_edge = float(ftp_edge)
+    fpp_edge = float(fpp_edge)
+    fppfpp = fpp_edge * fpp_edge
+    ftpfpp = 2.0 * ftp_edge * fpp_edge
+    ftpftp = ftp_edge * ftp_edge
+    upper_rows, upper_cols = np.triu_indices(lmns)
+    ms_lc = ms[upper_rows]
+    ms_lr = ms[upper_cols]
+    ns_lc = ns[upper_rows]
+    ns_lr = ns[upper_cols]
+    pmn_u = ms_lc * fpp_edge - ns_lc * ftp_edge
+    rmn_u = ms_lr * fpp_edge - ns_lr * ftp_edge
+    for vac_interval in range(ivac):
+        global_interval = radial_grid.ni + vac_interval
+        ds = radial_grid.ds[global_interval]
+        dsvar = radial_grid.ni * ds
+        tdsvac = 2.0 / ds
+        tdsvsq = tdsvac * tdsvac
+        c1_u = arrays["c1"][upper_rows, upper_cols, vac_interval]
+        c2_u = arrays["c2"][upper_rows, upper_cols, vac_interval]
+        c3_u = arrays["c3"][upper_rows, upper_cols, vac_interval]
+        c4_u = arrays["c4"][upper_rows, upper_cols, vac_interval]
+        c5_u = arrays["c5"][upper_rows, upper_cols, vac_interval]
+        c6_u = arrays["c6"][upper_rows, upper_cols, vac_interval]
+        c4_t_u = arrays["c4"][upper_cols, upper_rows, vac_interval]
+        c5_t_u = arrays["c5"][upper_cols, upper_rows, vac_interval]
+        del dsvar, tdsvac, tdsvsq, c1_u, c2_u, c3_u, c4_u, c5_u, c6_u, c4_t_u, c5_t_u
+        if vac_interval == ivac - 1:
+            C[:, :, vac_interval] = 0.0
+            G[:, :, vac_interval] = 0.0
+            BL[:, :, vac_interval] = 0.0
+            B[:, :, vac_interval] = 0.0
+            H[:, :, vac_int
+#### source/desc/stability/terpsichore/assembly.py::_zero_outer_shell_kinetic_blocks (L354)
+def _zero_outer_shell_kinetic_blocks(radial_grid, mode_table):
+    """Assemble reduced outer-shell kinetic blocks, which remain zero here."""
+
+    shape = (mode_table.size, mode_table.size, radial_grid.ivac)
+    zeros = np.zeros(shape)
+    return TerpsichoreKineticBlocks(
+        BA=zeros.copy(),
+        BB=zeros.copy(),
+        BC=zeros.copy(),
+        BD=zeros.copy(),
+        BE=zeros.copy(),
+        BF=zeros.copy(),
+        BG=zeros.copy(),
+        BH=zeros.copy(),
+        BBl=zeros.copy(),
+        BBu=zeros.copy(),
+    )
+#### source/desc/stability/terpsichore/assembly.py::_interval_block (L480)
+def _interval_block(block, interval_index):
+    arr = np.asarray(block, dtype=float)
+    if arr.ndim != 3:
+        raise ValueError("TERPSICHORE blocks must be rank-3 arrays.")
+    if arr.shape[2] == 0:
+        raise ValueError("TERPSICHORE blocks must contain at least one interval.")
+    if arr.shape[2] == interval_index + 1:
+        return arr[:, :, interval_index]
+    return arr[:, :, interval_index]
+### source/desc/stability/terpsichore/demo_case.py
+L15: def _stack(base, scales)
+L19: def _plasma_coefficients(mode_table, radial_grid)
+L60: def build_demo_case()
+L123: def build_wall_variants(equilibrium_data, *, wall_scale=1.3, nowall=1)
+#### source/desc/stability/terpsichore/demo_case.py::_plasma_coefficients (L19)
+def _plasma_coefficients(mode_table, radial_grid):
+    lmns = mode_table.size
+    ni = radial_grid.ni
+    base = np.array([[1.2, 0.3], [0.3, 1.1]], dtype=float)
+    alt = np.array([[0.4, -0.1], [0.2, 0.35]], dtype=float)
+    c0 = _stack(base + 0.10 * alt, (1.00, 1.05, 1.10))
+    c1 = _stack(base + 0.15 * alt, (0.50, 0.55, 0.60))
+    c2 = _stack(base - 0.08 * alt, (0.35, 0.38, 0.42))
+    c4 = _stack(base + 0.05 * alt, (0.28, 0.32, 0.36))
+    c5 = _stack(base - 0.03 * alt, (0.22, 0.25, 0.29))
+    c6 = _stack(base + 0.07 * alt, (0.26, 0.30, 0.34))
+    c9 = _stack(base + 0.12 * alt, (0.80, 0.84, 0.88))
+    c8 = _stack(base + 0.06 * alt, (0.40, 0.43, 0.46))
+    c10 = _stack(base + 0.04 * alt, (0.24, 0.28, 0.31))
+    c11 = _stack(base - 0.02 * alt, (0.18, 0.21, 0.24))
+    profiles = {
+        "ftp": np.array([1.40, 1.48, 1.57]),
+        "fpp": np.array([1.10, 1.18, 1.24]),
+        "ftpp": np.array([0.18, 0.22, 0.26]),
+        "fppp": np.array([0.12, 0.15, 0.18]),
+        "ci": np.array([0.84, 0.90, 0.97]),
+        "cj": np.array([1.22, 1.27, 1.33]),
+    }
+    assert c0.shape == (lmns, lmns, ni)
+    return {
+        "c0": c0,
+        "c1": c1,
+        "c2": c2,
+        "c4": c4,
+        "c5": c5,
+        "c6": c6,
+        "c9": c9,
+        "c8": c8,
+        "c10": c10,
+        "c11": c11,
+        **profiles,
+        "fixed_boundary": False,
+        "igreen": 0,
+    }
+### source/desc/stability/terpsichore/external_region.py
+L23: def _plasma_grid(radial_grid)
+L27: def _legacy_coefficients(coefficients)
+L33: def _build_vacuum_extension(*, equilibrium_data, mode_table, trig_table, radial_grid, vacuum_grid_data)
+L64: def build_external_region_payload(equilibrium_data, *, mode_table, trig_table, xi, eta, wall=None, wall_scale: float=1.0, nowall: int=1)
+#### source/desc/stability/terpsichore/external_region.py::_plasma_grid (L23)
+def _plasma_grid(radial_grid):
+    return radial_grid.plasma_view() if hasattr(radial_grid, "plasma_view") else radial_grid
+#### source/desc/stability/terpsichore/external_region.py::_build_vacuum_extension (L33)
+def _build_vacuum_extension(
+    *,
+    equilibrium_data,
+    mode_table,
+    trig_table,
+    radial_grid,
+    vacuum_grid_data,
+):
+    metric_payload = build_outer_region_metric_payload(
+        equilibrium_data=equilibrium_data,
+        vacuum_grid_data=vacuum_grid_data,
+    )
+    operator_payload = build_outer_region_operator_payload(
+        metric_payload=metric_payload,
+        mode_table=mode_table,
+        trig_table=trig_table,
+        radial_grid=radial_grid,
+    )
+    response_payload = assemble_outer_region_response_payload(
+        metric_payload=metric_payload,
+        operator_payload=operator_payload,
+        mode_table=mode_table,
+        radial_grid=radial_grid,
+    )
+    return (
+        response_payload.coefficients,
+        response_payload.potential_blocks,
+        response_payload.kinetic_blocks,
+    )
+#### source/desc/stability/terpsichore/external_region.py::build_external_region_payload (L64)
+def build_external_region_payload(
+    equilibrium_data,
+    *,
+    mode_table,
+    trig_table,
+    xi,
+    eta,
+    wall=None,
+    wall_scale: float = 1.0,
+    nowall: int = 1,
+):
+    radial_grid = equilibrium_data.radial_grid
+    plasma_grid = _plasma_grid(radial_grid)
+    plasma_coefficients = _legacy_coefficients(
+        equilibrium_data.data["terpsichore_coefficients"]
+    )
+    plasma_potential = assemble_potential_blocks_from_coefficients(
+        c0=plasma_coefficients["c0"],
+        c1=plasma_coefficients["c1"],
+        c2=plasma_coefficients["c2"],
+        c4=plasma_coefficients["c4"],
+        c5=plasma_coefficients["c5"],
+        c6=plasma_coefficients["c6"],
+        c9=plasma_coefficients["c9"],
+        ftp=plasma_coefficients["ftp"],
+        fpp=plasma_coefficients["fpp"],
+        ftpp=plasma_coefficients["ftpp"],
+        fppp=plasma_coefficients["fppp"],
+        ci=plasma_coefficients["ci"],
+        cj=plasma_coefficients["cj"],
+        radial_grid=plasma_grid,
+        mode_table=mode_table,
+        fixed_boundary=False,
+        igreen=plasma_coefficients.get("igreen", 0),
+    )
+    plasma_kinetic = assemble_kinetic_blocks_from_coefficients(
+        c8=plasma_coefficients["c8"],
+        c10=plasma_coefficients["c10"],
+        c11=plasma_coefficients["c11"],
+        radial_grid=plasma_grid,
+        mode_table=mode_table,
+        fixed_boundary=False,
+        igreen=plasma_coefficients.get("igreen", 0),
+        zero_outer_bb=False,
+    )
+    inputs = vacmet_inputs_from_equilibrium_data(
+        equilibrium_data,
+        wall=wall,
+        wall_scale=wall_scale,
+        nowall=nowall,
+    )
+    vacmet = compute_vacmet_metrics(**inputs)
+    vacuum_grid_data = vacmet.as_vacuum_grid_data()
+    _vacuum_coefficients, vacuum_potential, vacuum_kinetic = _build_vacuum_extension(
+        equilibrium_data=equilibrium_data,
+        mode_table=mode_table,
+        trig_table=trig_table,
+        radial_grid=radial_grid,
+        vacuum_grid_data=vacuum_grid_data,
+    )
+    potential_blocks = concatenate_potential_blocks(plasma_potential, vacuum_potential)
+    kinetic_blocks = concatenate_kinetic_blocks(plasma_kinetic, vacuum_kinetic)
+    wp_by_interval, wk_by_interval = compute_block_energy_contributions(
+        xi, eta, potential_blocks, kinetic_blocks, radial_grid
+    )
+    result = compute_energy_from_blocks(
+        xi,
+        eta,
+        potential_blocks,
+        kinetic_blocks,
+        radial_grid,
+        mode_table,
+        diagnostics={
+          
+### source/desc/stability/terpsichore/vacuum.py
+L13: class TerpsichoreVacmetData
+  L24: def as_vacuum_grid_data(self)
+L36: def _as_vector(values, name: str, size: int)
+L43: def _as_nodes(values, name: str, min_size: int)
+L50: def compute_vacmet_metrics(*, s_nodes, ni, ivac, dsvac, pvac, qvac, nowall, rpvi, vpvi, zpvi, rtpvi, vtpvi, ztpvi, rppvi, vppvi, zppvi, rspvi, vspvi, zspvi, rstpvi, vstpvi, zstpvi, rsppvi, vsppvi, zsppvi, rwall, zwall, rtwall, ztwall, rpwall, zpwall, tor=None)
+L237: def vacmet_boundary_from_geometry(geometry, *, radial_index: int=-1)
+L288: def build_vacmet_inputs(*, s_nodes, ni, ivac, dsvac, pvac, qvac, nowall, boundary, wall=None, wall_scale: float=1.0, tor=None)
+L344: def vacuum_grid_data_from_vacmet_inputs(vacmet_inputs)
+#### source/desc/stability/terpsichore/vacuum.py::TerpsichoreVacmetData.as_vacuum_grid_data (L24)
+    def as_vacuum_grid_data(self):
+        return {
+            "bjac": self.bjac,
+            "gppl": self.gppl,
+            "gtpl": self.gtpl,
+            "gttl": self.gttl,
+            "gssu": self.gssu,
+            "gstl": self.gstl,
+            "gssl": self.gssl,
+        }
+#### source/desc/stability/terpsichore/vacuum.py::compute_vacmet_metrics (L50)
+def compute_vacmet_metrics(
+    *,
+    s_nodes,
+    ni,
+    ivac,
+    dsvac,
+    pvac,
+    qvac,
+    nowall,
+    rpvi,
+    vpvi,
+    zpvi,
+    rtpvi,
+    vtpvi,
+    ztpvi,
+    rppvi,
+    vppvi,
+    zppvi,
+    rspvi,
+    vspvi,
+    zspvi,
+    rstpvi,
+    vstpvi,
+    zstpvi,
+    rsppvi,
+    vsppvi,
+    zsppvi,
+    rwall,
+    zwall,
+    rtwall,
+    ztwall,
+    rpwall,
+    zpwall,
+    tor=None,
+):
+    if ivac < 0:
+        raise ValueError("ivac must be non-negative.")
+    s_nodes = _as_nodes(s_nodes, "s_nodes", ni + ivac + 1)
+    if ivac == 0:
+        empty = np.zeros((0, 0))
+        return TerpsichoreVacmetData(
+            bjac=empty,
+            gppl=empty,
+            gtpl=empty,
+            gttl=empty,
+            gssu=empty,
+            gstl=empty,
+            gssl=empty,
+            rvac=empty,
+            vp=np.zeros(0),
+        )
+    if dsvac == 0:
+        raise ValueError("dsvac must be non-zero when ivac > 0.")
+
+    base = np.asarray(rpvi, dtype=float)
+    if base.ndim != 1:
+        raise ValueError("VACMET geometry arrays must be one-dimensional.")
+    njk = base.size
+    names = {
+        "rpvi": rpvi,
+        "vpvi": vpvi,
+        "zpvi": zpvi,
+        "rtpvi": rtpvi,
+        "vtpvi": vtpvi,
+        "ztpvi": ztpvi,
+        "rppvi": rppvi,
+        "vppvi": vppvi,
+        "zppvi": zppvi,
+        "rspvi": rspvi,
+        "vspvi": vspvi,
+        "zspvi": zspvi,
+        "rstpvi": rstpvi,
+        "vstpvi": vstpvi,
+        "zstpvi": zstpvi,
+        "rsppvi": rsppvi,
+        "vsppvi": vsppvi,
+        "zsppvi": zsppvi,
+        "rwall": rwall,
+        "zwall": zwall,
+        "rtwall": rtwall,
+        "ztwall": ztwall,
+        "rpwall": rpwall,
+        "zpwall": zpwall,
+    }
+    arrays = {name: _as_vector(value, name, njk) for name, value in names.items()}
+    tor_arr = np.zeros(njk) if tor is None else _as_vector(tor, "tor", njk)
+
+    bjac = np.zeros((njk, ivac))
+    gppl = np.zeros_like(bjac)
+    gtpl = np.zeros_like(bjac)
+    gttl = np.zeros_like(bjac)
+    gssu = np.zeros_like(bjac)
+    gstl = np.zeros_like(bjac)
+    gssl = np.zeros_like(bjac)
+    rvac = np.zeros_like(bjac)
+    vp = np.zeros(ivac)
+    nwalt = abs(nowall)
+    wall_phase = tor_arr if nowall >= 0 else arrays["vpvi"]
+    vpwall = np.ones(njk) if nowall >= 0 else arrays["vppvi"]
+    vtwall = np.zeros(njk) if nowall >= 0 else arrays["vtpvi"]
+
+    for interval in range(ivac):
+        svach = 0.5 * (s_nodes[ni + interval + 1] + s_nodes[ni + interval])
+        svac0 = svach - 1.0
+        ratio = 
+#### source/desc/stability/terpsichore/vacuum.py::vacmet_boundary_from_geometry (L237)
+def vacmet_boundary_from_geometry(geometry, *, radial_index: int = -1):
+    def get(*names, default=None):
+        for name in names:
+            if name in geometry and geometry[name] is not None:
+                return geometry[name]
+        if default is not None:
+            return default
+        raise KeyError(f"Missing geometry field; tried {names}.")
+
+    def boundary(value, name: str):
+        arr = np.asarray(value, dtype=float)
+        if arr.ndim == 1:
+            return arr
+        if arr.ndim == 2:
+            return arr[:, radial_index]
+        raise ValueError(f"{name} must be rank-1 boundary data or rank-2 point/radial data.")
+
+    rpvi = boundary(get("R"), "R")
+    zeros = np.zeros_like(rpvi)
+    out = {
+        "rpvi": rpvi,
+        "vpvi": boundary(get("phi", "V"), "phi"),
+        "zpvi": boundary(get("Z"), "Z"),
+        "rtpvi": boundary(get("Rt", "R_theta"), "Rt"),
+        "vtpvi": boundary(get("phit", "Vt", "phi_theta"), "phit"),
+        "ztpvi": boundary(get("Zt", "Z_theta"), "Zt"),
+        "rppvi": boundary(get("Rp", "R_zeta"), "Rp"),
+        "vppvi": boundary(get("phip", "Vp", "phi_zeta"), "phip"),
+        "zppvi": boundary(get("Zp", "Z_zeta"), "Zp"),
+        "rspvi": boundary(get("Rs", "R_s"), "Rs"),
+        "vspvi": boundary(get("phis", "Vs", "phi_s"), "phis"),
+        "zspvi": boundary(get("Zs", "Z_s"), "Zs"),
+        "rstpvi": boundary(get("Rst", "R_st", "R_s_theta", default=zeros), "Rst"),
+        "vstpvi": boundary(
+            get("phist", "Vst", "phi_st", "phi_s_theta", default=zeros),
+            "phist",
+        ),
+        "zstpvi": boundary(get("Zst", "Z_st", "Z_s_theta", default=zeros), "Zst"),
+        "rsppvi": boundary(get("Rsp", "R_sp", "R_s_zeta", default=zeros), "Rsp"),
+        "vsppvi": boundary(
+            get("phisp", "Vsp", "phi_sp", "phi_s_zeta", default=zeros),
+            "phisp",
+        ),
+        "zsppvi": boundary(get("Zsp", "Z_sp", "Z_s_zeta", default=zeros), "Zsp"),
+    }
+    for name, value in out.items():
+        if value.shape != rpvi.shape:
+            raise ValueError(f"{name} must have shape {rpvi.shape}, got {value.shape}.")
+    return out
+#### source/desc/stability/terpsichore/vacuum.py::build_vacmet_inputs (L288)
+def build_vacmet_inputs(
+    *,
+    s_nodes,
+    ni,
+    ivac,
+    dsvac,
+    pvac,
+    qvac,
+    nowall,
+    boundary,
+    wall=None,
+    wall_scale: float = 1.0,
+    tor=None,
+):
+    """Build VACMET inputs from boundary and wall arrays."""
+
+    if wall_scale <= 0:
+        raise ValueError("wall_scale must be positive.")
+    boundary_arrays = {name: np.asarray(boundary[name], dtype=float) for name in _VACMET_GEOMETRY_NAMES}
+    njk = boundary_arrays["rpvi"].shape
+    if len(njk) != 1:
+        raise ValueError("VACMET boundary arrays must be one-dimensional.")
+    for name, value in boundary_arrays.items():
+        if value.shape != njk:
+            raise ValueError(f"{name} must have shape {njk}, got {value.shape}.")
+    tor_arr = np.zeros(njk[0]) if tor is None else _as_vector(tor, "tor", njk[0])
+
+    if wall is None:
+        wall_arrays = {
+            "rwall": wall_scale * boundary_arrays["rpvi"],
+            "zwall": boundary_arrays["zpvi"].copy(),
+            "rtwall": wall_scale * boundary_arrays["rtpvi"],
+            "ztwall": boundary_arrays["ztpvi"].copy(),
+            "rpwall": wall_scale * boundary_arrays["rppvi"],
+            "zpwall": boundary_arrays["zppvi"].copy(),
+        }
+    else:
+        wall_arrays = {
+            name: _as_vector(wall[name], name, njk[0])
+            for name in ("rwall", "zwall", "rtwall", "ztwall", "rpwall", "zpwall")
+        }
+
+    return {
+        "s_nodes": np.asarray(s_nodes, dtype=float),
+        "ni": int(ni),
+        "ivac": int(ivac),
+        "dsvac": float(dsvac),
+        "pvac": float(pvac),
+        "qvac": float(qvac),
+        "nowall": int(nowall),
+        **boundary_arrays,
+        **wall_arrays,
+        "tor": tor_arr,
+    }
+### source/desc/stability/terpsichore/energy.py
+L15: def compute_growth_rate(omega2, walf=1.0)
+L26: def compute_energy(wp, wk, *, walf=1.0, **kwargs)
+L41: def split_global_vector(vector, radial_grid, mode_table)
+L56: def _quad(left, block, right)
+L60: def compute_block_energy_contributions(xi, eta, potential_blocks, kinetic_blocks, radial_grid)
+L124: def compute_block_quadratic_energy(xi, eta, potential_blocks, kinetic_blocks, radial_grid)
+L138: def compute_fortran_energy_oracle_arrays(xi, eta, potential_blocks, kinetic_blocks, radial_grid)
+L159: def compute_energy_from_blocks(xi, eta, potential_blocks, kinetic_blocks, radial_grid, mode_table, *, walf=1.0, diagnostics=None)
+L187: def compute_energy_from_vector(vector, potential_blocks, kinetic_blocks, radial_grid, mode_table, *, walf=1.0, diagnostics=None)
+#### source/desc/stability/terpsichore/energy.py::compute_energy (L26)
+def compute_energy(wp, wk, *, walf=1.0, **kwargs):
+    """Create a stability result from potential and kinetic energies."""
+
+    if wk == 0:
+        raise ValueError("wk must be non-zero.")
+    omega2 = wp / wk
+    return TerpsichoreStabilityResult(
+        growth_rate=compute_growth_rate(omega2, walf=walf),
+        omega2=omega2,
+        wp=wp,
+        wk=wk,
+        **kwargs,
+    )
+#### source/desc/stability/terpsichore/energy.py::compute_block_energy_contributions (L60)
+def compute_block_energy_contributions(xi, eta, potential_blocks, kinetic_blocks, radial_grid):
+    """Return per-interval ``WP`` and ``WK`` contributions using Fortran semantics.
+
+    Fortran ``ENERGY`` only fills/uses the upper triangle for each interval and
+    then doubles off-diagonal contributions. This implementation keeps that
+    exact reduction but performs each interval as vectorized NumPy operations
+    instead of Python ``lmns**2`` loops.
+    """
+
+    xi = np.asarray(xi, dtype=float)
+    eta = np.asarray(eta, dtype=float)
+    n_intervals = radial_grid.n_intervals
+    if xi.shape[1] != n_intervals + 1:
+        raise ValueError("xi must have one more radial node than intervals.")
+    if eta.shape[1] != n_intervals:
+        raise ValueError("eta must have one radial value per interval.")
+    lmns = xi.shape[0]
+    wp_by_interval = np.zeros(n_intervals)
+    wk_by_interval = np.zeros(n_intervals)
+    upper_mask = np.triu(np.ones((lmns, lmns), dtype=bool), k=1)
+    diag = np.diag_indices(lmns)
+    for interval in range(n_intervals):
+        x0 = xi[:, interval]
+        x1 = xi[:, interval + 1]
+        e = eta[:, interval]
+        x0_x0 = np.outer(x0, x0)
+        x0_e = np.outer(x0, e)
+        x0_x1 = np.outer(x0, x1)
+        e_x0 = np.outer(e, x0)
+        e_e = np.outer(e, e)
+        e_x1 = np.outer(e, x1)
+        x1_x0 = np.outer(x1, x0)
+        x1_e = np.outer(x1, e)
+        x1_x1 = np.outer(x1, x1)
+        potential_terms = (
+            potential_blocks.BU[:, :, interval] * x0_x0
+            + potential_blocks.EI[:, :, interval] * x0_e
+            + potential_blocks.CC[:, :, interval] * x0_x1
+            + potential_blocks.FI[:, :, interval] * e_x0
+            + potential_blocks.DI[:, :, interval] * e_e
+            + potential_blocks.GI[:, :, interval] * e_x1
+            + potential_blocks.AI[:, :, interval] * x1_x0
+            + potential_blocks.HI[:, :, interval] * x1_e
+            + potential_blocks.BL[:, :, interval] * x1_x1
+        )
+        wp_by_interval[interval] = float(
+            np.trace(potential_terms) + 2.0 * potential_terms[upper_mask].sum()
+        )
+        kinetic_terms = (
+            kinetic_blocks.BE[:, :, interval] * x0_e
+            + kinetic_blocks.BC[:, :, interval] * x0_x1
+            + kinetic_blocks.BF[:, :, interval] * e_x0
+            + kinetic_blocks.BD[:, :, interval] * e_e
+            + kinetic_blocks.BG[:, :, interval] * e_x1
+            + kinetic_blocks.BA[:, :, interval] * x1_x0
+            + kinetic_blocks.
+#### source/desc/stability/terpsichore/energy.py::compute_block_quadratic_energy (L124)
+def compute_block_quadratic_energy(xi, eta, potential_blocks, kinetic_blocks, radial_grid):
+    """Compute ``WP`` and ``WK`` directly from TERPSICHORE blocks.
+
+    This is algebraically equivalent to assembling the dense global matrices but
+    avoids materializing the very large QAS3 matrices during benchmark parity
+    diagnostics.
+    """
+
+    wp_by_interval, wk_by_interval = compute_block_energy_contributions(
+        xi, eta, potential_blocks, kinetic_blocks, radial_grid
+    )
+    return float(wp_by_interval.sum()), float(wk_by_interval.sum())
+#### source/desc/stability/terpsichore/energy.py::compute_fortran_energy_oracle_arrays (L138)
+def compute_fortran_energy_oracle_arrays(
+    xi, eta, potential_blocks, kinetic_blocks, radial_grid
+):
+    """Return arrays in Fortran ``ENERGY`` dump convention.
+
+    ``compute_block_energy_contributions`` returns the integrated contribution
+    to ``WP`` on each interval. Fortran dumps ``WPSI`` before multiplying by
+    ``dsvar = ni * (s(i) - s(i-1))``, so ``WPSI`` is an interval density.
+    ``WK_i`` is already an integrated per-interval increment and is returned
+    unchanged.
+    """
+
+    wp_by_interval, wk_by_interval = compute_block_energy_contributions(
+        xi, eta, potential_blocks, kinetic_blocks, radial_grid
+    )
+    dsvar = radial_grid.ni * np.asarray(radial_grid.ds, dtype=float)
+    if np.any(dsvar == 0):
+        raise ValueError("radial grid contains a zero-width interval.")
+    return {"WPSI": wp_by_interval / dsvar, "WK_i": wk_by_interval}
+#### source/desc/stability/terpsichore/energy.py::compute_energy_from_blocks (L159)
+def compute_energy_from_blocks(
+    xi,
+    eta,
+    potential_blocks,
+    kinetic_blocks,
+    radial_grid,
+    mode_table,
+    *,
+    walf=1.0,
+    diagnostics=None,
+):
+    """Compute a stability result from block arrays and split ``XI/ETA``."""
+
+    wp, wk = compute_block_quadratic_energy(
+        xi, eta, potential_blocks, kinetic_blocks, radial_grid
+    )
+    return compute_energy(
+        wp,
+        wk,
+        walf=walf,
+        eigenvector_xi=np.asarray(xi, dtype=float),
+        eigenvector_eta=np.asarray(eta, dtype=float),
+        mode_table=mode_table,
+        radial_grid=radial_grid,
+        diagnostics={} if diagnostics is None else diagnostics,
+    )
+#### source/desc/stability/terpsichore/energy.py::compute_energy_from_vector (L187)
+def compute_energy_from_vector(
+    vector,
+    potential_blocks,
+    kinetic_blocks,
+    radial_grid,
+    mode_table,
+    *,
+    walf=1.0,
+    diagnostics=None,
+):
+    """Compute TERPSICHORE energies from a global eigenvector and block matrices."""
+
+    K, M = assemble_global_matrices(
+        potential_blocks, kinetic_blocks, radial_grid, mode_table
+    )
+    vector = np.asarray(vector, dtype=float)
+    wp = float(vector @ K @ vector)
+    wk = float(vector @ M @ vector)
+    xi, eta = split_global_vector(vector, radial_grid, mode_table)
+    return compute_energy(
+        wp,
+        wk,
+        walf=walf,
+        eigenvector_xi=xi,
+        eigenvector_eta=eta,
+        mode_table=mode_table,
+        radial_grid=radial_grid,
+        diagnostics={} if diagnostics is None else diagnostics,
+    )
+### source/desc/stability/terpsichore/radial.py
+L11: class TerpsichoreRadialGrid
+  L18: def __post_init__(self)
+  L37: def n_intervals(self)
+  L41: def centers(self)
+  L45: def ds(self)
+  L49: def plasma_slice(self)
+  L53: def vacuum_slice(self)
+  L56: def plasma_view(self)
+  L62: def uniform(cls, surfs=101, ivac=0, dsvac=0.0)
+#### source/desc/stability/terpsichore/radial.py::TerpsichoreRadialGrid.n_intervals (L37)
+    def n_intervals(self):
+        return self.ni + self.ivac
+#### source/desc/stability/terpsichore/radial.py::TerpsichoreRadialGrid.plasma_slice (L49)
+    def plasma_slice(self):
+        return slice(0, self.ni)
+#### source/desc/stability/terpsichore/radial.py::TerpsichoreRadialGrid.vacuum_slice (L53)
+    def vacuum_slice(self):
+        return slice(self.ni, self.ni + self.ivac)
+#### source/desc/stability/terpsichore/radial.py::TerpsichoreRadialGrid.plasma_view (L56)
+    def plasma_view(self):
+        """Return a grid view containing only plasma intervals."""
+
+        return type(self)(s_nodes=self.s_nodes[: self.ni + 1], ni=self.ni, ivac=0)
+### source/desc/stability/terpsichore/equilibrium.py
+L13: class TerpsichoreEquilibriumData
+  L22: def get(self, name, default=None)
+L26: def vacmet_inputs_from_equilibrium_data(equilibrium_data, *, wall=None, wall_scale: float=1.0, nowall: int=1, radial_index: int=-1)
+#### source/desc/stability/terpsichore/equilibrium.py::vacmet_inputs_from_equilibrium_data (L26)
+def vacmet_inputs_from_equilibrium_data(
+    equilibrium_data,
+    *,
+    wall=None,
+    wall_scale: float = 1.0,
+    nowall: int = 1,
+    radial_index: int = -1,
+):
+    radial_grid = equilibrium_data.radial_grid
+    data = dict(equilibrium_data.data)
+    geometry = {
+        "R": data.get("R"),
+        "Z": data.get("Z"),
+        "phi": data.get("phi", data.get("V")),
+        "Rs": data.get("Rs", data.get("R_s", data.get("R_r"))),
+        "Rt": data.get("Rt", data.get("R_theta", data.get("R_t"))),
+        "Rp": data.get("Rp", data.get("R_zeta", data.get("R_z"))),
+        "Zs": data.get("Zs", data.get("Z_s", data.get("Z_r"))),
+        "Zt": data.get("Zt", data.get("Z_theta", data.get("Z_t"))),
+        "Zp": data.get("Zp", data.get("Z_zeta", data.get("Z_z"))),
+        "phis": data.get("phis", data.get("phi_s", data.get("phi_r", data.get("V_s")))),
+        "phit": data.get("phit", data.get("phi_theta", data.get("phi_t", data.get("V_t")))),
+        "phip": data.get("phip", data.get("phi_zeta", data.get("phi_z", data.get("V_z")))),
+        "Rst": data.get("Rst", data.get("R_st", data.get("R_s_theta"))),
+        "Rsp": data.get("Rsp", data.get("R_sp", data.get("R_s_zeta"))),
+        "Zst": data.get("Zst", data.get("Z_st", data.get("Z_s_theta"))),
+        "Zsp": data.get("Zsp", data.get("Z_sp", data.get("Z_s_zeta"))),
+        "phist": data.get("phist", data.get("phi_st", data.get("phi_s_theta", data.get("V_st")))),
+        "phisp": data.get("phisp", data.get("phi_sp", data.get("phi_s_zeta", data.get("V_sp")))),
+    }
+    boundary = vacmet_boundary_from_geometry(geometry, radial_index=radial_index)
+    dsvac = radial_grid.s_nodes[radial_grid.ni + radial_grid.ivac] - 1.0 if radial_grid.ivac else 0.0
+    dsvac = float(data.get("dsvac", dsvac))
+    pvac = float(data.get("pvac", 1.0))
+    qvac = float(data.get("qvac", 1.0))
+    tor = data.get("tor")
+    return build_vacmet_inputs(
+        s_nodes=radial_grid.s_nodes,
+        ni=radial_grid.ni,
+        ivac=radial_grid.ivac,
+        dsvac=dsvac,
+        pvac=pvac,
+        qvac=qvac,
+        nowall=nowall,
+        boundary=boundary,
+        wall=wall,
+        wall_scale=wall_scale,
+        tor=tor,
+    )
+### source/desc/stability/terpsichore/coefficients.py
+L17: class TerpsichoreCoefficientData
+  L30: def __post_init__(self)
+  L46: def shape(self)
+  L51: def has(self, names)
+  L56: def require(self, names)
+  L68: def get(self, name)
+  L77: def as_legacy_dict(self)
+  L87: def from_mapping(cls, mapping)
+L102: def coefficient_shape_for(mode_table, radial_grid)
+L108: def validate_coefficient_shape(data, mode_table, radial_grid, names=None)
+L120: def generate_coefficients_from_geometry(*args, **kwargs)
+L132: def _fortran_mod(a, p)
+L136: def _lsx_lookup(lsx, m, n, parity)
+L154: def compute_fourin_mapping_indices(mode_table, *, nper, lsx)
+L178: def map_fourin_integrals_to_coefficients(*, cna, cnb, mode_table, nper, lsx, dtdp, cospar, cospr2, ftp, fpp, ftpp, fppp, ci, cj, modelk=0, s_centers=None, cip=None, cjp=None, pp=None, fixed_boundary=True, igreen=0)
+L327: def _grid_array(data, name)
+L333: def compute_fourin_grid_functions(*, grid_data, profiles, interval, modelk=0)
+L416: def accumulate_fourin_integrals_from_grid_functions(*, functions, tsc, tss, bjac)
+L450: def compute_fourin_integral_arrays_from_grid(*, grid_data, profiles, trig_table, modelk=0)
+L475: def _compute_outer_shell_integral_arrays_from_metric_data(*, vacuum_grid_data, trig_table)
+L511: def _project_outer_shell_integrals_to_modal_coefficients(*, cna, cnb, mode_table, nper, lsx, dtdp, cospar)
+L528: def map_fourin_grid_to_coefficients(*, grid_data, profiles, mode_table, trig_table, modelk=0, dtdp=1.0, cospar=1.0, cospr2=1.0, fixed_boundary=True, igreen=0)
+#### source/desc/stability/terpsichore/coefficients.py::generate_coefficients_from_geometry (L120)
+def generate_coefficients_from_geometry(*args, **kwargs):
+    """Placeholder for the native ``FOURIN`` coefficient generator.
+
+    The next migration step is to port the plasma/vacuum integral formulas from
+    Fortran ``FOURIN`` into this function.
+    """
+
+    raise NotImplementedError(
+        "DESC geometry -> TERPSICHORE c0..c11 generation is not migrated yet."
+    )
+#### source/desc/stability/terpsichore/coefficients.py::_compute_outer_shell_integral_arrays_from_metric_data (L475)
+def _compute_outer_shell_integral_arrays_from_metric_data(*, vacuum_grid_data, trig_table):
+    """Compute reduced outer-shell raw ``cna``/``cnb`` arrays.
+
+    The Fortran vacuum branch requires ``gppl``, ``gtpl``, ``gttl``, ``gstl``,
+    ``gssl`` and ``gssu`` on pseudo-vacuum intervals ``ni+1..nvi``.  The QAS3
+    ``fort.23`` oracle stores only part of this set, so callers must provide the
+    missing metric terms from strict vacuum geometry reconstruction.
+    """
+
+    required = ("gppl", "gtpl", "gttl", "gstl", "gssl", "gssu")
+    missing = [name for name in required if vacuum_grid_data.get(name) is None]
+    if missing:
+        raise ValueError(
+            "outer-shell integral construction requires metric arrays "
+            + ", ".join(required)
+            + f"; missing {tuple(missing)}"
+        )
+    arrays = {name: np.asarray(vacuum_grid_data[name], dtype=float) for name in required}
+    shapes = {name: value.shape for name, value in arrays.items()}
+    if len(set(shapes.values())) != 1:
+        raise ValueError(f"outer-shell metric arrays must have identical shapes, got {shapes}")
+    points, intervals = next(iter(shapes.values()))
+    if trig_table.tsc.shape[1] != points or trig_table.tss.shape[1] != points:
+        raise ValueError("outer-shell metric point count must match trigonometric tables.")
+    lss_with_sentinel = trig_table.lss + 1
+    cna = np.zeros((7, lss_with_sentinel, intervals))
+    cnb = np.zeros((7, lss_with_sentinel, intervals))
+    cna[1] = trig_table.tsc @ arrays["gppl"]
+    cna[2] = trig_table.tsc @ arrays["gtpl"]
+    cna[3] = trig_table.tsc @ arrays["gttl"]
+    cnb[1] = trig_table.tss @ arrays["gstl"]
+    cnb[2] = trig_table.tsc @ arrays["gssl"]
+    cnb[3] = trig_table.tss @ arrays["gssu"]
+    return cna, cnb
+#### source/desc/stability/terpsichore/coefficients.py::_project_outer_shell_integrals_to_modal_coefficients (L511)
+def _project_outer_shell_integrals_to_modal_coefficients(
+    *, cna, cnb, mode_table, nper, lsx, dtdp, cospar
+):
+    """Project reduced outer-shell ``cna``/``cnb`` integrals to modal coefficients."""
+
+    cna = np.asarray(cna, dtype=float)
+    cnb = np.asarray(cnb, dtype=float)
+    if cna.shape != cnb.shape or cna.ndim != 3:
+        raise ValueError("cna and cnb must be rank-3 arrays with identical shape.")
+    lmns = mode_table.size
+    intervals = cna.shape[2]
+    shape = (lmns, lmns, intervals)
+    coeffs = {name: np.zeros(shape) for name in ALL_COEFFICIENTS}
+    indices = compute_fourin_mapping_indices(mode_table, nper=nper, lsx=lsx)
+    del indices, dtdp, cospar
+    return TerpsichoreCoefficientData(coefficients=coeffs, fixed_boundary=False)

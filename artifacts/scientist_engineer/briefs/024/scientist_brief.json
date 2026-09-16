@@ -1,0 +1,52 @@
+{
+  "task_id": "024",
+  "scientific_principle": "ZeroSumNormal is a Gaussian distribution supported on the subspace of vectors/matrices whose selected trailing axes sum to zero, constructed via an orthonormal basis B of the zero-sum subspace as x = Bz with z ~ N(0, sigma^2 I), where sigma is the standard deviation of the underlying unconstrained Normal. Because B has orthonormal columns, ||B^T x||^2 = ||x||^2 on the support, so the log-density equals the reduced-dimension Normal log-density of z: the quadratic term -||x||^2/(2 sigma^2) is UNSCALED and only the normalization constant reflects the reduced degrees of freedom (product of (axis_length - 1) over the constrained axes). Consequently the full constrained representation and the orthonormal reduced-coordinate representation are two coordinate systems for the same model, so a linear-Gaussian posterior (fitted responses and any fixed linear contrast) must be identical under either representation.",
+  "violated_invariant": "The ZeroSumNormal logp multiplies the entire independent-Normal logp (quadratic term included) by degrees_of_freedom/full_size, scaling the quadratic term by (K-1)/K (or (L-1)(P-1)/(LP)) instead of leaving it unscaled as -||x||^2/(2 sigma^2) with only the normalization constant adjusted.",
+  "observable_symptom": "In the centered factorial-effects model the mis-scaled prior density on the centered laboratory, protocol, and interaction effects changes the effective prior precision, so the posterior fitted responses and pre-planned interaction contrasts deviate from the documented model.",
+  "suspected_loci": [
+    "source/pymc/distributions/multivariate.py::zerosumnormal_logp",
+    "source/pymc/distributions/multivariate.py::ZeroSumNormalRV"
+  ],
+  "acceptance_checks": [
+    "For a 1D ZeroSumNormal of length K and scale sigma, the logp at any zero-sum vector x equals the reduced-coordinate Normal logp -(K-1)/2 log(2 pi sigma^2) - ||x||^2/(2 sigma^2), equivalently the sum of log N(x_i; 0, sigma^2) plus the constant 0.5 log(2 pi sigma^2).",
+    "For a 2D ZeroSumNormal of shape (L, P) with ndim_supp=2, the logp at any matrix G with zero row and column sums equals -(L-1)(P-1)/2 log(2 pi sigma^2) - ||G||_F^2/(2 sigma^2), matching the orthonormal reduced-coordinate construction G = B_L Z B_P^T.",
+    "The offset between the ZeroSumNormal logp and the full independent-Normal logp is a constant independent of the evaluation point, confirming the quadratic term is unscaled.",
+    "The logp is finite on the zero-sum support and rejects (non-finite) values whose constrained axes do not sum to zero.",
+    "Posterior fitted responses and any fixed linear contrast are identical whether the centered effects are represented in the full constrained form or the orthonormal reduced-coordinate form."
+  ],
+  "metamorphic_probes": [
+    {
+      "name": "one_dim_orthonormal_basis_logp",
+      "relation": "Transform T: sample reduced coordinates z ~ N(0, sigma^2 I) and set x = Bz for an orthonormal zero-sum basis B; the ZeroSumNormal logp at x must equal the reduced-coordinate Normal logp with the quadratic term unscaled.",
+      "code": "import numpy as np\nimport pytensor.tensor as pt\nimport pymc as pm\n\nK = 6\nsigma = 1.7\nrng = np.random.default_rng(11)\n\n# Orthonormal basis for the zero-sum subspace of R^K\nM = np.eye(K) - np.ones((K, K)) / K\nw, V = np.linalg.eigh(M)\nB = V[:, np.where(np.isclose(w, 1.0))[0]]  # K x (K-1)\nassert B.shape == (K, K - 1)\nassert np.allclose(B.T @ B, np.eye(K - 1))\nassert np.allclose(B.T @ np.ones(K), 0.0)\n\n# Reduced coordinates z ~ N(0, sigma^2 I), x = B z\nz = rng.normal(loc=0.0, scale=sigma, size=(K - 1,))\nx = B @ z\nassert np.isclose(x.sum(), 0.0, atol=1e-9)\n\ndist = pm.ZeroSumNormal.dist(sigma=sigma, support_shape=(K,), ndim_supp=1)\nlogp_zsn = float(pm.logp(dist, pt.as_tensor_variable(x)).eval())\n\n# Reference: reduced-coordinate Normal logp (quadratic term unscaled)\nref = -0.5 * (K - 1) * np.log(2 * np.pi * sigma**2) - 0.5 * np.sum(z**2) / sigma**2\n\nok = np.isclose(logp_zsn, ref, rtol=1e-6, atol=1e-6)\nprint(\"PASS\" if ok else f\"FAIL: logp_zsn={logp_zsn}, ref={ref}\")"
+    },
+    {
+      "name": "two_dim_orthonormal_basis_logp",
+      "relation": "Transform T: sample Z ~ N(0, sigma^2 I) elementwise and set G = B_L Z B_P^T for orthonormal zero-sum bases; the two-axis (ndim_supp=2) ZeroSumNormal logp at G must equal the (L-1)(P-1)-dimensional Normal logp of Z.",
+      "code": "import numpy as np\nimport pytensor.tensor as pt\nimport pymc as pm\n\nL, P = 4, 5\nsigma = 1.3\nrng = np.random.default_rng(23)\n\ndef zerosum_basis(n):\n    M = np.eye(n) - np.ones((n, n)) / n\n    w, V = np.linalg.eigh(M)\n    return V[:, np.where(np.isclose(w, 1.0))[0]]\n\nBL = zerosum_basis(L)  # L x (L-1)\nBP = zerosum_basis(P)  # P x (P-1)\nassert BL.shape == (L, L - 1) and BP.shape == (P, P - 1)\nassert np.allclose(BL.T @ np.ones(L), 0) and np.allclose(BP.T @ np.ones(P), 0)\n\n# Z ~ N(0, sigma^2 I) elementwise, G = BL Z BP^T\nZ = rng.normal(loc=0.0, scale=sigma, size=(L - 1, P - 1))\nG = BL @ Z @ BP.T\nassert np.allclose(G.sum(axis=0), 0, atol=1e-9)\nassert np.allclose(G.sum(axis=1), 0, atol=1e-9)\n\ndist = pm.ZeroSumNormal.dist(sigma=sigma, support_shape=(L, P), ndim_supp=2)\nlogp_zsn = float(pm.logp(dist, pt.as_tensor_variable(G)).eval())\n\n# Reference: reduced-coordinate Normal logp, dim (L-1)(P-1)\nref = -0.5 * (L - 1) * (P - 1) * np.log(2 * np.pi * sigma**2) - 0.5 * np.sum(Z**2) / sigma**2\n\nok = np.isclose(logp_zsn, ref, rtol=1e-6, atol=1e-6)\nprint(\"PASS\" if ok else f\"FAIL: logp_zsn={logp_zsn}, ref={ref}\")"
+    },
+    {
+      "name": "logp_offset_is_data_independent",
+      "relation": "Transform T: replace the evaluation point by any other zero-sum vector; the offset between the ZeroSumNormal logp and the full independent-Normal logp must remain the same constant (data-point invariance), which holds only if the quadratic term is unscaled.",
+      "code": "import numpy as np\nimport pytensor.tensor as pt\nimport pymc as pm\n\nK = 7\nsigma = 1.1\nrng = np.random.default_rng(37)\n\ndef indep_logp_sum(x, sigma):\n    return -0.5 * len(x) * np.log(2 * np.pi * sigma**2) - 0.5 * np.sum(x**2) / sigma**2\n\ndist = pm.ZeroSumNormal.dist(sigma=sigma, support_shape=(K,), ndim_supp=1)\n\ndef offset(x):\n    x = x - x.mean()  # project onto zero-sum support\n    return float(pm.logp(dist, pt.as_tensor_variable(x)).eval()) - indep_logp_sum(x, sigma)\n\nx1 = rng.normal(size=K)\nx2 = rng.normal(size=K) * 4.0  # different norm\no1, o2 = offset(x1), offset(x2)\n\n# Correct model: offset is the constant 0.5*log(2*pi*sigma^2), independent of x\nexpected = 0.5 * np.log(2 * np.pi * sigma**2)\nok = np.isclose(o1, o2, atol=1e-6) and np.isclose(o1, expected, atol=1e-6)\nprint(\"PASS\" if ok else f\"FAIL: o1={o1}, o2={o2}, expected={expected}\")"
+    },
+    {
+      "name": "zero_sum_constraint_enforced",
+      "relation": "Transform T: move the evaluation point off the zero-sum support; the logp must remain finite on the support and be rejected (non-finite) off it, confirming the support semantics are preserved.",
+      "code": "import numpy as np\nimport pytensor.tensor as pt\nimport pymc as pm\n\nK = 5\nsigma = 1.0\nrng = np.random.default_rng(53)\n\ndist = pm.ZeroSumNormal.dist(sigma=sigma, support_shape=(K,), ndim_supp=1)\n\n# On the zero-sum support, logp must be finite\nx_ok = rng.normal(size=K); x_ok = x_ok - x_ok.mean()\nlogp_ok = float(pm.logp(dist, pt.as_tensor_variable(x_ok)).eval())\n\n# Off the support (non-zero-sum), the constraint must be rejected\nx_bad = rng.normal(size=K) + 1.0  # sum != 0\ntry:\n    logp_bad = float(pm.logp(dist, pt.as_tensor_variable(x_bad)).eval())\n    rejected = (not np.isfinite(logp_bad))\nexcept Exception:\n    rejected = True\n\nok = np.isfinite(logp_ok) and rejected\nprint(\"PASS\" if ok else f\"FAIL: logp_ok={logp_ok}, rejected={rejected}\")"
+    }
+  ],
+  "anti_hardcoding": [
+    "Hardcoding the scaling ratio (K-1)/K or the offset constant for the specific K in the public study.",
+    "Special-casing the support shape to match the public data matrix.",
+    "Adding a fixed additive constant to the logp that happens to match the public norms.",
+    "Fixing only the 1D (ndim_supp=1) case while leaving the two-axis (ndim_supp=2) interaction path scaled.",
+    "Making the quadratic term unscaled but using an incorrect normalization constant that only matches one shape."
+  ],
+  "confidence": 0.72,
+  "evidence_notes": [
+    "The inventory snippet for zerosumnormal_logp (multivariate.py L2780) shows the logp as pt.sum(pm.logp(normal_dist, value) * _degrees_of_freedom / _full_size, ...), i.e. it scales the whole independent-Normal logp (quadratic term included) by (K-1)/K or (L-1)(P-1)/(LP). paper.md sections 2-3 define the distribution via the orthonormal reduced-coordinate construction x = Bz, z ~ N(0, sigma^2 I), whose logp keeps the quadratic term -||x||^2/(2 sigma^2) unscaled and adjusts only the normalization; the critic confirms the correct invariant is equality to the reduced-coordinate Normal logp, not a scaled full logp.",
+    "Expected to FAIL before the fix: one_dim_orthonormal_basis_logp, two_dim_orthonormal_basis_logp, logp_offset_is_data_independent (each compares the ZeroSumNormal logp against the unscaled-quadratic reduced-coordinate reference, which the scaled implementation violates). Expected to PASS both before and after the fix (sanity, not the defect): zero_sum_constraint_enforced (the zero-sum check_parameters is present in the snippet and is not the bug).",
+    "API parameter names (sigma, support_shape, ndim_supp) are inferred from the zerosumnormal_logp signature in the inventory and the critic's ndim_supp=2 note; if the public constructor differs, the probes would raise rather than print FAIL, signaling an API mismatch to resolve."
+  ]
+}

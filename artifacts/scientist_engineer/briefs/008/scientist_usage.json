@@ -1,0 +1,26 @@
+{
+  "prompt_tokens": 35178,
+  "completion_tokens": 37706,
+  "total_tokens": 72884,
+  "model": "Qwen3.8-27B",
+  "calls": [
+    {
+      "prompt_tokens": 15315,
+      "completion_tokens": 27743,
+      "total_tokens": 43058,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 83953
+    },
+    {
+      "prompt_tokens": 19863,
+      "completion_tokens": 9963,
+      "total_tokens": 29826,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 42662
+    }
+  ]
+}

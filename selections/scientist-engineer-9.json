@@ -1,0 +1,19 @@
+{
+  "name": "scientist-engineer-9",
+  "description": "Same nine tasks as verification-python-9. Scientist→Engineer generation-time side comparison aligned to the frozen two-attempt baseline prefix (REPORT §5 Table 3).",
+  "allow_restricted_licenses": false,
+  "budget": {
+    "n_attempts": 2,
+    "n_conditions": 1,
+    "n_trials_total": 18,
+    "n_concurrent": 8
+  },
+  "task_ids": ["001", "007", "008", "017", "024", "039", "053", "094", "107"],
+  "parent_selection": "selections/verification-python-9.json",
+  "comparison": {
+    "baseline": "frozen Qwen3.8 baseline, first two completed attempts per task",
+    "baseline_not_rerun": true,
+    "reported_job": "se3-qwen38-main9-n2",
+    "artifacts": "artifacts/scientist_engineer/"
+  }
+}

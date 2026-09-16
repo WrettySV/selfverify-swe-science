@@ -6,8 +6,7 @@
     "document_sha256_before_recalculation": "459b73794724445711b93a728a95374e0c411622c476e78ce03f655f5f9a6c37",
     "description": "Baseline outcome table with three attempts per task.",
     "verification": "Reported S/F outcomes; arithmetic checked against the result table.",
-    "order": "Positions follow the baseline table order and are separate from A/B patch IDs.",
-    "additional_attempts": 8
+    "order": "Positions follow the baseline table order and are separate from A/B patch IDs."
   },
   "tasks": {
     "001": {

@@ -1,0 +1,21 @@
+{
+  "attempts": [
+    {
+      "verdict": {
+        "accept": true,
+        "issues": [],
+        "suggested_fixes": []
+      },
+      "usage": {
+        "prompt_tokens": 11370,
+        "completion_tokens": 5935,
+        "total_tokens": 17305,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 24106
+      }
+    }
+  ],
+  "accepted": true
+}

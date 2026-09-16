@@ -1,0 +1,675 @@
+workdir: /app/task_053
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-053:v0.1.2
+code_files_total: 36
+## directories (file counts)
+source/monai/metrics: 19
+source/monai/transforms/croppad: 6
+.: 3
+source/monai/config: 3
+source/monai/transforms: 2
+paper_assets: 1
+source/monai: 1
+source/monai/utils: 1
+## terms_from_instruction
+strong: S_pred, S_ref, arXiv, post_fix_success, pre_fix_expected_failure, public_reproduction_report, runner_failure, study_pair, study_pair.npz, surface_Dice
+common: physical, spacing, scientific, metric, boundary, surface, score, paper, tolerance, measure, supplied, distance, class, complete, monai, segmentation, contour, finite, voxel, consistency, sampled, s_ref, s_pred, representation, overlap
+## import_reach_from_reproduce.py (path, depth)
+source/monai/metrics/__init__.py  (depth 1)
+source/monai/metrics/surface_dice.py  (depth 2)
+source/monai/metrics/metric.py  (depth 3)
+source/monai/metrics/utils.py  (depth 3)
+source/monai/utils/__init__.py  (depth 3)
+source/monai/config/__init__.py  (depth 4)
+source/monai/transforms/croppad/array.py  (depth 4)
+source/monai/transforms/utils.py  (depth 4)
+## ranked_source_paths (score, path, matched_terms)
+  19.5  source/monai/metrics/surface_dice.py  []
+   9.0  source/monai/metrics/utils.py  []
+   7.5  source/monai/metrics/metric.py  []
+   7.2  source/monai/metrics/__init__.py  []
+   6.5  source/monai/metrics/hausdorff_distance.py  []
+   6.5  source/monai/metrics/surface_distance.py  []
+   6.0  source/monai/metrics/regression.py  []
+   5.0  source/monai/metrics/meandice.py  []
+   4.5  source/monai/metrics/active_learning_metrics.py  []
+   4.5  source/monai/metrics/confusion_matrix.py  []
+   4.5  source/monai/metrics/generalized_dice.py  []
+   4.5  source/monai/metrics/meaniou.py  []
+   4.5  source/monai/metrics/panoptic_quality.py  []
+   3.5  source/monai/metrics/cumulative_average.py  []
+   3.5  source/monai/metrics/loss_metric.py  []
+   3.5  source/monai/metrics/wrapper.py  []
+   3.5  source/monai/transforms/croppad/batch.py  []
+   3.0  source/monai/transforms/croppad/functional.py  []
+   2.5  source/monai/config/deviceconfig.py  []
+   2.5  source/monai/metrics/froc.py  []
+   2.5  source/monai/metrics/rocauc.py  []
+   2.1  source/monai/utils/__init__.py  []
+   2.0  source/monai/config/type_definitions.py  []
+   2.0  source/monai/metrics/f_beta_score.py  []
+   1.5  paper_assets/README.md  []
+   1.5  source/monai/transforms/croppad/array.py  []
+   1.5  source/monai/transforms/utils.py  []
+   0.6  source/monai/config/__init__.py  []
+   0.5  source/monai/transforms/croppad/dictionary.py  []
+   0.5  source/monai/transforms/croppad/utils.py  []
+   0.3  source/monai/__init__.py  []
+   0.0  source/monai/transforms/__init__.py  []
+   0.0  source/monai/transforms/croppad/__init__.py  []
+## snippets
+### reproduce.py
+from __future__ import annotations
+
+import json
+import math
+import sys
+from pathlib import Path
+
+import numpy as np
+import torch
+
+
+TASK_DIR = Path(__file__).resolve().parent
+SOURCE_DIR = TASK_DIR / "source"
+FIXTURE = TASK_DIR / "fixtures" / "study_pair.npz"
+REPORT = TASK_DIR / "outputs" / "public_reproduction_report.json"
+CONSISTENCY_TOLERANCE = 0.12
+
+
+def write_report(payload: dict[str, object], exit_code: int) -> int:
+    REPORT.parent.mkdir(exist_ok=True)
+    text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    REPORT.write_text(text, encoding="utf-8")
+    print(text, end="")
+    return exit_code
+
+
+def as_one_hot(labels: np.ndarray) -> torch.Tensor:
+    tensor = torch.as_tensor(labels, dtype=torch.int64)
+    return torch.nn.functional.one_hot(tensor, num_classes=2).permute(0, 4, 1, 2, 3)
+
+
+def score_case(metric_cls, prediction: np.ndarray, reference: np.ndarray, spacing: np.ndarray, tolerance: float) -> float:
+    metric = metric_cls(
+        class_thresholds=[tolerance],
+        include_background=False,
+        reduction="none",
+    )
+    result = metric(
+        as_one_hot(prediction[None, ...]),
+        as_one_hot(reference[None, ...]),
+        spacing=tuple(float(value) for value in spacing),
+    )
+    value = float(result.detach().cpu().reshape(-1)[0])
+    if not math.isfinite(value):
+        raise ValueError("surface metric returned a non-finite foreground score")
+    return value
+
+
+def main() -> int:
+    try:
+        sys.path.insert(0, str(SOURCE_DIR))
+        from monai.metrics import SurfaceDiceMetric
+
+        with np.load(FIXTURE) as data:
+            tolerance = float(data["tolerance"])
+            scores = {
+                name: score_case(
+                    SurfaceDiceMetric,
+                    data[f"prediction_{name}"],
+                    data[f"reference_{name}"],
+                    data[f"{name}_spacing"],
+                    tolerance,
+                )
+                for name in ("fine", "coarse")
+            }
+    except Exception as exc:  # noqa: BLE001 - report infrastructure failures distinctly.
+        return write_report(
+            {
+                "schema_version": "1.0",
+                "status": "runner_failure",
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            },
+            2,
+        )
+
+    finite = all(math.isfinite(value) for value in scores.values())
+    spread = abs(scores["fine"] - scores["coarse"]) if finite else None
+    consistent = finite and spread is not None and spread <= CONSISTENCY_TOLERANCE
+    report = {
+        "schema_version": "1.0",
+        "status": "post_fix_success" if consistent else "pre_fix_expected_failure",
+        "scientific_check": "representation_consistency",
+        "observations": {
+            "finite": finite,
+            "study_representations": {
+                name: {"surface_score": value} for name, value in scores.items()
+            },
+            "absolute_representation_spread": spread,
+            "consistency_check_passed": consistent,
+        },
+    }
+    return write_report(report, 0 if consistent else 1)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+### reproduction.md
+# Public reproduction
+
+Run from the task directory:
+
+```bash
+python reproduce.py
+```
+
+The script loads two complete binary segmentation representations from `fixtures/study_pair.npz` and evaluates them through the normal high-level MONAI surface metric with their physical voxel spacing. It writes:
+
+```text
+outputs/public_reproduction_report.json
+```
+
+The report contains finite aggregate observations for the two representations and a representation-consistency check. It does not contain a per-boundary decomposition or a complete correctness oracle.
+
+The lifecycle states are:
+
+- `pre_fix_expected_failure`, exit code `1`: the scientific workflow completed with finite results, but the representation-consistency check is outside its documented tolerance.
+- `post_fix_success`, exit code `0`: the workflow completed with finite results and the representation-consistency check passed.
+- `runner_failure`, exit code `2`: the source, fixture, Python runtime, dependency, path, or serialization layer could not complete the calculation. This is not a scientific result.
+
+The public case is a smoke test over one reduced clinical-style study. Do not hard-code its values. Hidden verification uses independent shapes, dimensions, spacing orders, thresholds, two-dimensional inputs, and batches.
+### paper.md
+# Scientific context: surface Dice for sampled organ contours
+
+## Citation
+
+Stanislav Nikolov, Sam Blackwell, Alexei Zverovitch, et al., “Deep learning to achieve clinically applicable segmentation of head and neck anatomy for radiotherapy,” arXiv:1809.04430 (2018). The paper is available at <https://arxiv.org/abs/1809.04430> and <https://doi.org/10.48550/arXiv.1809.04430>.
+
+## Why the metric exists
+
+Radiotherapy planning requires contours around organs at risk. An automated contour can be useful in volume terms and still have a clinically important local displacement along its surface. A contour-oriented score therefore complements volume overlap: it asks how much of each boundary lies within an acceptable distance of the other boundary.
+
+The paper calls this family of measurements surface Dice similarity coefficient. Let `S_ref` and `S_pred` be the two boundaries and let `tau` be the allowed physical deviation. A normalized symmetric form is:
+
+```text
+surface_Dice(tau) =
+  (measure({p in S_ref  : distance(p, S_pred) <= tau})
+   + measure({q in S_pred : distance(q, S_ref) <= tau}))
+  / (measure(S_ref) + measure(S_pred))
+```
+
+The score is between zero and one for ordinary nonempty inputs. The two directed terms matter: a prediction can omit part of a reference boundary or add a boundary outside the reference tolerance.
+
+## Physical coordinates versus array indices
+
+Medical images are sampled on a grid. A voxel index is not a physical length. If the spacing is `(sx, sy, sz)`, moving one index along the three axes represents different physical distances when the spacings differ. A tolerance used to judge a contour is normally expressed in physical units such as millimetres, so spacing must be interpreted consistently throughout the calculation.
+
+The denominator in the formula is a geometric measure of the boundary: a length in 2-D or an area in 3-D. A sampled image therefore needs a documented convention for turning neighboring mask samples into that measure. The physical spacing and the local sampled geometry are part of the input interpretation, especially when the grid is anisotropic. The same convention must be used for the total boundary and for the portion within tolerance. More than one numerical surface construction can satisfy this physical requirement; the scientific contract is the spacing-aware behavior, not a particular implementation detail.
+
+## Inputs in this task
+
+The source works with one-hot, batch-first tensors. A two-dimensional input has shape `[B, C, H, W]`; a three-dimensional input has shape `[B, C, H, W, D]`. The task's public fixture uses a foreground class and supplies the voxel spacing for each complete study representation. The public reproduction is only a smoke test; a correct repair must also work for other masks, spacing tuples, tolerances, and batches.
+
+If a class is absent from both inputs, the metric may represent that class as undefined according to the existing API. If a class is present in only one input, the score should reflect the complete mismatch. These cases are part of the surrounding metric contract and should not be “fixed” by returning a convenient constant.
+
+## What to investigate
+
+Read the paper for the scientific definition and trace the normal metric path in the supplied source. Determine how the implementation identifies boundary samples, obtains directed distances, and accumulates the normalized result. Then make the physical-spacing workflow consistent for both the numerator and deno
+## outlines_of_top_modules
+### source/monai/metrics/surface_dice.py
+L33: class SurfaceDiceMetric
+  L64: def __init__(self, class_thresholds: list[float], include_background: bool=False, distance_metric: str='euclidean', reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L79: def _compute_tensor(self, y_pred: torch.Tensor, y: torch.Tensor, **kwargs: Any)
+  L110: def aggregate(self, reduction: MetricReduction | str | None=None)
+L134: def compute_surface_dice(y_pred: torch.Tensor, y: torch.Tensor, class_thresholds: list[float], include_background: bool=False, distance_metric: str='euclidean', spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None=None)
+#### source/monai/metrics/surface_dice.py::compute_surface_dice (L134)
+def compute_surface_dice(
+    y_pred: torch.Tensor,
+    y: torch.Tensor,
+    class_thresholds: list[float],
+    include_background: bool = False,
+    distance_metric: str = "euclidean",
+    spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None = None,
+) -> torch.Tensor:
+    r"""
+    This function computes the (Normalized) Surface Dice (NSD) between the two tensors `y_pred` (referred to as
+    :math:`\hat{Y}`) and `y` (referred to as :math:`Y`). This metric determines which fraction of a segmentation
+    boundary is correctly predicted. A boundary element is considered correctly predicted if the closest distance to the
+    reference boundary is smaller than or equal to the specified threshold related to the acceptable amount of deviation in
+    pixels. The NSD is bounded between 0 and 1.
+
+    This implementation supports multi-class tasks with an individual threshold :math:`\tau_c` for each class :math:`c`.
+    The class-specific NSD for batch index :math:`b`, :math:`\operatorname {NSD}_{b,c}`, is computed using the function:
+
+    .. math::
+        \operatorname {NSD}_{b,c} \left(Y_{b,c}, \hat{Y}_{b,c}\right) = \frac{\left|\mathcal{D}_{Y_{b,c}}^{'}\right| +
+        \left| \mathcal{D}_{\hat{Y}_{b,c}}^{'} \right|}{\left|\mathcal{D}_{Y_{b,c}}\right| +
+        \left|\mathcal{D}_{\hat{Y}_{b,c}}\right|}
+        :label: nsd
+
+    with :math:`\mathcal{D}_{Y_{b,c}}` and :math:`\mathcal{D}_{\hat{Y}_{b,c}}` being two sets of nearest-neighbor
+    distances. :math:`\mathcal{D}_{Y_{b,c}}` is computed from the predicted segmentation boundary towards the reference segmentation
+    boundary and vice-versa for :math:`\mathcal{D}_{\hat{Y}_{b,c}}`. :math:`\mathcal{D}_{Y_{b,c}}^{'}` and
+    :math:`\mathcal{D}_{\hat{Y}_{b,c}}^{'}` refer to the subsets of distances that are smaller or equal to the
+    acceptable distance :math:`\tau_c`:
+
+    .. math::
+        \mathcal{D}_{Y_{b,c}}^{'} = \{ d \in \mathcal{D}_{Y_{b,c}} \, | \, d \leq \tau_c \}.
+
+
+    In the case of a class neither being present in the predicted segmentation, nor in the reference segmentation, a nan value
+    will be returned for this class. In the case of a class being present in only one of predicted segmentation or
+    reference segmentation, the class NSD will be 0.
+
+    This implementation is based on https://arxiv.org/abs/2111.05408 and supports 2D and 3D images.
+    The boundary convention is part of the scientific meaning of this metric and should be kept
+    co
+### source/monai/metrics/utils.py
+L33: def ignore_background(y_pred: NdarrayTensor, y: NdarrayTensor)
+L50: def do_metric_reduction(f: torch.Tensor, reduction: MetricReduction | str=MetricReduction.MEAN)
+L112: def get_mask_edges(seg_pred: NdarrayOrTensor, seg_gt: NdarrayOrTensor, label_idx: int=1, crop: bool=True)
+L176: def get_surface_distance(seg_pred: np.ndarray, seg_gt: np.ndarray, distance_metric: str='euclidean', spacing: int | float | np.ndarray | Sequence[int | float] | None=None)
+L223: def is_binary_tensor(input: torch.Tensor, name: str)
+L242: def remap_instance_id(pred: torch.Tensor, by_size: bool=False)
+L279: def prepare_spacing(spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None, batch_size: int, img_dim: int)
+#### source/monai/metrics/utils.py::do_metric_reduction (L50)
+def do_metric_reduction(
+    f: torch.Tensor, reduction: MetricReduction | str = MetricReduction.MEAN
+) -> tuple[torch.Tensor | Any, torch.Tensor]:
+    """
+    This function is to do the metric reduction for calculated `not-nan` metrics of each sample's each class.
+    The function also returns `not_nans`, which counts the number of not nans for the metric.
+
+    Args:
+        f: a tensor that contains the calculated metric scores per batch and
+            per class. The first two dims should be batch and class.
+        reduction: define the mode to reduce metrics, will only apply reduction on `not-nan` values,
+            available reduction modes: {``"none"``, ``"mean"``, ``"sum"``, ``"mean_batch"``, ``"sum_batch"``,
+            ``"mean_channel"``, ``"sum_channel"``}, default to ``"mean"``.
+            if "none", return the input f tensor and not_nans.
+
+    Raises:
+        ValueError: When ``reduction`` is not one of
+            ["mean", "sum", "mean_batch", "sum_batch", "mean_channel", "sum_channel" "none"].
+    """
+
+    # some elements might be Nan (if ground truth y was missing (zeros))
+    # we need to account for it
+    nans = torch.isnan(f)
+    not_nans = (~nans).float()
+
+    t_zero = torch.zeros(1, device=f.device, dtype=f.dtype)
+    reduction = look_up_option(reduction, MetricReduction)
+    if reduction == MetricReduction.NONE:
+        return f, not_nans
+
+    f[nans] = 0
+    if reduction == MetricReduction.MEAN:
+        # 2 steps, first, mean by channel (accounting for nans), then by batch
+        not_nans = not_nans.sum(dim=1)
+        f = torch.where(not_nans > 0, f.sum(dim=1) / not_nans, t_zero)  # channel average
+
+        not_nans = (not_nans > 0).float().sum(dim=0)
+        f = torch.where(not_nans > 0, f.sum(dim=0) / not_nans, t_zero)  # batch average
+
+    elif reduction == MetricReduction.SUM:
+        not_nans = not_nans.sum(dim=[0, 1])
+        f = torch.sum(f, dim=[0, 1])  # sum over the batch and channel dims
+    elif reduction == MetricReduction.MEAN_BATCH:
+        not_nans = not_nans.sum(dim=0)
+        f = torch.where(not_nans > 0, f.sum(dim=0) / not_nans, t_zero)  # batch average
+    elif reduction == MetricReduction.SUM_BATCH:
+        not_nans = not_nans.sum(dim=0)
+        f = f.sum(dim=0)  # the batch sum
+    elif reduction == MetricReduction.MEAN_CHANNEL:
+        not_nans = not_nans.sum(dim=1)
+        f = torch.where(not_nans > 0, f.sum(dim=1) / not_nans, t_zero)  # channel average
+    elif reduction == MetricReduction.SUM_CHANNEL:
+  
+#### source/monai/metrics/utils.py::get_surface_distance (L176)
+def get_surface_distance(
+    seg_pred: np.ndarray,
+    seg_gt: np.ndarray,
+    distance_metric: str = "euclidean",
+    spacing: int | float | np.ndarray | Sequence[int | float] | None = None,
+) -> np.ndarray:
+    """
+    This function is used to compute the surface distances from `seg_pred` to `seg_gt`.
+
+    Args:
+        seg_pred: the edge of the predictions.
+        seg_gt: the edge of the ground truth.
+        distance_metric: : [``"euclidean"``, ``"chessboard"``, ``"taxicab"``]
+            the metric used to compute surface distance. Defaults to ``"euclidean"``.
+
+            - ``"euclidean"``, uses Exact Euclidean distance transform.
+            - ``"chessboard"``, uses `chessboard` metric in chamfer type of transform.
+            - ``"taxicab"``, uses `taxicab` metric in chamfer type of transform.
+        spacing: spacing of pixel (or voxel) along each axis. If a sequence, must be of
+            length equal to the image dimensions; if a single number, this is used for all axes.
+            If ``None``, spacing of unity is used. Defaults to ``None``.
+        spacing: spacing of pixel (or voxel). This parameter is relevant only if ``distance_metric`` is set to ``"euclidean"``.
+            Several input options are allowed: (1) If a single number, isotropic spacing with that value is used.
+            (2) If a sequence of numbers, the length of the sequence must be equal to the image dimensions.
+            (3) If ``None``, spacing of unity is used. Defaults to ``None``.
+
+    Note:
+        If seg_pred or seg_gt is all 0, may result in nan/inf distance.
+
+    """
+
+    if not np.any(seg_gt):
+        dis = np.inf * np.ones_like(seg_gt)
+    else:
+        if not np.any(seg_pred):
+            dis = np.inf * np.ones_like(seg_gt)
+            return np.asarray(dis[seg_gt])
+        if distance_metric == "euclidean":
+            dis = distance_transform_edt(~seg_gt, sampling=spacing)
+        elif distance_metric in {"chessboard", "taxicab"}:
+            dis = distance_transform_cdt(~seg_gt, metric=distance_metric)
+        else:
+            raise ValueError(f"distance_metric {distance_metric} is not implemented.")
+
+    return np.asarray(dis[seg_pred])
+#### source/monai/metrics/utils.py::prepare_spacing (L279)
+def prepare_spacing(
+    spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None,
+    batch_size: int,
+    img_dim: int,
+) -> Sequence[None | int | float | np.ndarray | Sequence[int | float]]:
+    """
+    This function is used to prepare the `spacing` parameter to include batch dimension for the computation of
+    surface distance, hausdorff distance or surface dice.
+
+    An example with batch_size = 4 and img_dim = 3:
+    input spacing = None -> output spacing = [None, None, None, None]
+    input spacing = 0.8 -> output spacing = [0.8, 0.8, 0.8, 0.8]
+    input spacing = [0.8, 0.5, 0.9] -> output spacing = [[0.8, 0.5, 0.9], [0.8, 0.5, 0.9], [0.8, 0.5, 0.9], [0.8, 0.5, 0.9]]
+    input spacing = [0.8, 0.7, 1.2, 0.8] -> output spacing = [0.8, 0.7, 1.2, 0.8] (same as input)
+
+    An example with batch_size = 3 and img_dim = 3:
+    input spacing = [0.8, 0.5, 0.9] -> output spacing = [[0.8, 0.5, 0.9], [0.8, 0.5, 0.9], [0.8, 0.5, 0.9], [0.8, 0.5, 0.9]]
+
+    Args:
+        spacing: can be a float, a sequence of length `img_dim`, or a sequence with length `batch_size`
+        that includes floats or sequences of length `img_dim`.
+
+    Raises:
+        AssertionError: when `spacing` is a sequence of sequence, where the outer sequence length does not
+        equal `batch_size` or inner sequence length does not equal `img_dim`.
+
+    Returns:
+        spacing: a sequence with length `batch_size` that includes integers, floats or sequences of length `img_dim`.
+    """
+    if spacing is None or isinstance(spacing, (int, float)):
+        return list([spacing] * batch_size)
+    elif isinstance(spacing, (Sequence, np.ndarray)):
+        assert all(
+            isinstance(s, type(spacing[0])) for s in list(spacing)
+        ), "if `spacing` is a sequence, its elements should be of same type."
+
+        if isinstance(spacing[0], (Sequence, np.ndarray)):
+            assert (
+                len(spacing) == batch_size
+            ), "if `spacing` is a sequence of sequences, the outer sequence should have same length as batch size."
+            assert all(
+                len(s) == img_dim for s in list(spacing)
+            ), "each element of `spacing` list should either have same length as image dim."
+            assert all(
+                isinstance(i, (int, float)) for s in list(spacing) for i in list(s)
+            ), "if `spacing` is a sequence of sequences or 2D np.ndarray, the elements should be integers or floats."
+            ret
+### source/monai/metrics/metric.py
+L26: class Metric
+  L34: def __call__(self, *args: Any, **kwargs: Any)
+L41: class IterationMetric
+  L51: def __call__(self, y_pred: TensorOrList, y: TensorOrList | None=None, **kwargs: Any)
+  L80: def _compute_list(self, y_pred: TensorOrList, y: TensorOrList | None=None, **kwargs: Any)
+  L113: def _compute_tensor(self, y_pred: torch.Tensor, y: torch.Tensor | None=None, **kwargs: Any)
+L122: class Cumulative
+  L180: def __init__(self)
+  L191: def reset(self)
+  L200: def extend(self, *data: Any)
+  L224: def append(self, *data: Any)
+  L245: def aggregate(self, *args: Any, **kwargs: Any)
+  L253: def _sync(self)
+  L269: def __len__(self)
+  L279: def get_buffer(self)
+L293: class CumulativeIterationMetric
+  L324: def __call__(self, y_pred: TensorOrList, y: TensorOrList | None=None, **kwargs: Any)
+### source/monai/metrics/__init__.py
+### source/monai/metrics/hausdorff_distance.py
+L35: class HausdorffDistanceMetric
+  L64: def __init__(self, include_background: bool=False, distance_metric: str='euclidean', percentile: float | None=None, directed: bool=False, reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L81: def _compute_tensor(self, y_pred: torch.Tensor, y: torch.Tensor, **kwargs: Any)
+  L118: def aggregate(self, reduction: MetricReduction | str | None=None)
+L139: def compute_hausdorff_distance(y_pred: np.ndarray | torch.Tensor, y: np.ndarray | torch.Tensor, include_background: bool=False, distance_metric: str='euclidean', percentile: float | None=None, directed: bool=False, spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None=None)
+L208: def compute_percent_hausdorff_distance(edges_pred: np.ndarray, edges_gt: np.ndarray, distance_metric: str='euclidean', percentile: float | None=None, spacing: int | float | np.ndarray | Sequence[int | float] | None=None)
+#### source/monai/metrics/hausdorff_distance.py::compute_hausdorff_distance (L139)
+def compute_hausdorff_distance(
+    y_pred: np.ndarray | torch.Tensor,
+    y: np.ndarray | torch.Tensor,
+    include_background: bool = False,
+    distance_metric: str = "euclidean",
+    percentile: float | None = None,
+    directed: bool = False,
+    spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None = None,
+) -> torch.Tensor:
+    """
+    Compute the Hausdorff distance.
+
+    Args:
+        y_pred: input data to compute, typical segmentation model output.
+            It must be one-hot format and first dim is batch, example shape: [16, 3, 32, 32]. The values
+            should be binarized.
+        y: ground truth to compute mean the distance. It must be one-hot format and first dim is batch.
+            The values should be binarized.
+        include_background: whether to include distance computation on the first channel of
+            the predicted output. Defaults to ``False``.
+        distance_metric: : [``"euclidean"``, ``"chessboard"``, ``"taxicab"``]
+            the metric used to compute surface distance. Defaults to ``"euclidean"``.
+        percentile: an optional float number between 0 and 100. If specified, the corresponding
+            percentile of the Hausdorff Distance rather than the maximum result will be achieved.
+            Defaults to ``None``.
+        directed: whether to calculate directed Hausdorff distance. Defaults to ``False``.
+        spacing: spacing of pixel (or voxel). This parameter is relevant only if ``distance_metric`` is set to ``"euclidean"``.
+            If a single number, isotropic spacing with that value is used for all images in the batch. If a sequence of numbers,
+            the length of the sequence must be equal to the image dimensions. This spacing will be used for all images in the batch.
+            If a sequence of sequences, the length of the outer sequence must be equal to the batch size.
+            If inner sequence has length 1, isotropic spacing with that value is used for all images in the batch,
+            else the inner sequence length must be equal to the image dimensions. If ``None``, spacing of unity is used
+            for all images in batch. Defaults to ``None``.
+    """
+
+    if not include_background:
+        y_pred, y = ignore_background(y_pred=y_pred, y=y)
+    y_pred = convert_data_type(y_pred, output_type=torch.Tensor, dtype=torch.float)[0]
+    y = convert_data_type(y, output_type=torch.Tensor, dtype=torch.float)[0]
+
+    if y.shape != y
+#### source/monai/metrics/hausdorff_distance.py::compute_percent_hausdorff_distance (L208)
+def compute_percent_hausdorff_distance(
+    edges_pred: np.ndarray,
+    edges_gt: np.ndarray,
+    distance_metric: str = "euclidean",
+    percentile: float | None = None,
+    spacing: int | float | np.ndarray | Sequence[int | float] | None = None,
+) -> float:
+    """
+    This function is used to compute the directed Hausdorff distance.
+    """
+
+    surface_distance = get_surface_distance(edges_pred, edges_gt, distance_metric=distance_metric, spacing=spacing)
+
+    # for both pred and gt do not have foreground
+    if surface_distance.shape == (0,):
+        return np.nan
+
+    if not percentile:
+        return surface_distance.max()  # type: ignore[no-any-return]
+
+    if 0 <= percentile <= 100:
+        return np.percentile(surface_distance, percentile)  # type: ignore[no-any-return]
+    raise ValueError(f"percentile should be a value between 0 and 100, get {percentile}.")
+### source/monai/metrics/surface_distance.py
+L33: class SurfaceDistanceMetric
+  L59: def __init__(self, include_background: bool=False, symmetric: bool=False, distance_metric: str='euclidean', reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L74: def _compute_tensor(self, y_pred: torch.Tensor, y: torch.Tensor, **kwargs: Any)
+  L109: def aggregate(self, reduction: MetricReduction | str | None=None)
+L130: def compute_average_surface_distance(y_pred: np.ndarray | torch.Tensor, y: np.ndarray | torch.Tensor, include_background: bool=False, symmetric: bool=False, distance_metric: str='euclidean', spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None=None)
+#### source/monai/metrics/surface_distance.py::compute_average_surface_distance (L130)
+def compute_average_surface_distance(
+    y_pred: np.ndarray | torch.Tensor,
+    y: np.ndarray | torch.Tensor,
+    include_background: bool = False,
+    symmetric: bool = False,
+    distance_metric: str = "euclidean",
+    spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None = None,
+) -> torch.Tensor:
+    """
+    This function is used to compute the Average Surface Distance from `y_pred` to `y`
+    under the default setting.
+    In addition, if sets ``symmetric = True``, the average symmetric surface distance between
+    these two inputs will be returned.
+    The implementation computes a directed surface-distance summary on sampled binary masks.
+
+    Args:
+        y_pred: input data to compute, typical segmentation model output.
+            It must be one-hot format and first dim is batch, example shape: [16, 3, 32, 32]. The values
+            should be binarized.
+        y: ground truth to compute mean the distance. It must be one-hot format and first dim is batch.
+            The values should be binarized.
+        include_background: whether to include distance computation on the first channel of
+            the predicted output. Defaults to ``False``.
+        symmetric: whether to calculate the symmetric average surface distance between
+            `seg_pred` and `seg_gt`. Defaults to ``False``.
+        distance_metric: : [``"euclidean"``, ``"chessboard"``, ``"taxicab"``]
+            the metric used to compute surface distance. Defaults to ``"euclidean"``.
+        spacing: spacing of pixel (or voxel). This parameter is relevant only if ``distance_metric`` is set to ``"euclidean"``.
+            If a single number, isotropic spacing with that value is used for all images in the batch. If a sequence of numbers,
+            the length of the sequence must be equal to the image dimensions. This spacing will be used for all images in the batch.
+            If a sequence of sequences, the length of the outer sequence must be equal to the batch size.
+            If inner sequence has length 1, isotropic spacing with that value is used for all images in the batch,
+            else the inner sequence length must be equal to the image dimensions. If ``None``, spacing of unity is used
+            for all images in batch. Defaults to ``None``.
+    """
+
+    if not include_background:
+        y_pred, y = ignore_background(y_pred=y_pred, y=y)
+
+    y_pred = convert_data_type(y_pred, output_type=torch.Tensor, dtype=torch.
+### source/monai/metrics/regression.py
+L30: class RegressionMetric
+  L48: def __init__(self, reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L53: def aggregate(self, reduction: MetricReduction | str | None=None)
+  L69: def _check_shape(self, y_pred: torch.Tensor, y: torch.Tensor)
+  L78: def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor)
+  L81: def _compute_tensor(self, y_pred: torch.Tensor, y: torch.Tensor)
+L88: class MSEMetric
+  L109: def __init__(self, reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L113: def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor)
+L120: class MAEMetric
+  L141: def __init__(self, reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L145: def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor)
+L152: class RMSEMetric
+  L174: def __init__(self, reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L178: def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor)
+L186: class PSNRMetric
+  L213: def __init__(self, max_val: int | float, reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L220: def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor)
+L228: def compute_mean_error_metrics(y_pred: torch.Tensor, y: torch.Tensor, func: Callable)
+L235: class KernelType
+L240: class SSIMMetric
+  L269: def __init__(self, spatial_dims: int, data_range: float=1.0, kernel_type: KernelType | str=KernelType.GAUSSIAN, win_size: int | Sequence[int]=11, kernel_sigma: float | Sequence[float]=1.5, k1: float=0.01, k2: float=0.03, reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False)
+  L298: def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor)
+L341: def _gaussian_kernel(spatial_dims: int, num_channels: int, kernel_size: Sequence[int], kernel_sigma: Sequence[float])
+L381: def compute_ssim_and_cs(y_pred: torch.Tensor, y: torch.Tensor, spatial_dims: int, kernel_size: Sequence[int], kernel_sigma: Sequence[float], data_range: float=1.0, kernel_type: KernelType | str=KernelType.GAUSSIAN, k1: float=0.01, k2: float=0.03)
+#### source/monai/metrics/regression.py::RegressionMetric._compute_metric (L78)
+    def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        raise NotImplementedError(f"Subclass {self.__class__.__name__} must implement this method.")
+#### source/monai/metrics/regression.py::MSEMetric._compute_metric (L113)
+    def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        y_pred = y_pred.float()
+        y = y.float()
+
+        return compute_mean_error_metrics(y_pred, y, func=self.sq_func)
+#### source/monai/metrics/regression.py::MAEMetric._compute_metric (L145)
+    def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        y_pred = y_pred.float()
+        y = y.float()
+
+        return compute_mean_error_metrics(y_pred, y, func=self.abs_func)
+#### source/monai/metrics/regression.py::RMSEMetric._compute_metric (L178)
+    def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        y_pred = y_pred.float()
+        y = y.float()
+
+        mse_out = compute_mean_error_metrics(y_pred, y, func=self.sq_func)
+        return torch.sqrt(mse_out)
+#### source/monai/metrics/regression.py::PSNRMetric._compute_metric (L220)
+    def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor) -> Any:
+        y_pred = y_pred.float()
+        y = y.float()
+
+        mse_out = compute_mean_error_metrics(y_pred, y, func=self.sq_func)
+        return 20 * math.log10(self.max_val) - 10 * torch.log10(mse_out)
+#### source/monai/metrics/regression.py::compute_mean_error_metrics (L228)
+def compute_mean_error_metrics(y_pred: torch.Tensor, y: torch.Tensor, func: Callable) -> torch.Tensor:
+    # reducing in only channel + spatial dimensions (not batch)
+    # reduction of batch handled inside __call__() using do_metric_reduction() in respective calling class
+    flt = partial(torch.flatten, start_dim=1)
+    return torch.mean(flt(func(y - y_pred)), dim=-1, keepdim=True)
+#### source/monai/metrics/regression.py::SSIMMetric._compute_metric (L298)
+    def _compute_metric(self, y_pred: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+            y_pred: Predicted image.
+                It must be a 2D or 3D batch-first tensor [B,C,H,W] or [B,C,H,W,D].
+            y: Reference image.
+                It must be a 2D or 3D batch-first tensor [B,C,H,W] or [B,C,H,W,D].
+
+        Raises:
+            ValueError: when `y_pred` is not a 2D or 3D image.
+        """
+        dims = y_pred.ndimension()
+        if self.spatial_dims == 2 and dims != 4:
+            raise ValueError(
+                f"y_pred should have 4 dimensions (batch, channel, height, width) when using {self.spatial_dims} "
+                f"spatial dimensions, got {dims}."
+            )
+
+        if self.spatial_dims == 3 and dims != 5:
+            raise ValueError(
+                f"y_pred should have 4 dimensions (batch, channel, height, width, depth) when using {self.spatial_dims}"
+                f" spatial dimensions, got {dims}."
+            )
+
+        ssim_value_full_image, _ = compute_ssim_and_cs(
+            y_pred=y_pred,
+            y=y,
+            spatial_dims=self.spatial_dims,
+            data_range=self.data_range,
+            kernel_type=self.kernel_type,
+            kernel_size=self.kernel_size,
+            kernel_sigma=self.kernel_sigma,
+            k1=self.k1,
+            k2=self.k2,
+        )
+
+        ssim_per_batch: torch.Tensor = ssim_value_full_image.view(ssim_value_full_image.shape[0], -1).mean(
+            1, keepdim=True
+        )
+
+        return ssim_per_batch
+### source/monai/metrics/meandice.py
+L24: class DiceMetric
+  L56: def __init__(self, include_background: bool=True, reduction: MetricReduction | str=MetricReduction.MEAN, get_not_nans: bool=False, ignore_empty: bool=True, num_classes: int | None=None)
+  L79: def _compute_tensor(self, y_pred: torch.Tensor, y: torch.Tensor)
+  L97: def aggregate(self, reduction: MetricReduction | str | None=None)
+L118: def compute_dice(y_pred: torch.Tensor, y: torch.Tensor, include_background: bool=True, ignore_empty: bool=True, num_classes: int | None=None)
+L154: class DiceHelper
+  L177: def __init__(self, include_background: bool | None=None, sigmoid: bool=False, softmax: bool | None=None, activate: bool=False, get_not_nans: bool=True, reduction: MetricReduction | str=MetricReduction.MEAN_BATCH, ignore_empty: bool=True, num_classes: int | None=None)
+  L216: def compute_channel(self, y_pred: torch.Tensor, y: torch.Tensor)
+  L228: def __call__(self, y_pred: torch.Tensor, y: torch.Tensor)

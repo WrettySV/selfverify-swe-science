@@ -11,6 +11,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = []
 report = ["reportlab==5.0.1", "pypdf==6.19.0"]
+scientist-engineer = ["openai>=1.40"]
 
 [build-system]
 requires = ["setuptools>=68"]
@@ -20,4 +21,4 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-selfverify = ["prompts/*.md"]
+selfverify = ["prompts/*.md", "prompts/scientist_engineer/*.md"]

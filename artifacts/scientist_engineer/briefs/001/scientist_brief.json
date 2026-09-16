@@ -1,0 +1,61 @@
+{
+  "task_id": "001",
+  "scientific_principle": "In canonical transition-state theory the rotational partition function of the transition state carries the symmetry number sigma and the moments of inertia, and internal (torsional) degrees of freedom are treated as rotors about specific bonds. The set of rotatable axes is a property of the physical molecular object, not of its encoding: a rotor is identified by the unoriented element-symbol sequence along its torsion axis (a coordinate and its reverse are the same physical axis, canonicalized to the lexicographically smaller sequence), and each physically distinct, non-redundant axis must appear exactly once. Consequently the sorted multiset of these symbol sequences \u2014 the rotor signature \u2014 must be identical for every equivalent presentation of the same TS graph: arbitrary atom-key relabelings and reversal of the reaction direction (swapping the 0.1 forming and 0.9 breaking bond orders). This is the graph-level analogue of the requirement that the symmetry divisor sigma of the rotational partition function be invariant under equivalent presentations of one physical object.",
+  "violated_invariant": "The sorted, unoriented rotor signature (one entry per physically distinct rotatable axis) must be exactly identical for all equivalent presentations of the same transition-state graph, but it changes under atom-key relabeling and/or reaction-direction reversal.",
+  "observable_symptom": "The workflow's agreement relation fails: the original graph, its relabeled copies, and its reversed reaction yield different rotor signatures (different coordinate sets or counts) for the same physical transition state, while a genuinely changed-connectivity graph must remain distinct.",
+  "suspected_loci": [
+    "source/automol/graph/base/ts.py::rotational_coordinates",
+    "source/automol/graph/base/_00core.py::ts_reverse",
+    "source/automol/graph/base/_00core.py::relabel"
+  ],
+  "acceptance_checks": [
+    "For any valid TS graph, relabeling all atom keys with an arbitrary (including non-monotone) permutation leaves the sorted unoriented rotor signature exactly unchanged.",
+    "Reversing the reaction direction (swapping the 0.1 and 0.9 bond orders) leaves the signature unchanged, and a double reversal returns the original observation.",
+    "The signature is nonempty for a TS containing at least one non-terminal, non-ring single bond, and empty for a TS with no such bond (e.g., only multiple bonds plus a fractional forming bond).",
+    "Each physically distinct rotatable axis is represented exactly once: the signature length equals the number of distinct rotors, with no symmetry-induced duplicates and no axes dropped or added across presentations.",
+    "Changing the connectivity (e.g., shortening the carbon chain by removing a terminal group) changes the signature; a changed-connectivity graph must not collapse to the same observation."
+  ],
+  "metamorphic_probes": [
+    {
+      "name": "relabel_invariance",
+      "relation": "Transform T: relabel all atom keys of a pentane 1,2-methyl-shift TS with two fixed non-monotone permutations; the sorted unoriented rotor signature must be exactly unchanged and nonempty.",
+      "code": "import sys\nfrom pathlib import Path\nsrc = Path('source')\nif not src.is_dir():\n    src = Path(__file__).resolve().parent / 'source'\nsys.path.insert(0, str(src))\nfrom automol import graph\n\ndef sig(gra):\n    syms = graph.atom_symbols(gra)\n    out = []\n    for coord in graph.rotational_coordinates(gra):\n        seq = tuple(syms[k] for k in coord)\n        out.append(min(seq, seq[::-1]))\n    return sorted(out)\n\n# pentane 1,2-methyl-shift TS: C0-C1-C2-C3-C4, break C0-C1, form C0-C2\natm = {0: 'C', 1: 'C', 2: 'C', 3: 'C', 4: 'C'}\nhyd = {0: 3, 1: 2, 2: 2, 3: 2, 4: 3}\nbonds = [(0, 1), (1, 2), (2, 3), (3, 4)]\ngra = graph.from_data(atm, bonds, atm_imp_hyd_dct=hyd)\ngra = graph.ts_graph(gra, frm_bnd_keys=[(0, 2)], brk_bnd_keys=[(0, 1)])\n\ns0 = sig(gra)\nassert len(s0) > 0, 'expected a nonempty rotor observation'\nfor perm in ({0: 3, 1: 0, 2: 4, 3: 1, 4: 2}, {0: 4, 1: 3, 2: 2, 3: 1, 4: 0}):\n    s2 = sig(graph.relabel(gra, perm))\n    assert s2 == s0, f'relabel broke invariance: {s0} vs {s2}'\nprint('PASS')\n"
+    },
+    {
+      "name": "reverse_invariance",
+      "relation": "Transform T: reverse the reaction direction of a pentane 1,2-methyl-shift TS via graph.ts.reverse; the signature must be exactly unchanged and nonempty, and a double reversal must return the original observation.",
+      "code": "import sys\nfrom pathlib import Path\nsrc = Path('source')\nif not src.is_dir():\n    src = Path(__file__).resolve().parent / 'source'\nsys.path.insert(0, str(src))\nfrom automol import graph\n\ndef sig(gra):\n    syms = graph.atom_symbols(gra)\n    out = []\n    for coord in graph.rotational_coordinates(gra):\n        seq = tuple(syms[k] for k in coord)\n        out.append(min(seq, seq[::-1]))\n    return sorted(out)\n\natm = {0: 'C', 1: 'C', 2: 'C', 3: 'C', 4: 'C'}\nhyd = {0: 3, 1: 2, 2: 2, 3: 2, 4: 3}\nbonds = [(0, 1), (1, 2), (2, 3), (3, 4)]\ngra = graph.from_data(atm, bonds, atm_imp_hyd_dct=hyd)\ngra = graph.ts_graph(gra, frm_bnd_keys=[(0, 2)], brk_bnd_keys=[(0, 1)])\n\ns0 = sig(gra)\nassert len(s0) > 0, 'expected a nonempty rotor observation'\ngrev = graph.ts.reverse(gra)\nassert sig(grev) == s0, 'reaction reversal changed the rotor signature'\nassert sig(graph.ts.reverse(grev)) == s0, 'double reversal is not the identity'\nprint('PASS')\n"
+    },
+    {
+      "name": "chain_shift_invariance",
+      "relation": "Transform T: on a longer hexane 1,2-methyl-shift TS (more rotatable axes than the pentane case), a fixed key permutation and a reaction reversal must each leave the sorted unoriented signature exactly unchanged and nonempty.",
+      "code": "import sys\nfrom pathlib import Path\nsrc = Path('source')\nif not src.is_dir():\n    src = Path(__file__).resolve().parent / 'source'\nsys.path.insert(0, str(src))\nfrom automol import graph\n\ndef sig(gra):\n    syms = graph.atom_symbols(gra)\n    out = []\n    for coord in graph.rotational_coordinates(gra):\n        seq = tuple(syms[k] for k in coord)\n        out.append(min(seq, seq[::-1]))\n    return sorted(out)\n\n# hexane 1,2-shift TS: C0..C5, break C0-C1, form C0-C2\natm = {i: 'C' for i in range(6)}\nhyd = {0: 3, 1: 2, 2: 2, 3: 2, 4: 2, 5: 3}\nbonds = [(i, i + 1) for i in range(5)]\ngra = graph.from_data(atm, bonds, atm_imp_hyd_dct=hyd)\ngra = graph.ts_graph(gra, frm_bnd_keys=[(0, 2)], brk_bnd_keys=[(0, 1)])\n\ns0 = sig(gra)\nassert len(s0) > 0, 'expected a nonempty rotor observation'\nassert sig(graph.relabel(gra, {0: 5, 1: 2, 2: 4, 3: 0, 4: 3, 5: 1})) == s0, 'relabel broke invariance'\nassert sig(graph.ts.reverse(gra)) == s0, 'reversal broke invariance'\nprint('PASS')\n"
+    },
+    {
+      "name": "connectivity_change_distinct",
+      "relation": "Transform T: shorten the chain of a 1,2-methyl-shift TS from five to four carbons (removing a terminal group, keeping the graph connected and valid); the changed-connectivity signature must differ from the original nonempty signature.",
+      "code": "import sys\nfrom pathlib import Path\nsrc = Path('source')\nif not src.is_dir():\n    src = Path(__file__).resolve().parent / 'source'\nsys.path.insert(0, str(src))\nfrom automol import graph\n\ndef sig(gra):\n    syms = graph.atom_symbols(gra)\n    out = []\n    for coord in graph.rotational_coordinates(gra):\n        seq = tuple(syms[k] for k in coord)\n        out.append(min(seq, seq[::-1]))\n    return sorted(out)\n\ndef shift_ts(n):\n    atm = {i: 'C' for i in range(n)}\n    hyd = {i: (3 if i in (0, n - 1) else 2) for i in range(n)}\n    bonds = [(i, i + 1) for i in range(n - 1)]\n    gra = graph.from_data(atm, bonds, atm_imp_hyd_dct=hyd)\n    return graph.ts_graph(gra, frm_bnd_keys=[(0, 2)], brk_bnd_keys=[(0, 1)])\n\ns5 = sig(shift_ts(5))\nassert len(s5) > 0, 'expected a nonempty rotor observation for the longer chain'\ns4 = sig(shift_ts(4))\nassert s4 != s5, 'changed connectivity collapsed to the same rotor observation'\nprint('PASS')\n"
+    },
+    {
+      "name": "rigid_no_rotor",
+      "relation": "Transform T: a TS built from two acetylene fragments with only a fractional forming bond (no single bonds anywhere) has no rotatable axis, so rotational_coordinates must return an empty set.",
+      "code": "import sys\nfrom pathlib import Path\nsrc = Path('source')\nif not src.is_dir():\n    src = Path(__file__).resolve().parent / 'source'\nsys.path.insert(0, str(src))\nfrom automol import graph\n\n# rigid TS: C0#C1 ... C2#C3 with a forming C1-C2 bond; no single bonds\natm = {0: 'C', 1: 'C', 2: 'C', 3: 'C'}\nhyd = {0: 1, 1: 0, 2: 0, 3: 1}\nbonds = [(0, 1), (2, 3)]\ngra = graph.from_data(atm, bonds, atm_imp_hyd_dct=hyd, bnd_ord_dct={(0, 1): 3, (2, 3): 3})\ngra = graph.ts_graph(gra, frm_bnd_keys=[(1, 2)], brk_bnd_keys=[])\ncoords = graph.rotational_coordinates(gra)\nassert len(coords) == 0, f'a TS with no rotatable single bond must have no rotors, got {len(coords)}'\nprint('PASS')\n"
+    }
+  ],
+  "anti_hardcoding": [
+    "Special-casing the public fixture's atom count, atom keys, or bond orders inside rotational_coordinates, ts_reverse, or relabel.",
+    "Caching or returning a fixed coordinate list or signature for the known presentations while computing other inputs differently.",
+    "Ordering or orienting coordinates by raw atom-key order instead of a canonical symbol sequence: this passes on the original presentation but fails under a relabeling that changes key order.",
+    "Dropping, duplicating, or merging coordinates merely to make counts or signatures match across presentations instead of identifying the physical axes (the method material explicitly forbids removing an axis just to match counts).",
+    "Keying behavior on is_ts_graph or on the mere presence of 0.1/0.9 bond orders rather than on graph structure, so new valid TS shapes (different chains, branched skeletons, multiple rotors) behave differently."
+  ],
+  "confidence": 0.7,
+  "evidence_notes": [
+    "workflow/observe.py (visible in the inventory) computes the signature from graph.rotational_coordinates + graph.atom_symbols, canonicalizes each coordinate via min(seq, seq[::-1]), and compares the original graph, two relabeled copies, and graph.ts.reverse; because unorientation is already handled there, the inconsistency must come from rotational_coordinates (or ts_reverse/relabel) returning different coordinate sets across presentations.",
+    "source/automol/graph/base/ts.py appears in the import reach and ranked source paths, but its function outline is not shown in the inventory, so the top locus (rotational_coordinates) is inferred from the workflow call graph; confidence is capped at 0.7 for this reason.",
+    "ts_reverse (_00core.py L541) and relabel (_00core.py L1843) are visible and are exactly the other two presentation transforms the workflow applies; a defect in either breaks the same agreement relation.",
+    "Expected to fail before the fix: probes 1-3 (relabel/reverse invariance), if the coordinate set depends on key order or reaction direction. Probes 4-5 are guards and are expected to pass before the fix only if the buggy code already distinguishes connectivity and returns empty for the rigid TS; they exist to reject shallow fixes that force agreement by collapsing or padding coordinates.",
+    "Previous brief issues are addressed: implicit hydrogens only (no explicit+implicit double counting), a genuine non-terminal single-bond rotor mid-chain so the invariance probes are not vacuous, a nonempty assertion before every signature comparison, fixed (non-random) permutations, and a connected, valid changed-connectivity control (chain shortening) instead of a bond removal that disconnects the graph.",
+    "Residual risk noted: probe 5 assumes the fractional forming bond itself is never reported as a rotor (it is the reaction coordinate, not a rotatable axis); if the implementation counts it, that probe would need re-derivation, but the invariance probes 1-3 remain the primary discriminators."
+  ]
+}

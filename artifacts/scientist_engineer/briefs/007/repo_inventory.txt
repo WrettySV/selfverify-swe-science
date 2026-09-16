@@ -1,0 +1,589 @@
+workdir: /app/task_007
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-007:v0.1.2
+code_files_total: 48
+## directories (file counts)
+source/suspect/io: 11
+source/tests/test_mrs: 10
+source/suspect/processing: 6
+source/suspect: 5
+.: 3
+source/suspect/fitting: 2
+source/suspect/image: 2
+source/suspect/scripts: 2
+source/suspect/viz: 2
+paper_assets: 1
+source/docs: 1
+source: 1
+source/suspect/basis: 1
+source/tests: 1
+## terms_from_instruction
+strong: Infinity, mrm.25094, null, pre_fix_expected_failure, public_dynamic_series, public_dynamic_series.npz, reproduction_report, reproduction_report.json, runner_failure, workflow_completed
+common: registration, spectral, transients, frequency, drift, reference, correction, dynamic, phase, transient, averaging, quality, magnetic, resonance, stable, domain, spectroscopy, series, region, reported, scientifically, peaks, scientific, suspect, small
+## import_reach_from_reproduce.py (path, depth)
+source/suspect/mrsdata.py  (depth 1)
+source/suspect/processing/frequency_correction.py  (depth 1)
+source/tests/test_mrs/test_mrsdata.py  (depth 1)
+source/suspect/__init__.py  (depth 2)
+source/suspect/_transforms.py  (depth 3)
+source/suspect/_version.py  (depth 3)
+source/suspect/core.py  (depth 3)
+## ranked_source_paths (score, path, matched_terms)
+  19.5  source/suspect/processing/frequency_correction.py  []
+  16.5  source/suspect/mrsdata.py  []
+   4.0  source/suspect/core.py  []
+   4.0  source/suspect/io/siemens.py  ['null']
+   3.9  source/suspect/__init__.py  []
+   3.5  source/suspect/_transforms.py  []
+   3.2  source/tests/test_mrs/test_mrsdata.py  []
+   3.0  source/suspect/_version.py  []
+   2.5  source/setup.py  []
+   2.5  source/suspect/io/twix.py  []
+   2.5  source/suspect/processing/_apodize.py  []
+   2.0  source/suspect/fitting/singlet.py  []
+   2.0  source/suspect/io/dicom.py  []
+   2.0  source/suspect/viz/plot_1D_signals.py  []
+   1.5  source/suspect/image/_image.py  []
+   1.5  source/suspect/io/lcmodel.py  []
+   1.5  source/suspect/processing/denoising.py  []
+   1.5  source/suspect/processing/water_suppression.py  []
+   1.0  source/docs/conf.py  []
+   1.0  source/suspect/io/rda.py  []
+   1.0  source/suspect/processing/channel_combination.py  []
+   0.6  source/suspect/basis/__init__.py  []
+   0.5  source/suspect/io/_common.py  []
+   0.5  source/suspect/io/bruker.py  []
+   0.5  source/suspect/io/felix.py  []
+   0.5  source/suspect/io/philips.py  []
+   0.5  source/suspect/io/tarquin.py  []
+   0.5  source/suspect/scripts/anonymize.py  []
+   0.4  source/tests/test_mrs/test_fitting.py  []
+   0.4  source/tests/test_mrs/test_processing.py  []
+   0.3  source/suspect/image/__init__.py  []
+   0.3  source/suspect/io/__init__.py  []
+   0.3  source/suspect/processing/__init__.py  []
+   0.2  source/tests/test_mrs/test_basis.py  []
+   0.2  source/tests/test_mrs/test_core.py  []
+   0.2  source/tests/test_mrs/test_io.py  []
+   0.1  source/tests/test_mrs/test_ima.py  []
+   0.1  source/tests/test_mrs/test_rda.py  []
+   0.1  source/tests/test_mrs/test_twix.py  []
+   0.0  paper_assets/README.md  []
+   0.0  source/suspect/fitting/__init__.py  []
+   0.0  source/suspect/viz/__init__.py  []
+## snippets
+### reproduce.py
+from __future__ import annotations
+
+import importlib.util
+import json
+import warnings
+from pathlib import Path
+from types import ModuleType
+
+import numpy as np
+
+
+ROOT = Path(__file__).resolve().parent
+SOURCE = ROOT / "source"
+FIXTURES = ROOT / "fixtures"
+OUTPUTS = ROOT / "outputs"
+EXIT_CODES = {
+    "workflow_completed": 0,
+    "post_fix_success": 0,
+    "pre_fix_expected_failure": 1,
+    "runner_failure": 2,
+}
+
+
+def _load_module(name: str, path: Path) -> ModuleType:
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load {name} from {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_suspect_core() -> tuple[type, ModuleType]:
+    mrsdata = _load_module(
+        "sciencebench_suspect_mrsdata", SOURCE / "suspect" / "mrsdata.py"
+    )
+    frequency_correction = _load_module(
+        "sciencebench_suspect_frequency_correction",
+        SOURCE / "suspect" / "processing" / "frequency_correction.py",
+    )
+    return mrsdata.MRSData, frequency_correction
+
+
+def residual_ratio(series: list[np.ndarray], reference: np.ndarray) -> float:
+    denom = np.linalg.norm(reference)
+    return float(
+        np.mean(
+            [np.linalg.norm(np.asarray(item) - reference) / denom for item in series]
+        )
+    )
+
+
+def average_snr(series: list[np.ndarray]) -> float:
+    spectrum = np.fft.fftshift(np.fft.fft(np.mean(np.asarray(series), axis=0)))
+    magnitude = np.abs(spectrum)
+    edge = max(8, len(magnitude) // 12)
+    noise = np.concatenate([magnitude[:edge], magnitude[-edge:]])
+    return float(np.max(magnitude) / (np.std(noise) + 1e-12))
+
+
+def linewidth_hz(series: list[np.ndarray], dt: float) -> float:
+    spectrum = np.fft.fftshift(np.fft.fft(np.mean(np.asarray(series), axis=0)))
+    magnitude = np.abs(spectrum)
+    peak = int(np.argmax(magnitude))
+    half_height = magnitude[peak] / 2.0
+    left = peak
+    while left > 0 and magnitude[left] >= half_height:
+        left -= 1
+    right = peak
+    while right < len(magnitude) - 1 and magnitude[right] >= half_height:
+        right += 1
+    return float((right - left) * (1.0 / dt) / len(magnitude))
+
+
+def _base_report(
+    *,
+    n_transients: int,
+    accepted_transients: int,
+    n_points: int,
+    frequency_range: tuple[float, float],
+) -> dict[str, object]:
+    return {
+        "workflow": "dynamic MRS spectral registration",
+        "n_transients": n_transients,
+        "accepted_transients": accepted_transients,
+        "n_points": n_points,
+        "registration_window_hz": [frequency_range[0], frequency_range[1]],
+    }
+
+
+def _finite_or_none(value: float) -> float | None:
+    value = float(value)
+    return value if np.isfinite(value) else None
+
+
+def run_workflow() -> dict[str, object]:
+    MRSData, frequency_correction = load_suspect_core()
+    with np.load(FIXTURES / "public_dynamic_series.npz") as fixture:
+        dt = float(fixture["dt"])
+        f0 = float(fixture["f0"])
+        frequency_range = tuple(float(item) for item in fixture["frequency_range"])
+        reference = MRSData(fixture["reference"], dt, f0)
+        dynamics = [MRSData(row, dt, f0) for row in fixture["dynamics"]]
+        initial_guesses = np.asarray(fixture["initial_guesses"], dtype=float)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        result = frequency_correction.register_dynamic_series(
+            dynamics,
+            reference=reference,
+            initial_guesses=[
+                (float(initial_guess[0]), float(initial_guess[1]))
+                for initial_guess in initial_guesses
+            ],
+            frequency_range=frequency_range,
+            reject_threshold=0.42,
+        )
+    corrected = list(result["corrected"])
+    accepted = np.asarray(result["accepted"], dtype=bool).reshape(-1)
+    residuals_before = np.asarray(result["residuals_before"], dtype=float).reshape(-1)
+    residuals_after = np.asarray(result["residuals_after"], dtype=float).reshape(-1)
+    if not (
+        len(corrected)
+        == accepted.size
+        == residuals_before.size
+        == residuals_after.size
+        == len(dynamics)
+    ):
+        raise ValueError(
+            "Registration result arrays do not match the dynamic series length."
+        )
+
+    accepted_corrected = [
+        item for item, keep in zip(corrected, accepted, strict=True) if keep
+    ]
+    accepted_original = [
+        item for item, keep in zip(dynamics, accepted, strict=True) if keep
+    ]
+    accepted_count = int(np.sum(accepted))
+    report = _base_report(
+        n_transients=len(dynamics),
+        accepted_transients=accepted_count,
+        n_points=int(reference.shape[-1]),
+        frequency_range=frequency_range,
+    )
+
+    before_residual = float(np.mean(residuals_before))
+    if not accepted_corrected:
+        report.update(
+            {
+                "mean_residual_before": _finite_or_none(before_residual),
+                "mean_residual_after": None,
+                "average_snr_before": None,
+                "average_snr_after": None,
+                "linewidth_before_hz": None,
+                "linewidth_after_hz": None,
+                "status": "pre_fix_expected_failure",
+                "failure_kind": "no_transients_accepted",
+            }
+        )
+        return report
+
+    after_residual = float(np.mean(residuals_after[accepted]))
+    before_snr = average_snr(accepted_original)
+    after_snr = average_snr(accepted_corrected)
+    before_lw = linewidth_hz(accepted_original, dt)
+    after_lw = linewidth_hz(accepted_corrected, dt)
+
+    observations = [
+        before_residual,
+        after_residual,
+        before_snr,
+        after_snr,
+        before_lw,
+        after_lw,
+    ]
+    observations_are_finite = bool(np.all(np.isfinite(observations)))
+    report.update(
+        {
+            "mean_residual_before": _finite_or_none(before_residual),
+            "mean_residual_after": _finite_or_none(after_residual),
+            "average_snr_before": _finite_or_none(before_snr),
+            "average_snr_after": _finite_or_none(after_snr),
+            "linewidth_before_hz": _finite_or_none(before_lw),
+            "linewidth_after_hz": _finite_or_none(after_lw),
+            "status": (
+                "workflow_completed"
+                if observations_are_finite
+                else "pre_fix_expected_failure"
+            ),
+        }
+    )
+    if not observations_are_finite:
+        report["failure_kind"] = "non_finite_registration_observation"
+    return report
+
+
+def emit_report(report: dict[str, object]) -> None:
+    payload = json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    OUTPUTS.mkdir(exist_ok=True)
+    (OUTPUTS / "reproduction_report.json").write_text(payload, encoding="utf-8")
+    print(payload, end="")
+
+
+def main() -> int:
+    try:
+        report = run_workflow()
+    except Exception as exc:
+        report = {
+            "w
+### reproduction.md
+# Public Reproduction
+
+Run the reproduction from the task directory:
+
+```bash
+python reproduce.py
+```
+
+The script loads `fixtures/public_dynamic_series.npz`, runs the package's
+dynamic spectral-registration workflow, compensates the estimated drift, and
+reports before/after quality metrics in `outputs/reproduction_report.json`.
+The workflow uses a stable registration window, records how many transients are
+accepted for averaging, and records residual, SNR, and linewidth observations
+before and after correction.
+
+`workflow_completed` means that the candidate workflow returned a finite,
+inspectable registered series. The public report does not apply fixed
+improvement multipliers or certify the repair. Private verification owns the
+authoritative scientific magnitudes and additional cases. If no transient is
+accepted, or if the workflow returns a non-finite scientific observation, the
+script emits a structured `pre_fix_expected_failure` report with exit code 1.
+Import, fixture, dependency, and result-protocol exceptions are reported as
+`runner_failure` with exit code 2. All reports are strict JSON; unavailable
+observations are represented as `null`, never `NaN` or `Infinity`.
+### paper.md
+# Spectral Registration Context For Dynamic MRS
+
+Magnetic-resonance spectroscopy experiments often acquire many repeated
+transients before averaging them. Small scanner and subject changes can shift
+individual transients in frequency and phase. If those shifts are not corrected,
+averaging broadens peaks, distorts line shapes, and reduces the effective SNR.
+
+Near et al. introduced time-domain spectral registration as a practical way to
+estimate frequency and phase drift between an input transient and a reference.
+The method adjusts a transient with a complex exponential and chooses the
+frequency/phase parameters that minimize the time-domain mismatch to the
+reference. After a valid correction, the aligned transients should be more
+similar to each other, and their averaged spectrum should have a sharper,
+higher-quality peak than the uncorrected average.
+
+For this task, treat the public data as a compact dynamic MRS quality-control
+case. The important scientific invariant is qualitative but testable:
+
+```text
+applying the registration workflow should improve alignment quality.
+```
+
+In practice, not every spectral feature is equally useful for registration.
+Some peaks can change with experimental condition, editing state, or nuisance
+contamination, while another spectral region remains a stable reference. A
+registration workflow should therefore be able to compare transients in the
+scientifically appropriate frequency window, then apply the resulting
+time-domain correction to the full transient.
+
+Useful checks include reduced residual mismatch to the reference in the stable
+region, narrower dominant spectral peaks after averaging, improved SNR
+proxies, and avoiding contamination from transients that cannot be registered
+to the common reference. A repair that only works for one point count, one
+fixture, or one globally identical spectrum is not scientifically adequate.
+
+## References
+
+- Near J, Edden R, Evans C, Paquin R, Harris A, Jezzard P. Frequency and phase
+  drift correction of magnetic resonance spectroscopy data by spectral
+  registration in the time domain. Magnetic Resonance in Medicine 73:44-50
+  (2015). DOI: `10.1002/mrm.25094`.
+- Suspect documentation: frequency correction API.
+## outlines_of_top_modules
+### source/suspect/processing/frequency_correction.py
+L5: def transform_fid(fid, frequency_shift, phase_shift)
+L12: def residual_water_alignment(data)
+L23: def spectral_registration(data, target, initial_guess=(0.0, 0.0), frequency_range=None)
+L75: def residual_ratio(data, target, frequency_range=None)
+L89: def average_spectrum_snr(series)
+L97: def linewidth_hz(series, dt)
+L111: def _frequency_weights(data, frequency_range)
+L117: def dynamic_reference(series)
+L124: def register_dynamic_series(series, reference=None, initial_guesses=None, frequency_range=None, reject_threshold=None)
+#### source/suspect/processing/frequency_correction.py::spectral_registration (L23)
+def spectral_registration(data, target, initial_guess=(0.0, 0.0), frequency_range=None):
+    """
+    Performs the spectral registration method to calculate the frequency and
+    phase shifts between the input data and the reference spectrum target. The
+    frequency range over which the two spectra are compared can be specified to
+    exclude regions where the spectra differ.
+
+    Parameters
+    ----------
+    data : MRSData
+    target : MRSData
+    initial_guess : tuple
+    frequency_range : 
+
+    Returns
+    -------
+
+    """
+
+    # make sure that there are no extra dimensions in the data
+    data = data.squeeze()
+    target = target.squeeze()
+
+    # the supplied frequency range can be none, in which case we use the whole
+    # spectrum, or it can be a tuple defining two frequencies in Hz, in which
+    # case we use the spectral points between those two frequencies, or it can
+    # be a numpy.array of the same size as the data in which case we simply use
+    # that array as the weightings for the comparison
+    if type(frequency_range) is tuple:
+        spectral_weights = frequency_range[0] < data.frequency_axis() & data.frequency_axis() < frequency_range[1]
+    else:
+        spectral_weights = frequency_range
+
+    # define a residual function for the optimizer to use
+    def residual(input_vector):
+        transformed_data = transform_fid(data, input_vector[0], input_vector[1])
+        residual_data = transformed_data - target
+        if frequency_range is not None:
+            spectrum = residual_data.spectrum()
+            weighted_spectrum = residual_data * spectral_weights
+            # remove zero-elements
+            weighted_spectrum = weighted_spectrum[weighted_spectrum != 0]
+            residual_data = numpy.fft.ifft(numpy.fft.ifftshift(weighted_spectrum))
+        return_vector = numpy.zeros(len(residual_data) * 2)
+        return_vector[:len(residual_data)] = residual_data.real
+        return_vector[len(residual_data):] = residual_data.imag
+        return return_vector
+
+    out = scipy.optimize.leastsq(residual, initial_guess)
+    return -out[0][0], -out[0][1]
+#### source/suspect/processing/frequency_correction.py::_frequency_weights (L111)
+def _frequency_weights(data, frequency_range):
+    if type(frequency_range) is tuple:
+        return frequency_range[0] < data.frequency_axis() & data.frequency_axis() < frequency_range[1]
+    return frequency_range
+#### source/suspect/processing/frequency_correction.py::dynamic_reference (L117)
+def dynamic_reference(series):
+    series = [item.squeeze() for item in series]
+    if len(series) == 0:
+        raise ValueError("series must contain at least one transient")
+    return series[0]
+#### source/suspect/processing/frequency_correction.py::register_dynamic_series (L124)
+def register_dynamic_series(
+    series,
+    reference=None,
+    initial_guesses=None,
+    frequency_range=None,
+    reject_threshold=None,
+):
+    """
+    Register a dynamic MRS series to a common reference.
+
+    The returned dictionary is intentionally simple so that downstream quality
+    control can inspect the corrected transients, per-transient drift estimates,
+    residuals, and accepted mask.
+    """
+    transients = [item.squeeze() for item in series]
+    if len(transients) == 0:
+        raise ValueError("series must contain at least one transient")
+    if reference is None:
+        reference = dynamic_reference(transients)
+    else:
+        reference = reference.squeeze()
+
+    if initial_guesses is None:
+        initial_guesses = [(0.0, 0.0)] * len(transients)
+    if len(initial_guesses) != len(transients):
+        raise ValueError("initial_guesses must match the number of transients")
+
+    corrected = []
+    estimates = []
+    before = []
+    after = []
+    accepted = []
+
+    for transient, initial_guess in zip(transients, initial_guesses):
+        before.append(residual_ratio(transient, reference, frequency_range=None))
+        freq, phase = spectral_registration(
+            transient,
+            reference,
+            initial_guess=initial_guess,
+            frequency_range=None,
+        )
+        aligned = transform_fid(transient, -freq, -phase)
+        corrected.append(aligned)
+        estimates.append((freq, phase))
+        after_value = residual_ratio(aligned, reference, frequency_range=None)
+        after.append(after_value)
+        accepted.append(True)
+
+    return {
+        "reference": reference,
+        "corrected": corrected,
+        "estimates": numpy.asarray(estimates, dtype=float),
+        "residuals_before": numpy.asarray(before, dtype=float),
+        "residuals_after": numpy.asarray(after, dtype=float),
+        "accepted": numpy.asarray(accepted, dtype=bool),
+        "frequency_range": frequency_range,
+    }
+### source/suspect/mrsdata.py
+L4: class MRSData
+  L10: def __new__(cls, input_array, dt, f0, te=30, ppm0=4.7, voxel_dimensions=(10, 10, 10), transform=None, metadata=None)
+  L24: def __array_finalize__(self, obj)
+  L34: def __array_wrap__(self, obj)
+  L40: def __str__(self)
+  L43: def inherit(self, new_array)
+  L70: def dt(self)
+  L77: def np(self)
+  L84: def sw(self)
+  L91: def df(self)
+  L100: def te(self)
+  L107: def f0(self)
+  L113: def spectrum(self)
+  L123: def hertz_to_ppm(self, frequency)
+  L139: def ppm_to_hertz(self, frequency)
+  L155: def time_axis(self)
+  L166: def frequency_axis(self)
+  L177: def frequency_axis_ppm(self)
+  L190: def voxel_size(self)
+  L201: def to_scanner(self, x, y, z)
+  L226: def from_scanner(self, x, y, z)
+  L251: def adjust_phase(self, zero_phase, first_phase=0, fixed_frequency=0)
+#### source/suspect/mrsdata.py::MRSData.frequency_axis (L166)
+    def frequency_axis(self):
+        """
+
+        Returns
+        -------
+        ndarray
+            An array of frequencies in Hertz ranging from -sw/2 to sw/2.
+
+        """
+        return numpy.linspace(-self.sw / 2, self.sw / 2, self.np, endpoint=False)
+#### source/suspect/mrsdata.py::MRSData.frequency_axis_ppm (L177)
+    def frequency_axis_ppm(self):
+        """
+
+        Returns
+        -------
+        ndarray
+            An array of frequencies in PPM.
+
+        """
+        return numpy.linspace(self.hertz_to_ppm(-self.sw / 2.0),
+                              self.hertz_to_ppm(self.sw / 2.0),
+                              self.np, endpoint=False)
+#### source/suspect/mrsdata.py::MRSData.adjust_phase (L251)
+    def adjust_phase(self, zero_phase, first_phase=0, fixed_frequency=0):
+        """
+        Adjust the phases of the signal.
+
+        Refer to suspect.adjust_phase for full documentation.
+
+        See Also
+        --------
+        suspect.adjust_phase : equivalent function
+        """
+        # easiest to apply the phase shift in the frequency domain
+        # TODO when MRSSpectrum is a real class, this function can delegate
+        # to that one.
+        spectrum = self.spectrum()
+        phase_ramp = numpy.linspace(-self.sw / 2,
+                                    self.sw / 2,
+                                    self.np,
+                                    endpoint=False)
+        phase_shift = zero_phase + first_phase * (fixed_frequency + phase_ramp)
+        phased_spectrum = spectrum * numpy.exp(1j * phase_shift)
+        return self.inherit(numpy.fft.ifft(numpy.fft.ifftshift(phased_spectrum, axes=-1), axis=-1))
+### source/suspect/core.py
+L4: def adjust_phase(data, zero_phase, first_phase=0, fixed_frequency=0)
+#### source/suspect/core.py::adjust_phase (L4)
+def adjust_phase(data, zero_phase, first_phase=0, fixed_frequency=0):
+    """
+    Adjust the phase of an MRSData object
+
+    Parameters
+    ----------
+    data : MRSData
+        The MRSData object to be phased
+    zero_phase : scalar
+        The change to the zero order phase, in radians
+    first_phase : scalar, optional
+        The change to the first order phase, in radians per Hz
+    fixed_frequency : scalar, optional
+        The frequency, in Hz, which is unchanged by the first order
+        phase shift
+
+    Returns
+    -------
+    out : MRSData
+        A new MRSData object with adjusted phase.
+    """
+    return data.adjust_phase(zero_phase, first_phase, fixed_frequency)
+### source/suspect/io/siemens.py
+L37: def read_csa_header(csa_header_bytes)
+L94: def load_siemens_dicom(filename)
+### source/suspect/__init__.py
+### source/suspect/_transforms.py
+L4: def transformation_matrix(x_vector, y_vector, translation, spacing)
+### source/tests/test_mrs/test_mrsdata.py
+L7: def test_create_mrs()
+L15: def test_slice_mrs()
+L22: def test_average_mrs()
+L30: def test_zero_rank_to_scalar()
+### source/suspect/_version.py

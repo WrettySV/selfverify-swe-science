@@ -1,0 +1,65 @@
+{
+  "task_id": "107",
+  "scientific_principle": "The public contract of indefinite symbolic integration is the first part of the Fundamental Theorem of Calculus: if F = integrate(f, x) is a returned primitive, then dF/dx = f(x) at every real point where f is continuous (away from poles or branch points). Equivalently, a central finite difference of F in the integration variable must converge to f(x). This antiderivative property must hold for arbitrary integrands and the explicitly requested variable, and must be preserved under the standard metamorphic relations of indefinite integration: linearity (a*f + b*g), scaling of the argument (f(c*x)), translation (f(x+d)), and equivalence of string vs. object forms of the same integrand. It is a representation/consistency invariant, not a property of any one closed form.",
+  "violated_invariant": "The primitive F = integrate(f, x) no longer satisfies dF/dx = f(x); its central finite difference in the integration variable does not equal the integrand at real sample points.",
+  "observable_symptom": "The public integrate(f, x) workflow runs to completion, but the local rate of change of the returned antiderivative in the requested variable disagrees with the integrand, so the pointwise antiderivative-consistency check fails on the supplied workbench cases.",
+  "suspected_loci": [
+    "source/sympy/integrals/integrals.py::integrate",
+    "source/sympy/integrals/integrals.py::Integral._eval_integral",
+    "source/sympy/integrals/manualintegrate.py::PowerRule",
+    "source/sympy/integrals/manualintegrate.py::manualintegrate",
+    "source/sympy/integrals/risch.py::risch_integrate",
+    "source/sympy/integrals/heurisch.py::heurisch"
+  ],
+  "acceptance_checks": [
+    "For any real-coefficient polynomial p(x), the primitive F = integrate(p, x) satisfies dF/dx = p(x) at arbitrary real x.",
+    "For trigonometric and exponential integrands (linear combinations of sin, cos, exp), the returned primitive F satisfies dF/dx = f(x) at arbitrary real x.",
+    "For products and simple rational integrands (x*sin(x), x*exp(x), x**2*exp(x), 1/(x**2+1), x/(x**2+1)), the returned primitive F satisfies dF/dx = f(x) at real x away from poles.",
+    "Linearity: for real constants a, b and integrable f, g, the primitive of a*f + b*g has derivative a*f + b*g.",
+    "Argument scaling: for nonzero real c, the primitive of f(c*x) has derivative f(c*x).",
+    "Argument translation: for real d, the primitive of f(x+d) has derivative f(x+d).",
+    "Representation invariance: the string form and the object form of the same integrand yield primitives with the identical derivative property."
+  ],
+  "metamorphic_probes": [
+    {
+      "name": "poly_antiderivative",
+      "relation": "For fresh random real polynomials p(x), the primitive F=integrate(p,x) must have central finite difference in x equal to p(x) (T: random polynomial, expected F'(x)=p(x)).",
+      "code": "import sys, os, random\nfor cand in (os.path.join(os.getcwd(), \"source\"), \"source\"):\n    if os.path.isdir(cand):\n        sys.path.insert(0, cand); break\nfrom sympy import Symbol, integrate\nx = Symbol(\"x\", real=True)\nrng = random.Random(107)\ndef fd(F, f, x0, h=1e-5, tol=1e-4):\n    fp = complex(F.subs(x, x0 + h).evalf(50))\n    fm = complex(F.subs(x, x0 - h).evalf(50))\n    return abs((fp - fm) / (2 * h) - complex(f.subs(x, x0).evalf(50))) < tol\nok = True\nfor _ in range(6):\n    deg = rng.randint(2, 5)\n    f = sum(rng.randint(-9, 9) * x**k for k in range(deg + 1))\n    if f == 0:\n        f = x**2\n    F = integrate(f, x)\n    for x0 in (0.3, 1.1):\n        ok = ok and fd(F, f, x0)\nprint(\"PASS\" if ok else \"FAIL\")"
+    },
+    {
+      "name": "trig_exp_antiderivative",
+      "relation": "For fresh random linear combinations of sin, cos, exp, the primitive F=integrate(f,x) must satisfy F'(x)=f(x) (T: random trig/exp mix, expected antiderivative identity).",
+      "code": "import sys, os, random\nfor cand in (os.path.join(os.getcwd(), \"source\"), \"source\"):\n    if os.path.isdir(cand):\n        sys.path.insert(0, cand); break\nfrom sympy import Symbol, integrate, sin, cos, exp\nx = Symbol(\"x\", real=True)\nrng = random.Random(207)\ndef fd(F, f, x0, h=1e-5, tol=1e-4):\n    fp = complex(F.subs(x, x0 + h).evalf(50))\n    fm = complex(F.subs(x, x0 - h).evalf(50))\n    return abs((fp - fm) / (2 * h) - complex(f.subs(x, x0).evalf(50))) < tol\nok = True\nfor _ in range(6):\n    a, b, c = rng.randint(1, 5), rng.randint(1, 5), rng.randint(1, 5)\n    f = a * sin(x) + b * cos(x) + c * exp(x)\n    F = integrate(f, x)\n    for x0 in (0.4, 1.3):\n        ok = ok and fd(F, f, x0)\nprint(\"PASS\" if ok else \"FAIL\")"
+    },
+    {
+      "name": "product_rational_antiderivative",
+      "relation": "For fresh product and rational integrands, the primitive F=integrate(f,x) must satisfy F'(x)=f(x) away from poles (T: parts/ratint families, expected antiderivative identity).",
+      "code": "import sys, os\nfor cand in (os.path.join(os.getcwd(), \"source\"), \"source\"):\n    if os.path.isdir(cand):\n        sys.path.insert(0, cand); break\nfrom sympy import Symbol, integrate, sin, exp\nx = Symbol(\"x\", real=True)\ndef fd(F, f, x0, h=1e-5, tol=1e-4):\n    fp = complex(F.subs(x, x0 + h).evalf(50))\n    fm = complex(F.subs(x, x0 - h).evalf(50))\n    return abs((fp - fm) / (2 * h) - complex(f.subs(x, x0).evalf(50))) < tol\nok = True\nfor f in (x * sin(x), x * exp(x), x**2 * exp(x), 1 / (x**2 + 1), x / (x**2 + 1)):\n    F = integrate(f, x)\n    for x0 in (0.5, 1.2):\n        ok = ok and fd(F, f, x0)\nprint(\"PASS\" if ok else \"FAIL\")"
+    },
+    {
+      "name": "linearity_translation_metamorphic",
+      "relation": "Transform T = (a) linear combination a*f+b*g and (b) argument translation f(x+d); in both cases the primitive's derivative must equal the transformed integrand (expected linearity and translation invariance of the antiderivative property).",
+      "code": "import sys, os, random\nfor cand in (os.path.join(os.getcwd(), \"source\"), \"source\"):\n    if os.path.isdir(cand):\n        sys.path.insert(0, cand); break\nfrom sympy import Symbol, integrate, sin, exp, Rational\nx = Symbol(\"x\", real=True)\nrng = random.Random(307)\ndef fd(F, f, x0, h=1e-5, tol=1e-4):\n    fp = complex(F.subs(x, x0 + h).evalf(50))\n    fm = complex(F.subs(x, x0 - h).evalf(50))\n    return abs((fp - fm) / (2 * h) - complex(f.subs(x, x0).evalf(50))) < tol\nok = True\na, b = Rational(rng.randint(1, 4), 2), Rational(rng.randint(1, 4), 2)\nf, g = x**2 + sin(x), exp(x) + x\nF = integrate(a * f + b * g, x)\nfor x0 in (0.3, 1.0):\n    ok = ok and fd(F, a * f + b * g, x0)\nd = Rational(3, 2)\nf2 = x**3 + sin(2 * x)\nF2 = integrate(f2.subs(x, x + d), x)\nfor x0 in (0.2, 0.9):\n    ok = ok and fd(F2, f2.subs(x, x + d), x0)\nprint(\"PASS\" if ok else \"FAIL\")"
+    },
+    {
+      "name": "scaling_stringform_metamorphic",
+      "relation": "Transform T = (a) argument scaling f(c*x) and (b) string-vs-object form of the same integrand; in both cases the primitive's derivative must equal the (transformed) integrand (expected scaling invariance and representation invariance).",
+      "code": "import sys, os, random\nfor cand in (os.path.join(os.getcwd(), \"source\"), \"source\"):\n    if os.path.isdir(cand):\n        sys.path.insert(0, cand); break\nfrom sympy import Symbol, integrate, sin, exp, sympify, Rational\nx = Symbol(\"x\", real=True)\nrng = random.Random(407)\ndef fd(F, f, x0, h=1e-5, tol=1e-4):\n    fp = complex(F.subs(x, x0 + h).evalf(50))\n    fm = complex(F.subs(x, x0 - h).evalf(50))\n    return abs((fp - fm) / (2 * h) - complex(f.subs(x, x0).evalf(50))) < tol\nok = True\nc = Rational(rng.randint(2, 4), 1)\nf = x**2 + exp(x)\nF = integrate(f.subs(x, c * x), x)\nfor x0 in (0.3, 1.0):\n    ok = ok and fd(F, f.subs(x, c * x), x0)\nf3 = x**3 * sin(x) + 2 * x\nFs = integrate(sympify(str(f3)), x)\nfor x0 in (0.4, 1.1):\n    ok = ok and fd(Fs, f3, x0)\nprint(\"PASS\" if ok else \"FAIL\")"
+    }
+  ],
+  "anti_hardcoding": [
+    "Special-casing the exact integrand expressions (or their string forms) from the workbench cases to return precomputed antiderivatives.",
+    "Matching on specific symbol names, polynomial degrees, or coefficient values that occur only in the supplied cases and returning a tailored primitive.",
+    "Returning a numerically evaluated (non-symbolic) primitive or a numeric interpolation that satisfies the pointwise finite-difference check at the sample points but is not a valid symbolic antiderivative elsewhere.",
+    "Adding correction terms that vanish at the checked sample points (e.g. multiples of (x - x0)) so the pointwise check passes while the true symbolic derivative is wrong on a neighborhood.",
+    "Only repairing one integration sub-algorithm (e.g. the polynomial path) while leaving the trig/exp/product/rational paths inconsistent, so the fix does not generalize to fresh integrand families."
+  ],
+  "confidence": 0.55,
+  "evidence_notes": [
+    "reproduce.py computes F=integrate(f, variable) and checks a central finite difference of F in `variable` against f at real sample points (step 1e-6, tol 1e-5, 80 digits); this is exactly the antiderivative invariant F'(x)=f(x), so the defect must make integrate return an incorrect primitive (or integrate w.r.t. the wrong variable), not a failure of the check harness.",
+    "The public pipeline is Integral._eval_integral (integrals.py L823) dispatching to heuristics/ratint/risch/meijerint/heurisch/manualintegrate, entered via integrate (integrals.py L1406); the top-ranked files are integrals.py and manualintegrate.py, consistent with an ordinary-expression indefinite-integration bug.",
+    "The provided outlines are truncated at docstrings, so I cannot see the exact mutated line; I therefore list the pipeline entry points and the polynomial (PowerRule) and general (manualintegrate/risch/heurisch) sub-algorithms as the likely loci. heurisch.py and trigonometry.py are not shown in the outline, lowering confidence in the precise symbol.",
+    "Expected to FAIL before the fix: poly_antiderivative and trig_exp_antiderivative if the bug is in the common power/trig path; product_rational_antiderivative if it is in the integration-by-parts/ratint path; linearity_translation_metamorphic and scaling_stringform_metamorphic if it is in Add handling, variable handling, or a global sign/variable error. Because the probes span all common integrand families plus the metamorphic relations, at least one will fail on the buggy tree regardless of which single line was mutated.",
+    "All probes PASS on a correct SymPy: every chosen integrand has a closed-form primitive, no chosen evaluation point is a pole, and the central-difference check (h=1e-5, tol=1e-4, 50 digits) is far looser than the truncation/rounding error, so correct primitives pass comfortably."
+  ]
+}

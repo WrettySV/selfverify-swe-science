@@ -1,0 +1,1337 @@
+workdir: /app/task_001
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-001:v0.1.0
+code_files_total: 192
+## directories (file counts)
+source/automol/graph/base: 18
+source/automol/reac: 17
+source/molsym/symtext: 10
+source/phydat: 10
+source/automol/util: 8
+source/molsym/salcs: 8
+source/automol: 7
+source/automol/geom: 7
+source/autochem/unit_: 6
+source/molsym: 6
+source/autochem/util: 5
+source/automol/etrans: 5
+source/automol/extern: 5
+source/automol/graph: 5
+source/autochem/rate: 4
+source/autochem/therm: 4
+source/automol/data: 4
+source/automol/embed: 4
+source/automol/geom/base: 4
+source/automol/inchi: 4
+.: 3
+source/automol/amchi: 3
+source/automol/form: 3
+source/automol/mult: 3
+source/automol/prop: 3
+source/automol/smarts: 3
+source/automol/util/dict_: 3
+source/automol/zmat: 3
+source/automol/zmat/base: 3
+source/autoreact/ktp_xarray: 3
+source/automol/_deprecated: 2
+source/automol/amchi/base: 2
+source/automol/chi: 2
+source/automol/chi/base: 2
+source/automol/inchi/base: 2
+source/automol/smiles: 2
+source/automol/smiles/base: 2
+source/autoreact: 2
+source/autoreact/params: 2
+workflow: 2
+## terms_from_instruction
+strong: reproduction.json, runner_error, runner_failure, scientific_observation, status, workflow_completed
+common: graph, transition, state, supplied, physical, rotor, reaction, presentations, observation, molecular, coordinate, finite, valid, equivalent, scientific, connectivity, signature, chemistry, offline, representation, symmetry, theory, status, https, using
+## import_reach_from_reproduce.py (path, depth)
+source/automol/__init__.py  (depth 1)
+source/automol/graph/__init__.py  (depth 1)
+workflow/case.py  (depth 1)
+workflow/observe.py  (depth 1)
+source/automol/const.py  (depth 2)
+source/automol/graph/_0embed.py  (depth 2)
+source/automol/graph/_1rmg.py  (depth 2)
+source/automol/graph/_2conv.py  (depth 2)
+source/automol/graph/_3super_func_group.py  (depth 2)
+source/automol/graph/base/_00core.py  (depth 2)
+source/automol/graph/base/_02algo.py  (depth 2)
+source/automol/graph/base/_03kekule.py  (depth 2)
+source/automol/graph/base/_05stereo.py  (depth 2)
+source/automol/graph/base/_06heur.py  (depth 2)
+source/automol/graph/base/_07geom.py  (depth 2)
+source/automol/graph/base/_08canon.py  (depth 2)
+source/automol/graph/base/_09amchi.py  (depth 2)
+source/automol/graph/base/_10smiles.py  (depth 2)
+source/automol/graph/base/_11stereo.py  (depth 2)
+source/automol/graph/base/__init__.py  (depth 2)
+source/automol/graph/base/_func_group.py  (depth 2)
+source/automol/graph/base/enum.py  (depth 2)
+source/automol/graph/base/ts.py  (depth 2)
+source/automol/graph/base/vmat.py  (depth 2)
+source/automol/amchi/__init__.py  (depth 3)
+source/automol/extern/__init__.py  (depth 3)
+source/automol/extern/rdkit_.py  (depth 3)
+source/automol/geom/__init__.py  (depth 3)
+source/automol/graph/base/_04class.py  (depth 3)
+source/automol/graph/base/_12rdkit.py  (depth 3)
+source/automol/reac/enum.py  (depth 3)
+source/automol/smiles/__init__.py  (depth 3)
+source/automol/util/__init__.py  (depth 3)
+source/automol/util/heuristic.py  (depth 3)
+source/automol/util/ring.py  (depth 3)
+source/automol/util/vector.py  (depth 3)
+source/automol/util/zmat_conv.py  (depth 3)
+source/phydat/__init__.py  (depth 3)
+source/phydat/phycon.py  (depth 3)
+source/phydat/ptab.py  (depth 3)
+## ranked_source_paths (score, path, matched_terms)
+  19.0  workflow/observe.py  []
+  15.5  workflow/case.py  []
+  11.5  source/automol/graph/_0embed.py  []
+  11.5  source/automol/graph/base/_00core.py  []
+  11.5  source/automol/graph/base/_08canon.py  []
+  11.0  source/automol/graph/_2conv.py  []
+  11.0  source/automol/graph/base/_11stereo.py  []
+  10.0  source/automol/graph/base/_02algo.py  []
+  10.0  source/automol/graph/base/_06heur.py  []
+  10.0  source/automol/graph/base/_10smiles.py  []
+   9.5  source/automol/graph/base/_03kekule.py  []
+   9.5  source/automol/graph/base/_05stereo.py  []
+   9.0  source/automol/graph/base/enum.py  []
+   8.7  source/automol/graph/__init__.py  []
+   8.1  source/automol/__init__.py  []
+   8.0  source/automol/graph/base/_func_group.py  []
+   7.5  source/automol/const.py  []
+   7.5  source/automol/graph/_3super_func_group.py  []
+   7.5  source/automol/graph/base/_09amchi.py  []
+   7.5  source/automol/graph/base/ts.py  []
+   7.5  source/automol/graph/base/vmat.py  []
+   7.0  source/automol/graph/base/_07geom.py  []
+   6.5  source/automol/amchi/_conv.py  []
+   6.5  source/automol/extern/rdkit_.py  []
+   6.5  source/automol/geom/_1conv.py  []
+   6.5  source/automol/graph/_1rmg.py  []
+   6.0  source/automol/symm.py  []
+   5.0  source/automol/geom/base/_0core.py  []
+   5.0  source/automol/graph/base/_12rdkit.py  []
+   5.0  source/automol/smiles/_conv.py  []
+   5.0  source/automol/util/zmat_conv.py  []
+   4.5  source/automol/graph/base/__init__.py  []
+   4.5  source/automol/inchi/_conv.py  []
+   4.5  source/automol/reac/_0core.py  []
+   4.5  source/automol/reac/enum.py  []
+   4.5  source/automol/util/vector.py  []
+   4.0  source/automol/data/tors.py  []
+   4.0  source/automol/graph/base/_04class.py  []
+   4.0  source/automol/reac/_4struc.py  []
+   4.0  source/automol/zmat/_conv.py  []
+   3.5  source/automol/geom/_2vib.py  []
+   3.5  source/automol/geom/_ring.py  []
+   3.5  source/automol/reac/_3find.py  []
+   3.5  source/automol/util/_util.py  []
+   3.5  source/automol/zmat/base/_core.py  []
+   3.5  source/phydat/phycon.py  []
+   3.5  source/phydat/ptab.py  []
+   3.0  source/automol/amchi/base/_core.py  []
+   3.0  source/automol/data/rotor.py  []
+   3.0  source/automol/reac/_2stereo.py  []
+   3.0  source/automol/reac/_5conv.py  []
+   3.0  source/automol/reac/_7scan_deprecated.py  []
+   3.0  source/automol/reac/_enum.py  []
+   3.0  source/automol/util/heuristic.py  []
+   3.0  source/automol/util/ring.py  []
+   3.0  source/molsym/salcs/IC_SALCs.py  []
+   2.7  source/automol/amchi/__init__.py  []
+   2.7  source/automol/smiles/__init__.py  []
+   2.5  source/automol/chi/_conv.py  []
+   2.5  source/automol/embed/_cleanup.py  []
+## snippets
+### reproduce.py
+"""Run the finite public transition-state rotor observation."""
+
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+
+TASK_DIR = Path(__file__).resolve().parent
+SOURCE_DIR = TASK_DIR / "source"
+sys.path.insert(0, str(SOURCE_DIR))
+
+
+def _write_report(report: dict) -> int:
+    out_dir = TASK_DIR / "outputs"
+    out_dir.mkdir(exist_ok=True)
+    (out_dir / "reproduction.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True), encoding="utf-8"
+    )
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0 if report["status"] != "runner_failure" else 1
+
+
+def main() -> int:
+    try:
+        from automol import graph
+
+        from workflow.case import CASE_GRAPH, CONTROL_GRAPH
+        from workflow.observe import transition_state_observation
+    except Exception:
+        return _write_report(
+            {
+                "status": "runner_failure",
+                "scientific_observation": {},
+                "runner_error": "task source could not be imported",
+            }
+        )
+
+    try:
+        observation = transition_state_observation(graph, CASE_GRAPH, CONTROL_GRAPH)
+        return _write_report(
+            {
+                "status": "workflow_completed",
+                "scientific_observation": observation,
+                "runner_error": None,
+            }
+        )
+    except Exception:
+        return _write_report(
+            {
+                "status": "runner_failure",
+                "scientific_observation": {},
+                "runner_error": "scientific graph fixture could not be evaluated",
+            }
+        )
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+### reproduction.md
+# Offline reproduction
+
+Run from the task root:
+
+```bash
+python reproduce.py
+```
+
+The command writes a finite JSON report to `outputs/reproduction.json` and also
+prints the report. It uses only the supplied source and local fixture. No
+network, clock, random state, or external quantum-chemistry program is used.
+
+## Machine-readable contract
+
+The report always contains `status`, `scientific_observation`, and
+`runner_error` fields.
+
+- `workflow_completed`: the graph workflow ran to completion and returned
+  finite, named observations. The signature-agreement field is a transparent
+  scientific relation, not a task-specific golden value.
+- `runner_failure`: import, fixture, path, dependency, serialization, or other
+  infrastructure failure. It is never a scientific result.
+
+Expected exit codes are 0 for `workflow_completed` and 1 for
+`runner_failure`.
+
+The public observation is intentionally limited to finite graph sizes, signature
+sizes, a nonempty-observation check for this rotatable fixture, a
+connectivity-changed negative control, and the transparent agreement relation
+among equivalent presentations. Coordinate directions are treated as
+unoriented: a coordinate and its reverse describe the same physical axis. It
+does not expose atom keys or private expected values, read answer files, compare
+to a task-specific golden array, or run an independent complete reference
+implementation.
+### paper.md
+# Transition-state symmetry and molecular graph representations
+
+This task uses ordinary transition-state theory (TST) and the graph
+representation conventions of the Auto-Mech project.  The following context is
+provided as a method reference, not as a solution for this particular source
+snapshot.
+
+For a reaction rate in canonical TST, a common schematic form is
+
+\[
+k(T) = \frac{k_B T}{h}\frac{Q^\ddagger(T)}{Q_R(T)}
+       \exp\left[-\frac{\Delta E^\ddagger}{k_B T}\right],
+\]
+
+where the molecular partition functions contain translational, rotational, and
+vibrational contributions. The rotational contribution for a nonlinear
+molecule contains a symmetry divisor \(\sigma\):
+
+\[
+q_{\mathrm{rot}} \propto \frac{1}{\sigma}
+  \sqrt{I_A I_B I_C}\,T^{3/2},
+\]
+
+with the corresponding expression for a linear molecule using its nonzero
+moments of inertia. The symmetry number is a property of the physical
+molecular object and its indistinguishable rotations; equivalent presentations
+of one object must not change the physical factor. See Truhlar, Garrett, and
+Klippenstein, *Current Status of Transition-State Theory*,
+<https://doi.org/10.1021/cr00016a001>.
+
+Auto-Mech stores molecular connectivity as a graph: atom keys map to tuples
+containing an element symbol, implicit-hydrogen count, and stereo information;
+bonds are keyed by unordered atom-key pairs and carry bond-order information.
+Transition-state graphs use the same representation while allowing an
+intermediate bond order between the reactant and product limits to encode a
+forming or breaking connection. The supplied graph APIs expose connectivity,
+reaction orientation, and rotor-coordinate observations. These are
+data-structure contracts, not assumptions about a particular fixture.
+
+For this workbench, a valid graph has finite atom and bond maps, unordered bond
+keys, chemically consistent implicit-hydrogen counts, and finite transition
+edge orders. A physical rotor observation is represented by a sorted signature
+of canonical element-symbol sequences along the public coordinate objects. A
+coordinate and its reverse describe the same unoriented physical axis, so the
+lexicographically smaller sequence is used. Each physically distinct,
+nonredundant rotatable axis must be represented once; removing an axis merely
+to make two presentations have the same count is not a valid repair. Equivalent
+graph presentations must produce the same signature exactly (these are
+discrete symbols, so no numerical tolerance is involved), while the supplied
+changed-connectivity negative control must not be collapsed to the same
+observation. Distinguish that physical invariant from an implementation
+artifact.
+
+## References
+
+1. D. G. Truhlar, B. C. Garrett, and S. J. Klippenstein, “Current Status of
+   Transition-State Theory,” *Chemical Reviews* 100 (2000), 2703–2796,
+   <https://doi.org/10.1021/cr00016a001>.
+2. Auto-Mech project documentation and source docstrings at the supplied
+   source commit, <https://github.com/Auto-Mech/autochem>.
+
+The supplied source is the historical version under investigation.  The task
+does not require an external quantum-chemistry executable or internet access.
+## outlines_of_top_modules
+### workflow/observe.py
+L6: def _signature(graph_module, graph_data, coordinates)
+L15: def _remap_key_orders(count)
+L23: def _remap(graph_data, new_keys)
+L33: def transition_state_observation(graph_module, graph_data, negative_control=None)
+#### workflow/observe.py::_signature (L6)
+def _signature(graph_module, graph_data, coordinates):
+    symbols = graph_module.atom_symbols(graph_data)
+    signatures = []
+    for item in coordinates:
+        sequence = tuple(symbols[key] for key in item)
+        signatures.append(min(sequence, sequence[::-1]))
+    return sorted(signatures)
+#### workflow/observe.py::transition_state_observation (L33)
+def transition_state_observation(graph_module, graph_data, negative_control=None):
+    """Summarize equivalent reaction presentations using public graph behavior."""
+    remap_a, remap_b = _remap_key_orders(len(graph_module.atom_keys(graph_data)))
+    presentations = (
+        graph_data,
+        _remap(graph_data, remap_a),
+        _remap(graph_data, remap_b),
+        graph_module.ts.reverse(graph_data),
+    )
+    signatures = []
+    for presentation in presentations:
+        coordinates = graph_module.rotational_coordinates(presentation)
+        signatures.append(_signature(graph_module, presentation, coordinates))
+
+    reference = signatures[0]
+    if not reference:
+        raise ValueError("the supplied transition state has no observable rotor")
+    control_sizes = None
+    control_distinct = None
+    if negative_control is not None:
+        control_coordinates = graph_module.rotational_coordinates(negative_control)
+        control_signature = _signature(graph_module, negative_control, control_coordinates)
+        control_sizes = [len(control_signature)]
+        control_distinct = control_signature != reference
+        if not control_distinct:
+            raise ValueError("a changed connectivity collapsed to the same rotor observation")
+    return {
+        "atom_count": len(graph_module.atom_keys(graph_data)),
+        "bond_count": len(graph_module.bond_keys(graph_data)),
+        "presentation_count": len(signatures),
+        "signature_sizes": [len(signature) for signature in signatures],
+        "signature_agreement": all(signature == reference for signature in signatures),
+        "nonempty_observation": all(bool(signature) for signature in signatures),
+        "negative_control_signature_sizes": control_sizes,
+        "negative_control_distinct": control_distinct,
+    }
+### workflow/case.py
+### source/automol/graph/_0embed.py
+L71: def clean_geometry(gra: Any, geo: Any, stereo: bool=True, local_stereo: bool=False, none_if_failed: bool=True, geos: Tuple[Any, ...]=(), geos_keys: Tuple[Tuple, ...]=(), relax_angles: bool=False, log: bool=False)
+L146: def geometry_matches(gra, geo, stereo: bool=True, local_stereo: bool=False, check_ts_bonds: bool=True, log: bool=False)
+L237: def zmatrix_matches(gra, zma, stereo: bool=True, local_stereo: bool=False, check_ts_bonds: bool=True, log: bool=False)
+L275: def distance_bounds_matrices(gra, geos: Tuple[Any, ...]=(), geos_keys: Tuple[Tuple, ...]=(), relax_angles: bool=False, relax_torsions: bool=False, angstrom: bool=True)
+L369: def _distance_bounds_matrices(gra, sp_dct=None)
+L405: def chirality_constraint_bounds(loc_gra)
+L425: def planarity_constraint_bounds(gra)
+L465: def heuristic_bond_angle_distance(gra, key1, key2, key3, d12=None, d23=None, angstrom=True, a123=None, degree=True, hyb_dct=None)
+L503: def closest_approach(gra, key1, key2)
+L512: def path_distance_bounds_(gra)
+L560: def shared_ring_size(keys, rng_keys_lst)
+L571: def hardcoded_geometry(gra: Any)
+### source/automol/graph/base/_00core.py
+L50: def from_data(atm_symb_dct, bnd_keys, atm_imp_hyd_dct=None, atm_ste_par_dct=None, bnd_ord_dct=None, bnd_ste_par_dct=None)
+L115: def atoms_from_data(atm_symb_dct, atm_imp_hyd_dct=None, atm_ste_par_dct=None)
+L163: def bonds_from_data(bnd_keys, bnd_ord_dct=None, bnd_ste_par_dct=None, dummy_atm_keys=())
+L221: def from_atoms_and_bonds(atm_dct, bnd_dct)
+L269: def atoms(gra)
+L281: def bonds(gra)
+L293: def atom_keys(gra, symb=None, excl_symbs=())
+L314: def bond_keys(gra, ts_=True)
+L328: def atom_symbols(gra, dummy_symbol=None)
+L349: def bond_orders(gra, ts_=True)
+L363: def atom_implicit_hydrogens(gra)
+L377: def atom_stereo_parities(gra)
+L389: def bond_stereo_parities(gra)
+L401: def stereo_parities(gra)
+L416: def ts_graph(gra, frm_bnd_keys, brk_bnd_keys)
+L439: def ts_graph_from_reactants_and_products(rct_gra: object, prd_gra: object)
+L456: def ts_forming_bond_keys(tsg)
+L469: def ts_breaking_bond_keys(tsg)
+L482: def ts_reacting_bond_keys(tsg)
+L494: def ts_reacting_atom_keys(tsg)
+L507: def ts_transferring_atoms(tsg)
+L541: def ts_reverse(tsg)
+L563: def ts_reagents_graphs_without_stereo(tsg, dummy: bool=True, keep_zeros: bool=False, keep_stereo: bool=False)
+L588: def ts_reactants_graph_without_stereo(tsg, dummy: bool=True, keep_zeros: bool=False, keep_stereo: bool=False)
+L609: def ts_products_graph_without_stereo(tsg, dummy: bool=True, keep_zeros: bool=False, keep_stereo: bool=False)
+L630: def ts_reagents_graph_without_stereo(tsg, prod: bool=False, dummy: bool=True, keep_zeros: bool=False, keep_stereo: bool=False)
+L675: def set_atom_symbols(gra, atm_symb_dct)
+L689: def set_bond_orders(gra, bnd_ord_dct)
+L704: def set_atom_implicit_hydrogens(gra, atm_imp_hyd_dct)
+L723: def set_atom_stereo_parities(gra, atm_par_dct)
+L739: def set_bond_stereo_parities(gra, bnd_par_dct)
+L756: def set_stereo_parities(gra, par_dct)
+L777: def string(gra, one_indexed=False)
+L792: def yaml_data(gra, one_indexed=False)
+L828: def from_string(gra_str, one_indexed=None)
+L844: def from_yaml_data(yaml_gra_dct, one_indexed=None)
+L880: def from_old_yaml_data(yaml_gra_dct, one_indexed=True)
+L921: def frozen(gra)
+L943: def formula(gra)
+L958: def symbols(gra)
+L972: def argsort_by_size(gras, descending: bool=True)
+L999: def sort_by_size(gras, descending: bool=True)
+L1018: def atom_count(gra, symb=None, heavy_only=False, dummy=False, with_implicit=True, keys=None)
+L1058: def count(gra)
+L1069: def electron_count(gra, charge=0)
+L1084: def atom_stereo_keys(gra, symb=None, excl_symbs=())
+L1104: def bond_stereo_keys(gra)
+L1117: def stereo_keys(gra)
+L1129: def has_atom_stereo(gra, symb=None, excl_symbs=())
+L1146: def has_bond_stereo(gra)
+L1157: def has_stereo(gra)
+L1168: def has_dummy_atoms(gra)
+L1179: def has_pi_bonds(gra)
+L1194: def is_ts_graph(gra)
+L1208: def atomic_numbers(gra)
+L1221: def mass_numbers(gra)
+L1234: def van_der_waals_radii(gra, angstrom=False)
+L1251: def covalent_radii(gra, angstrom=False)
+L1268: def atomic_valences(gra)
+L1284: def atom_lone_pairs(gra)
+L1297: def atom_electron_pairs(gra, bond_order: bool=True)
+L1321: def lone_pair_atom_keys(gra)
+L1333: def atom_van_der_waals_radius(gra, key, angstrom=True)
+L1351: def atom_bond_counts(gra, bond_order=True, with_implicit=True, ts_=True)
+L1382: def atom_unpaired_electrons(gra, bond_order: bool=True)
+L1408: def bond_unpaired_electrons(gra, bond_order=True)
+L1435: def atom_hypervalencies(gra, bond_order: bool=True)
+L1447: def tetrahedral_atoms(gra, min_ncount: int=3)
+L1484: def tetrahedral_atom_keys(gra, min_ncount: int=3)
+L1508: def vinyl_radical_bond_candidates(gra, min_ncount: int=1)
+L1536: def maximum_spin_multiplicity(gra, bond_order=True)
+L1550: def possible_spin_multiplicities(gra, bond_order=True)
+L1566: def atom_symbol_keys(gra)
+L1588: def backbone_and_nonbackbone_hydrogen_keys(gra)
+L1614: def backbone_hydrogen_keys(gra)
+L1631: def nonbackbone_hydrogen_keys(gra)
+L1643: def atom_nonbackbone_hydrogen_keys(gra)
+L1659: def backbone_keys(gra, hyd=True)
+L1675: def backbone_bond_keys(gra, terminal=False)
+L1695: def atom_backbone_hydrogen_keys(gra)
+L1710: def terminal_atom_keys(gra, backbone=True, atom=True)
+L1729: def terminal_atom_neighbors(gra, backbone=True, atom=True)
+L1751: def unsaturated_atom_keys(gra)
+L1764: def unsaturated_bond_keys(gra)
+L1777: def distance_keys(gra, dup: bool=False, ts_: bool=True)
+L1793: def central_angle_keys(gra, dup: bool=False, ts_: bool=False)
+L1817: def dihedral_angle_keys(gra, dup: bool=False, ts_: bool=False)
+L1843: def relabel(gra, key_dct: Dict[AtomKey, AtomKey], check: bool=False)
+L1866: def standard_keys(gra)
+L1880: def standard_keys_for_sequence(gras)
+L1913: def zmatrix_conversion_info(gra)
+L1926: def apply_zmatrix_conversion(gra, zc_: ZmatConv)
+L1944: def undo_zmatrix_conversion(gra, zc_: ZmatConv=None)
+L1966: def align_with_geometry(gra: Any, geo: Any, args: Optional[List[Any]]=None, geo_idx_dct: Optional[Dict[AtomKey, AtomKey]]=None)
+L2023: def add_atoms(gra, symb_dct, imp_hyd_dct=None, ste_par_dct=None, check=True)
+L2072: def add_bonds(gra, keys, ord_dct=None, ste_par_dct=None, check=True)
+L2120: def remove_atoms(gra, atm_keys, check=True, stereo=True)
+L2144: def remove_bonds(gra, bnd_keys, check=True, stereo=True)
+L2173: def change_implicit_hydrogens(gra, imp_hyd_change_dct)
+L2195: def add_atom_explicit_hydrogens(gra, exp_hyd_keys_dct)
+L2222: def add_bonded_atom(gra, symb, atm_key, bnd_atm_key=None, imp_hyd=None, atm_ste_par=None, bnd_ord=None, bnd_ste_par=None)
+L2276: def without_pi_bonds(gra)
+L2302: def without_reacting_bonds(gra)
+L2313: def without_bonds_by_orders(gra, ords=(0,), skip_dummies=True)
+L2335: def without_dummy_atoms(gra)
+L2348: def without_stereo(gra, atm_keys=None, bnd_keys=None)
+L2378: def with_explicit_stereo_hydrogens(gra, all_: bool=False, neg: bool=False)
+L2416: def explicit(gra, atm_keys: Optional[List[int]]=None, neg: bool=False)
+L2448: def implicit(gra, atm_keys=None)
+L2471: def union(gra1, gra2, check=True)
+L2498: def union_from_sequence(gras, check=True, shift_keys=False)
+L2523: def subgraph(gra, atm_keys, stereo=False)
+L2548: def bond_induced_subgraph(gra, bnd_keys, stereo=False)
+L2573: def atom_neighborhood(gra, atm_key, bnd_keys=None, stereo=False, ts_=True, second_degree: bool=False)
+L2611: def atom_neighborhoods(gra, bnd_keys=None, stereo=False, ts_=True)
+L2635: def bond_neighborhood(gra, bnd_key, bnd_keys=None, stereo=False, ts_=True)
+L2655: def bond_neighborhoods(gra, bnd_keys=None, stereo=False, ts_=True)
+L2678: def atom_neighbor_atom_keys(gra, atm_key, bnd_keys=None, symb=None, excl_symbs=(), ts_=True, second_degree: bool=False, include_self: bool=False)
+L2722: def negate_hydrogen_stereo_priorities(gra, pri_dct: Dict[int, int], with_none: bool=True)
+L2752: def local_stereo_priorities(gra, with_none: bool=False)
+#### source/automol/graph/base/_00core.py::ts_graph (L416)
+def ts_graph(gra, frm_bnd_keys, brk_bnd_keys):
+    """Construct a TS graph from a molecular graph.
+
+    :param gra: molecular graph, representing the reactants
+    :type gra: automol graph data structure
+    :param frm_bnd_keys: Keys to bonds which are forming in the TS
+    :type frm_bnd_keys: tuple[frozenset]
+    :param brk_bnd_keys: Keys to bonds which are breaking in the TS
+    :type brk_bnd_keys: tuple[frozenset]
+    :returns: TS graph
+    :rtype: automol graph data structure
+    """
+    frm_bnd_keys = frozenset(map(frozenset, frm_bnd_keys))
+    brk_bnd_keys = frozenset(map(frozenset, brk_bnd_keys))
+
+    frm_ord_dct = {k: 0.1 for k in frm_bnd_keys}
+    brk_ord_dct = {k: 0.9 for k in brk_bnd_keys}
+
+    gra = add_bonds(gra, frm_bnd_keys, ord_dct=frm_ord_dct, check=False)
+    gra = add_bonds(gra, brk_bnd_keys, ord_dct=brk_ord_dct, check=False)
+    return gra
+#### source/automol/graph/base/_00core.py::ts_graph_from_reactants_and_products (L439)
+def ts_graph_from_reactants_and_products(rct_gra: object, prd_gra: object) -> object:
+    """Construct a TS graph from reactants and products graphs.
+
+    The reactants and products must have matching keys.
+
+    :param rct_gra: Reactants graph
+    :param prd_gra: Products graph
+    :return: TS graph
+    """
+    rct_bkeys = bond_keys(rct_gra)
+    prd_bkeys = bond_keys(prd_gra)
+    frm_bkeys = prd_bkeys - rct_bkeys
+    brk_bkeys = rct_bkeys - prd_bkeys
+    return ts_graph(rct_gra, frm_bnd_keys=frm_bkeys, brk_bnd_keys=brk_bkeys)
+#### source/automol/graph/base/_00core.py::ts_reagents_graphs_without_stereo (L563)
+def ts_reagents_graphs_without_stereo(
+    tsg, dummy: bool = True, keep_zeros: bool = False, keep_stereo: bool = False
+):
+    """Get the reactants of a TS graph, without stereo
+
+    :param tsg: TS graph
+    :type tsg: automol graph data structure
+    :param dummy: Keep dummy atoms? default True
+    :type dummy: bool, optional
+    :param keep_zeros: Keep the bonds with a resulting bond order of 0?
+    :type keep_zeros: bool
+    :param keep_stereo: Keep stereo, even though it is invalid?
+    :type keep_stereo: bool
+    :returns: The TS graph, without reacting bond orders
+    :rtype: automol graph data structure
+    """
+    rcts_gra = ts_reagents_graph_without_stereo(
+        tsg, prod=False, dummy=dummy, keep_zeros=keep_zeros, keep_stereo=keep_stereo
+    )
+    prds_gra = ts_reagents_graph_without_stereo(
+        tsg, prod=True, dummy=dummy, keep_zeros=keep_zeros, keep_stereo=keep_stereo
+    )
+    return (rcts_gra, prds_gra)
+#### source/automol/graph/base/_00core.py::ts_reactants_graph_without_stereo (L588)
+def ts_reactants_graph_without_stereo(
+    tsg, dummy: bool = True, keep_zeros: bool = False, keep_stereo: bool = False
+):
+    """Get the reactants of a TS graph, without stereo
+
+    :param tsg: TS graph
+    :type tsg: automol graph data structure
+    :param dummy: Keep dummy atoms? default True
+    :type dummy: bool, optional
+    :param keep_zeros: Keep the bonds with a resulting bond order of 0?
+    :type keep_zeros: bool
+    :param keep_stereo: Keep stereo, even though it is invalid?
+    :type keep_stereo: bool
+    :returns: The TS graph, without reacting bond orders
+    :rtype: automol graph data structure
+    """
+    return ts_reagents_graph_without_stereo(
+        tsg, prod=False, dummy=dummy, keep_zeros=keep_zeros, keep_stereo=keep_stereo
+    )
+#### source/automol/graph/base/_00core.py::ts_products_graph_without_stereo (L609)
+def ts_products_graph_without_stereo(
+    tsg, dummy: bool = True, keep_zeros: bool = False, keep_stereo: bool = False
+):
+    """Get the reactants of a TS graph, without stereo
+
+    :param tsg: TS graph
+    :type tsg: automol graph data structure
+    :param dummy: Keep dummy atoms? default True
+    :type dummy: bool, optional
+    :param keep_zeros: Keep the bonds with a resulting bond order of 0?
+    :type keep_zeros: bool
+    :param keep_stereo: Keep stereo, even though it is invalid?
+    :type keep_stereo: bool
+    :returns: The TS graph, without reacting bond orders
+    :rtype: automol graph data structure
+    """
+    return ts_reagents_graph_without_stereo(
+        tsg, prod=True, dummy=dummy, keep_zeros=keep_zeros, keep_stereo=keep_stereo
+    )
+#### source/automol/graph/base/_00core.py::ts_reagents_graph_without_stereo (L630)
+def ts_reagents_graph_without_stereo(
+    tsg,
+    prod: bool = False,
+    dummy: bool = True,
+    keep_zeros: bool = False,
+    keep_stereo: bool = False,
+):
+    """Get the reactants or products of a TS graph, without stereo
+
+    :param tsg: TS graph
+    :type tsg: automol graph data structure
+    :param prod: Replace reacting bond orders with product values instead?
+    :type prod: bool
+    :param dummy: Keep dummy atoms? default True
+    :type dummy: bool, optional
+    :param keep_zeros: Keep the bonds with a resulting bond order of 0?
+    :type keep_zeros: bool
+    :param keep_stereo: Keep stereo, even though it is invalid?
+    :type keep_stereo: bool
+    :returns: The TS graph, without reacting bond orders
+    :rtype: automol graph data structure
+    """
+    bnd_keys = ts_reacting_bond_keys(tsg)
+    ord_dct = dict_.by_key(bond_orders(tsg), bnd_keys)
+    if prod:
+        ord_dct = dict_.transform_values(ord_dct, lambda o: 1 - round(o, 1))
+    ord_dct = dict_.transform_values(ord_dct, round)
+
+    # Remove dummy atoms, unless requested to keep
+    if not dummy:
+        tsg = without_dummy_atoms(tsg)
+
+    # Round the bond orders for forming bonds, and remove forming bonds
+    tsg = set_bond_orders(tsg, ord_dct)
+    if not keep_zeros:
+        tsg = without_bonds_by_orders(tsg, ords=0, skip_dummies=True)
+
+    # Remove invalid stereo, unless requested otherwise
+    if not keep_stereo:
+        tsg = without_stereo(tsg)
+
+    return tsg
+#### source/automol/graph/base/_00core.py::is_ts_graph (L1194)
+def is_ts_graph(gra):
+    """Is this a TS graph?
+
+    This is based on whether or not it has 0.1 or 0.9-order bonds.
+
+    :param gra: molecular graph
+    :type gra: automol graph data structure
+    :returns: `True` if it is, `False` if it isn't
+    :rtype: bool
+    """
+    bnd_ords = bond_orders(gra).values()
+    return any(round(o, 1) in (0.1, 0.9) for o in bnd_ords)
+#### source/automol/graph/base/_00core.py::subgraph (L2523)
+def subgraph(gra, atm_keys, stereo=False):
+    """Get the subgraph of a subset of the atoms in this graph
+
+    All bonds between the specified atoms will be included.
+
+    :param gra: molecular graph
+    :type gra: automol graph data structure
+    :param atm_keys: The atom keys to be included in the subgraph
+    :type atm_keys: list[int]
+    :param stereo: Keep stereo information in the subgraph?
+    :type stereo: bool
+    :returns: A molecular graph
+    :rtype: automol graph data structure
+    """
+    atm_keys = set(atm_keys)
+    assert atm_keys <= atom_keys(gra), f"Keys not present in graph:\n{atm_keys}\n{gra}"
+    bnd_keys = set(filter(lambda x: x <= atm_keys, bond_keys(gra)))
+    atm_dct = dict_.by_key(atoms(gra), atm_keys)
+    bnd_dct = dict_.by_key(bonds(gra), bnd_keys)
+    sub = from_atoms_and_bonds(atm_dct, bnd_dct)
+    if not stereo:
+        sub = without_stereo(sub)
+    return sub
+### source/automol/graph/base/_08canon.py
+L66: def canonical(gra)
+L82: def canonical_priorities(gra, pri_dct=None)
+L96: def canonical_keys(gra)
+L133: def canonical_amchi_graph_with_numbers(gra, stereo: bool=True)
+L186: def smiles_graph(gra: Any, res_stereo: bool=True, exp: bool=False, dummy: bool=False)
+L223: def stereo_assignment_representation(gra, pri_dct: dict, cand_dct: dict | None=None)
+L250: def ts_direction_representation(tsg, pri_dct: dict, cand_dct: dict | None=None)
+L280: def is_canonical_enantiomer(ugra, upri_dct, rgra, rpri_dct, cand_dct: dict | None=None)
+L303: def is_canonical_direction(ftsg, fpri_dct, rtsg, rpri_dct, fcand_dct: dict | None=None, rcand_dct: dict | None=None)
+L331: def calculate_stereo(gra, par_eval_: Optional[ParityEvaluator]=None, can_par_eval_: Optional[ParityEvaluator]=None, pri_dct: Optional[Dict[int, int]]=None, cand_dct: Optional[CenterNeighborDict]=None)
+L379: def _calculate_ts_stereo(tsg, par_eval_: Optional[ParityEvaluator]=None, can_par_eval_: Optional[ParityEvaluator]=None, pri_dct: Optional[Dict[int, int]]=None, cand_dct: Optional[CenterNeighborDict]=None)
+L430: def _calculate_stereo_core(gra, par_eval_: Optional[ParityEvaluator]=None, can_par_eval_: Optional[ParityEvaluator]=None, pri_dct: Optional[Dict[int, int]]=None, cand_dct: Optional[CenterNeighborDict]=None, is_rev: bool=False)
+L495: def refine_priorities(gra, pri_dct: Optional[Dict[int, int]]=None)
+L520: def break_priority_ties(gra, pri_dct: Dict[int, int], neg_hkeys: bool=False)
+L547: def _refine_priorities(gra, pri_dct: Optional[Dict[int, int]]=None, neg_hkeys: bool=True)
+L636: def _break_priority_ties(gra, pri_dct: Dict[int, int], neg_hkeys: bool=False)
+L685: def sort_evaluator_atom_invariants_(gra)
+L798: def class_dict_from_priority_dict(pri_dct: dict)
+L813: def to_local_stereo(gra, pri_dct=None)
+L859: def from_local_stereo(gra, pri_dct=None)
+#### source/automol/graph/base/_08canon.py::canonical_amchi_graph_with_numbers (L133)
+def canonical_amchi_graph_with_numbers(
+    gra, stereo: bool = True
+) -> Tuple[Any, Dict[int, int], bool, bool]:
+    """Put a connected graph in AMChI-canonical form
+
+    :param gra: A connected graph
+    :type gra: automol graph data structure
+    :param stereo: Include stereo, if present? defaults to True
+    :type stereo: bool, optional
+    """
+    assert is_connected(gra), f"Graph is disconnected\n{gra}"
+    gra = without_dummy_atoms(gra)
+    gra = gra if stereo else without_stereo(gra)
+    ste_keys = stereo_keys(gra)
+    atm_ste_keys = atom_stereo_keys(gra)
+    cand_dct = stereocenter_candidates(gra)
+
+    # 1. Convert to implicit-hydrogen form
+    gra = implicit(gra)
+
+    # 2. Determine the canonical TS direction
+    *_, pri_dct, is_can_dir = calculate_stereo(gra, cand_dct=cand_dct)
+    gra = ts_reverse(gra) if is_can_dir is False else gra
+    cand_dct.update(stereocenter_candidates(gra, bond=False))
+
+    # 3. Determine the canonical enantiomer
+    is_can_enant = None
+    if len(atm_ste_keys) == 1:
+        rgra = invert_atom_stereo_parities(gra)
+        is_can_enant = is_canonical_enantiomer(
+            gra, pri_dct, rgra, pri_dct, cand_dct=cand_dct
+        )
+        gra = rgra if is_can_enant is False else gra
+    elif len(atm_ste_keys) > 1:
+        par_eval_ = parity_evaluator_flip_from_graph
+        loc_gra = set_stereo_parities(gra, par_eval_(gra, ste_keys, pri_dct, cand_dct))
+        rloc_gra = invert_atom_stereo_parities(loc_gra)
+        rgra, _, rpri_dct, _ = calculate_stereo(rloc_gra, par_eval_=par_eval_)
+
+        is_can_enant = is_canonical_enantiomer(
+            gra, pri_dct, rgra, rpri_dct, cand_dct=cand_dct
+        )
+
+        gra = rgra if is_can_enant is False else gra
+        pri_dct = rpri_dct if is_can_enant is False else pri_dct
+
+    # 4. Find canonical numbers and relabel
+    num_dct = break_priority_ties(gra, pri_dct, neg_hkeys=False)
+    gra = relabel_(gra, num_dct)
+
+    return gra, num_dct, is_can_dir, is_can_enant
+#### source/automol/graph/base/_08canon.py::smiles_graph (L186)
+def smiles_graph(
+    gra: Any, res_stereo: bool = True, exp: bool = False, dummy: bool = False
+) -> Any:
+    """Put a connected graph in a form appropriate for writing SMILES strings.
+
+    :param gra: molecular graph
+    :param exp: Include explicit hydrogens that aren't needed for stereochemistry?
+    :param res_stereo: allow resonant double-bond stereo?
+    :param dummy: Retain dummy atoms? Defaults to False
+    :return: The graph, kekulized with appropriate implicit/explicit hydrogens
+    """
+    if not dummy:
+        gra = without_dummy_atoms(gra)
+
+    # Add in missing explicit hydrogens (connected to H or needed for stereo)
+    gra = explicit(gra, atm_keys=atom_keys(gra, symb="H"), neg=True)
+    gra = with_explicit_stereo_hydrogens(gra, all_=False, neg=True)
+
+    # Make all other hydrogens implicit
+    if not exp:
+        bbn_keys = backbone_keys(gra, hyd=False)
+        ste_keys = set(itertools.chain(*bond_stereo_keys(gra)))
+        nbnd_dct = atom_bond_counts(gra, bond_order=False, with_implicit=True)
+        imp_keys = {k for k in bbn_keys if not (k in ste_keys and nbnd_dct[k] <= 2)}
+        gra = implicit(gra, atm_keys=imp_keys)
+
+    # Find a dominant resonance
+    kgr = kekule(gra, max_stereo_overlap=True)
+
+    # Remove stereo parities at single bonds if requested
+    if not res_stereo:
+        bad_bkeys = bad_stereo_bond_keys_from_kekule(kgr)
+        kgr = without_stereo(kgr, bnd_keys=bad_bkeys)
+
+    return kgr
+#### source/automol/graph/base/_08canon.py::stereo_assignment_representation (L223)
+def stereo_assignment_representation(gra, pri_dct: dict, cand_dct: dict | None = None):
+    """Generate a representation of a stereo assignment, for checking for
+    symmetric equivalence or for determining a canonical enantiomer.
+
+    :param gra: molecular graph
+    :param pri_dct: A dictionary mapping atom keys to priorities
+    :param cand_dct: A dictionary mapping stereocenter candidates to their neighbor keys
+    :returns: A canonical representation of the assignment
+    """
+    cand_dct = stereocenter_candidates(gra) if cand_dct is None else cand_dct
+
+    atm_keys = sorted(atom_stereo_keys(gra), key=pri_dct.get)
+    bnd_keys = sorted(bond_stereo_keys(gra), key=lambda x: sorted(map(pri_dct.get, x)))
+
+    atm_nkeys_dct, bnd_nkeys_dct = stereocenter_candidates_grouped(cand_dct, pri_dct)
+
+    atm_pars = dict_.values_by_key(atom_stereo_parities(gra), atm_keys)
+    bnd_pars = dict_.values_by_key(bond_stereo_parities(gra), bnd_keys)
+    atm_pris = tuple(map(pri_dct.get, atm_keys))
+    bnd_pris = tuple(map(pri_dct.get, bnd_keys))
+    atm_npris = tuple(tuple(map(pri_dct.get, atm_nkeys_dct[k])) for k in atm_keys)
+    bnd_npris = tuple(tuple(map(pri_dct.get, bnd_nkeys_dct[k])) for k in bnd_keys)
+
+    rep = (atm_pars, bnd_pars, atm_pris, bnd_pris, atm_npris, bnd_npris)
+    return rep
+#### source/automol/graph/base/_08canon.py::ts_direction_representation (L250)
+def ts_direction_representation(tsg, pri_dct: dict, cand_dct: dict | None = None):
+    """Generate a representation of the reaction direction to determine the
+    canonical direction of a TS graph.
+
+    The reaction representation consists of two pieces:
+
+    1. Canonical representations of the forming and breaking bonds,
+    respectively.
+    2. Canonical representations of the stereo assignments.
+
+    :param tsg: A TS graph
+    :param pri_dct: A dictionary mapping atom keys to priorities
+    :param cand_dct: A dictionary mapping stereocenter candidates to their neighbor keys
+    :returns: A canonical representation of the TS reaction
+    """
+    frm_keys = ts_forming_bond_keys(tsg)
+    brk_keys = ts_breaking_bond_keys(tsg)
+    # Rep value 1: Number of bonds broken and formed
+    rxn_rep1 = (len(frm_keys), len(brk_keys))
+    # Rep value 2: Canonical keys of bonds broken and formed
+    rxn_rep2 = (
+        sorted(sorted(map(pri_dct.get, k)) for k in frm_keys),
+        sorted(sorted(map(pri_dct.get, k)) for k in brk_keys),
+    )
+    # Rep value 3: Stereo assignment
+    ste_rep = stereo_assignment_representation(tsg, pri_dct, cand_dct=cand_dct)
+    rep = (rxn_rep1, rxn_rep2, ste_rep)
+    return rep
+### source/automol/graph/_2conv.py
+L43: def geometry(gra, check=True, log=False, rct_geos: Sequence[object] | None=None, geo_idx_dct: Dict[int, int] | None=None)
+L106: def _connected_geometry(gra, check=True, log=False, ntries: int=4)
+L153: def _clean_and_validate_connected_geometry(gra, geo, stereo: bool=True, local_stereo: bool=True, check: bool=True, log: bool=False)
+L195: def inchi(gra, stereo: bool=True, local_stereo: bool=False)
+L210: def chi(gra, stereo=True)
+L227: def rdkit_molecule(gra, stereo=True, exp=False, label=False, label_dct=None)
+L255: def svg_string(gra, stereo=True, exp=False, label=False, label_dct=None, image_size=200)
+L281: def ipywidget(gra, stereo=True, exp=False, label=False, label_dct=None, image_size=300)
+L317: def rdkit_reaction(rgras, pgras, stereo=True, res_stereo=False)
+L345: def display(gra, stereo=True, exp=False, label=False, label_dct=None)
+L375: def display_reaction(rgras, pgras, stereo=True, exp=False, label=False, label_dct=None)
+L440: def ts_geometry_from_reactants(tsg, rct_geos, geo_idx_dct: Optional[Dict[int, int]]=None, check: bool=True, log: bool=False)
+L511: def clean_ts_geometry(tsg, ts_geo, geo_idx_dct: Dict[int, int] | None=None, check: bool=True, log: bool=False)
+L568: def ts_join_reactant_geometries(tsg, rct_geos, geo_idx_dct=None)
+L634: def perturb_geometry_planar_dihedrals(gra, geo, geo_idx_dct=None, ang=5.0 * phycon.DEG2RAD, degree=False)
+#### source/automol/graph/_2conv.py::_clean_and_validate_connected_geometry (L153)
+def _clean_and_validate_connected_geometry(
+    gra,
+    geo,
+    stereo: bool = True,
+    local_stereo: bool = True,
+    check: bool = True,
+    log: bool = False,
+):
+    """Validate and clen up a connected geometry
+
+    :param gra: Connected molecular graph with standard keys
+    :type gra: automol graph data structure
+    :param geo: Molecular geometry
+    :type geo: automol geom data structure
+    :param stereo: Take stereochemistry into consideration? defaults to True
+    :param local_stereo: Does the graph have local stereo assignments? defaults to True
+    :param check: Check stereo and connectivity? defaults to True
+    :param log: Log information to the screen? defaults to False
+    """
+    gra = gra if stereo else without_stereo(gra)
+    gra = gra if local_stereo else to_local_stereo(gra)
+
+    if stereo and geo is not None:
+        geo = stereo_corrected_geometry(gra, geo, local_stereo=local_stereo)
+
+    geo = geometry_correct_linear_vinyls(gra, geo)
+
+    if not geometry_matches(gra, geo, stereo=stereo, local_stereo=True):
+        geo = clean_geometry(gra, geo, stereo=stereo, local_stereo=True)
+
+    # Remove perfectly planar dihedral angles, to avoid symmetry problems
+    geo = perturb_geometry_planar_dihedrals(gra, geo, ang=5.0, degree=True)
+
+    if log:
+        print("Cleaned geometry:")
+        print(None if geo is None else geom.round_(geo))
+
+    matches = geometry_matches(gra, geo, stereo=stereo, local_stereo=local_stereo)
+
+    return geo if matches or not check else None
+#### source/automol/graph/_2conv.py::rdkit_reaction (L317)
+def rdkit_reaction(rgras, pgras, stereo=True, res_stereo=False):
+    """Convert reactant and product graphs to an RDKit reaction object.
+
+    This is mainly useful for quick visualization with IPython, which can be
+    done as follows:
+    >>> from IPython.display import display
+    >>> display(rdkit_reaction(pgras, rgras))
+
+        :param rgras: reactant graphs
+        :param pgras: product graphs
+        :param stereo: Include stereo?
+        :type stereo: bool
+        :param res_stereo: allow resonant double-bond stereo?
+        :type res_stereo: bool
+        :param rxn: the reaction object
+        :returns: the RDKit reaction
+    """
+    rdkit_.turn_3d_visualization_off()
+    rsmis = [
+        smiles(g, stereo=stereo, res_stereo=res_stereo, exp_singles=True) for g in rgras
+    ]
+    psmis = [
+        smiles(g, stereo=stereo, res_stereo=res_stereo, exp_singles=True) for g in pgras
+    ]
+    rxn_smi = smiles_base.reaction(rsmis, psmis)
+    return rdkit_.from_smarts(rxn_smi)
+#### source/automol/graph/_2conv.py::display_reaction (L375)
+def display_reaction(rgras, pgras, stereo=True, exp=False, label=False, label_dct=None):
+    """Display reaction to IPython using the RDKit visualizer
+
+    :param rgras: reactant graphs
+    :param pgras: product graphs
+    :param stereo: Include stereochemistry information?
+    :type stereo: bool
+    :param exp: Include explicit hydrogens that aren't needed for stereochemistry?
+    :type exp: bool
+    :param label: Display the molecule with atom labels?
+    :type label: bool
+    :param label_dct: Atom labels, by atom key.  If `None` and `label` is
+        `True`, the atom keys themselves will be used as labels.
+    :param label_dct: bool
+    """
+    arrow_svg_str = """
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
+    <defs>
+        <marker id="arrowhead" markerWidth="5" markerHeight="5" 
+        refX="0" refY="2.5" orient="auto">
+        <polygon points="0 0, 5 2.5, 0 5" />
+        </marker>
+    </defs>
+    <line x1="20" y1="50" x2="120" y2="50" stroke="#000" 
+    stroke-width="10" marker-end="url(#arrowhead)" />
+    </svg>
+    """
+
+    def _union(gras):
+        label_dct_ = {}
+        start = 0
+        gras_ = []
+        for gra in gras:
+            keys = atom_keys(gra)
+            if min(keys) < start:
+                key_dct = {k: k + start for k in keys}
+                gra = relabel(gra, key_dct)
+                label_dct_.update(dict(map(reversed, key_dct.items())))
+            else:
+                label_dct_.update({k: k for k in keys})
+            gras_.append(gra)
+            start = start + max(keys) + 1
+        return union_from_sequence(gras_), label_dct_
+
+    rdkit_.turn_3d_visualization_off()
+
+    rgra, rlabel_dct = _union(rgras)
+    pgra, plabel_dct = _union(pgras)
+
+    if not label and not label_dct:
+        rlabel_dct = plabel_dct = None
+
+    if label_dct:
+        rlabel_dct = dict_.transform_keys(label_dct, rlabel_dct.get)
+        plabel_dct = dict_.transform_keys(label_dct, plabel_dct.get)
+
+    rwid = ipywidget(rgra, stereo=stereo, exp=exp, label=label, label_dct=rlabel_dct)
+    pwid = ipywidget(pgra, stereo=stereo, exp=exp, label=label, label_dct=plabel_dct)
+    arrow_widget = ipywidgets.Image(
+        value=arrow_svg_str.encode("utf-8"), format="svg+xml", width=100, height=50
+    )
+    ipd.display(ipywidgets.HBox([rwid, arrow_widget, pwid]))
+### source/automol/graph/base/_11stereo.py
+L73: def expand_stereo(gra, symeq: bool=False, enant: bool=True, strained: bool=False, rcts_gra: object | None=None, prds_gra: object | None=None)
+L120: def _expand_stereo_core(gra, cand_dct, rcand_dct: dict | None=None, rcts_gra: object | None=None, prds_gra: object | None=None)
+L190: def _select_ts_canonical_direction_priorities(gprs, fcand_dct: dict, rcand_dct: dict)
+L202: def _remove_strained_stereoisomers_from_expansion(gps, cand_dct, migration_only: bool=False)
+L245: def _remove_noncanonical_enantiomers_from_expansion(gps, cand_dct: dict)
+L269: def _remove_symmetry_equivalents_from_expansion(gps, cand_dct: dict)
+L283: def expand_reaction_stereo(ts_gra, flat: bool=False)
+L321: def ts_reactants_graph(tsg, stereo=True, dummy=True)
+L336: def ts_products_graph(tsg, stereo=True, dummy=True)
+L351: def ts_reagents_graph(tsg, prod=False, stereo=True, dummy=True)
+L374: def ts_fleeting_stereocenter_keys(tsg, strict: bool=True)
+L415: def has_fleeting_atom_or_bond_stereo(tsg, strict: bool=True)
+L432: def stereo_corrected_geometry(gra, geo, geo_idx_dct=None, local_stereo: bool=False, lin_ts_bonds: bool=False)
+L498: def set_stereo_from_geometry(gra, geo, local_stereo=False, geo_idx_dct=None)
+L530: def reflect(gra)
+L546: def unassigned_stereocenter_keys(gra, atom: bool=True, bond: bool=True, pri_dct: Optional[Dict[int, int]]=None)
+L572: def geometry_pseudorotate_atom(gra, geo, key, ang=numpy.pi, degree=False, geo_idx_dct=None)
+#### source/automol/graph/base/_11stereo.py::_remove_symmetry_equivalents_from_expansion (L269)
+def _remove_symmetry_equivalents_from_expansion(gps, cand_dct: dict):
+    """Remove symmetry-equivalent stereoisomers from an expansion."""
+    gps0 = gps
+    gps = []
+    seen_reps = []
+    for gra, pri_dct in gps0:
+        rep = stereo_assignment_representation(gra, pri_dct, cand_dct=cand_dct)
+        if rep not in seen_reps:
+            gps.append((gra, pri_dct))
+            seen_reps.append(rep)
+    return gps
+#### source/automol/graph/base/_11stereo.py::expand_reaction_stereo (L283)
+def expand_reaction_stereo(ts_gra, flat: bool = False):
+    """Obtain all possible stereoisomeric pathways of a reaction, grouped by reactants
+    and products (unless requesting `flat` expansion)
+
+    :param ts_gra: TS graph
+    :type ts_gra: automol graph data structure
+    :param flat: Return a flat list, instead of grouping by reagents?, default False
+    :type flat: bool, optional
+    :returns: A list of triples: a reactants graph, a products graph, and a list of TS
+        graphs associated with them
+    :rtype: List[Tuple[graph, graph, List[graph]]]
+    """
+
+    def _from_groupby_result(groupby_result):
+        """For formatting groupby results"""
+        _, group = groupby_result
+        rcts_gras, prds_gras, ts_gras = zip(*group)
+        return (rcts_gras[0], prds_gras[0], ts_gras)
+
+    # Allow *all* possibilities for the TS, including symmetry equivalent ones
+    ts_sgras = expand_stereo(ts_gra, symeq=True, enant=True)
+
+    rxn_sgras_lst = []
+    for ts_sgra in ts_sgras:
+        rcts_sgra = ts_reactants_graph(ts_sgra)
+        prds_sgra = ts_products_graph(ts_sgra)
+        rxn_sgras_lst.append((rcts_sgra, prds_sgra, ts_sgra))
+
+    rxn_sgras_lst = sorted(rxn_sgras_lst, key=lambda gs: tuple(map(frozen, gs)))
+
+    if not flat:
+        rxn_sgras_groupby_iter = itertools.groupby(
+            rxn_sgras_lst, key=lambda gs: tuple(map(frozen, gs[:-1]))
+        )
+        rxn_sgras_lst = list(map(_from_groupby_result, rxn_sgras_groupby_iter))
+    return rxn_sgras_lst
+#### source/automol/graph/base/_11stereo.py::ts_reactants_graph (L321)
+def ts_reactants_graph(tsg, stereo=True, dummy=True):
+    """Get the reactants from a TS graph
+
+    :param tsg: TS graph
+    :type tsg: automol graph data structure
+    :param stereo: Keep stereo, even though it is invalid?
+    :type stereo: bool, optional
+    :param dummy: Keep dummy atoms? default True
+    :type dummy: bool, optional
+    :returns: The TS graph, without reacting bond orders
+    :rtype: automol graph data structure
+    """
+    return ts_reagents_graph(tsg, prod=False, stereo=stereo, dummy=dummy)
+#### source/automol/graph/base/_11stereo.py::ts_products_graph (L336)
+def ts_products_graph(tsg, stereo=True, dummy=True):
+    """Get the products from a TS graph
+
+    :param tsg: TS graph
+    :type tsg: automol graph data structure
+    :param stereo: Keep stereo, even though it is invalid?
+    :type stereo: bool, optional
+    :param dummy: Keep dummy atoms? default True
+    :type dummy: bool, optional
+    :returns: The TS graph, without reacting bond orders
+    :rtype: automol graph data structure
+    """
+    return ts_reagents_graph(tsg, prod=True, stereo=stereo, dummy=dummy)
+#### source/automol/graph/base/_11stereo.py::ts_reagents_graph (L351)
+def ts_reagents_graph(tsg, prod=False, stereo=True, dummy=True):
+    """Get the reactants or products from a TS graph
+
+    :param tsg: TS graph
+    :type tsg: automol graph data structure
+    :param prod: Do this for the products, instead of the reactants?
+    :type prod: bool
+    :param stereo: Keep stereo, even though it is invalid?
+    :type stereo: bool, optional
+    :param dummy: Keep dummy atoms? default True
+    :type dummy: bool, optional
+    :returns: The TS graph, without reacting bond orders
+    :rtype: automol graph data structure
+    """
+    gra = ts_reagents_graph_without_stereo(tsg, prod=prod, dummy=dummy)
+    if stereo:
+        tsg = ts_reverse(tsg) if prod else tsg
+        loc_tsg = to_local_stereo(tsg)
+        par_eval_ = parity_evaluator_reactants_from_local_ts_graph_(loc_tsg)
+        gra, *_ = calculate_stereo(gra, par_eval_=par_eval_)
+    return gra
+### source/automol/graph/base/_02algo.py
+L52: def isomorphism(gra1, gra2, backbone_only=False, stereo=True, dummy=True, subgraph=False)
+L89: def isomorphic(gra1, gra2, backbone_only=False, stereo=True, dummy=True)
+L107: def unique(gras, backbone_only=False, stereo=True, dummy=True)
+L126: def unique_with_counts(gras, backbone_only=False, stereo=True, dummy=True)
+L148: def _unique_with_counts(items, equiv)
+L164: def sequence_isomorphism(gras1, gras2, backbone_only=False, stereo=True, dummy=True)
+L207: def subgraph_isomorphism(gra1, gra2, backbone_only=False, stereo=True, dummy=True)
+L229: def equivalent_atoms(gra, atm_key, stereo=True, dummy=True)
+L271: def equivalent_bonds(gra, bnd_key, stereo=True, dummy=True)
+L322: def are_equivalent_atoms(gra, atm1_key, atm2_key, stereo=True, dummy=True)
+L346: def are_equivalent_bonds(gra, bnd1_key, bnd2_key, stereo=True, dummy=True)
+L382: def atom_equivalence_class_reps(gra, atm_keys=None, stereo=True, dummy=True, symb=None)
+L413: def bond_equivalence_class_reps(gra, bnd_keys=None, stereo=True, dummy=True)
+L442: def connected_components(gra, stereo=True)
+L452: def connected_components_atom_keys(gra)
+L459: def is_connected(gra)
+L464: def dfs_(gra, key)
+L476: def dfs_atom_keys(dfs: list[tuple[int, int]])
+L485: def dfs_bond_keys(dfs: list[tuple[int, int]])
+L494: def dfs_children(dfs: list[tuple[int, int]])
+L506: def dfs_parents(dfs: list[tuple[int, int]])
+L515: def dfs_missing_bond_keys(gra, dfs: list[tuple[int, int]])
+L525: def dfs_missing_children(gra, dfs: list[tuple[int, int]])
+L544: def atom_shortest_paths(gra)
+L554: def shortest_path_between_atoms(gra, key1, key2)
+L559: def simple_paths_between_atoms(gra, key1, key2, overlap: bool=False)
+L570: def shortest_path_between_groups(gra, keys1, keys2)
+L595: def atom_longest_chains(gra)
+L603: def atom_longest_chain(gra, atm_key)
+L630: def longest_chain(gra)
+L638: def weighted_maximal_matching(gra, bnd_weight_dct=None)
+L650: def ring_atom_chirality(gra, atm, ring_atms, stereo=False)
+L678: def branches(gra, atm_key, keep_root=False, stereo=False)
+L697: def branch_dict(gra, atm_key, keep_root=False, stereo=False)
+L735: def branch(gra, atm_key, branch_key, keep_root: bool=False, stereo: bool=False, return_missing_neighbor: bool=False)
+L775: def branch_atom_keys(gra, atm_key, branch_key, keep_root: bool=False, return_missing_neighbor: bool=False)
+L808: def is_branched(gra)
+L821: def rings(gra, ts_=True)
+L835: def rings_atom_keys(gra, ts_=True)
+L858: def rings_bond_keys(gra, ts_=True)
+L873: def sorted_ring_atom_keys(rng)
+L878: def sorted_ring_atom_keys_from_bond_keys(rng_bnd_keys)
+L899: def is_ring_key_sequence(gra, keys)
+L905: def ring_arc_complement_atom_keys(gra, rng)
+L958: def ring_systems(gra, lump_spiro=True)
+L967: def ring_systems_atom_keys(gra, lump_spiro=True)
+L973: def ring_systems_bond_keys(gra, lump_spiro=True)
+L998: def spiros(gra: Any, repeat_end: bool=False)
+L1020: def spiro_atom_keys(gra)
+L1031: def is_ring_system(gra)
+L1037: def ring_system_decomposed_atom_keys(rsy, rng_keys=None, check=True)
+L1134: def ring_systems_decomposed_atom_keys(gra)
+L1145: def _decompose_ring_system_atom_keys(rsy)
+L1172: def is_bimolecular(tsg)
+L1183: def reacting_rings_bond_keys(tsg)
+L1196: def reacting_rings_atom_keys(tsg)
+L1207: def forming_rings_bond_keys(tsg)
+L1220: def forming_rings_atom_keys(tsg)
+L1233: def breaking_rings_bond_keys(tsg)
+L1246: def breaking_rings_atom_keys(tsg)
+L1259: def has_reacting_ring(tsg)
+#### source/automol/graph/base/_02algo.py::subgraph_isomorphism (L207)
+def subgraph_isomorphism(gra1, gra2, backbone_only=False, stereo=True, dummy=True):
+    """Test whether a graph contains a subgraph which is isomorphic to another
+
+    :param backbone_only: Compare backbone atoms only?
+    :type backbone_only: bool
+    :param stereo: Consider stereo?
+    :type stereo: bool
+    :param dummy: Consider dummy atoms?
+    :type dummy: bool
+    :returns: The isomorphism mapping a subgraph of `gra1` onto `gra2`
+    :rtype: dict
+    """
+    return isomorphism(
+        gra1,
+        gra2,
+        backbone_only=backbone_only,
+        stereo=stereo,
+        dummy=dummy,
+        subgraph=True,
+    )
+#### source/automol/graph/base/_02algo.py::equivalent_atoms (L229)
+def equivalent_atoms(gra, atm_key, stereo=True, dummy=True):
+    """Identify sets of isomorphically equivalent atoms
+
+    Two atoms are equivalent if they transform into each other under an
+    automorphism
+
+    :param gra: A graph
+    :param atm_key: An atom key for the graph
+    :param stereo: Consider stereo?
+    :type stereo: bool
+    :param dummy: Consider dummy atoms?
+    :type dummy: bool
+    :returns: Keys to equivalent atoms
+    :rtype: frozenset
+    """
+    assert atm_key in atom_keys(gra), f"{atm_key} not in {atom_keys(gra)}"
+
+    atm_symb_dct = atom_symbols(gra)
+    atm_ngbs_dct = atoms_neighbor_atom_keys(gra)
+
+    def _neighbor_symbols(key):
+        return sorted(map(atm_symb_dct.__getitem__, atm_ngbs_dct[key]))
+
+    # 1. Find atoms with the same symbols
+    atm_symb = atm_symb_dct[atm_key]
+    cand_keys = atom_keys(gra, symb=atm_symb)
+
+    # 2. Of those, find atoms with the same neighboring atom types
+    atm_ngb_symbs = _neighbor_symbols(atm_key)
+    cand_keys = [k for k in cand_keys if _neighbor_symbols(k) == atm_ngb_symbs]
+
+    # 3. Find the equivalent atoms from the list of candidates.
+    # Strategy: Change the atom symbol to 'Ts' and check for isomorphism.
+    # Assumes none of the compounds have element 117.
+    atm_keys = []
+    for key in cand_keys:
+        if are_equivalent_atoms(gra, atm_key, key, stereo=stereo, dummy=dummy):
+            atm_keys.append(key)
+
+    return frozenset(atm_keys)
+#### source/automol/graph/base/_02algo.py::equivalent_bonds (L271)
+def equivalent_bonds(gra, bnd_key, stereo=True, dummy=True):
+    """Identify sets of isomorphically equivalent bonds
+
+    Two bonds are equivalent if they transform into each other under an
+    automorphism
+
+    :param gra: A graph
+    :param bnd_key: An bond key for the graph, which may be sorted or unsorted
+    :param backbone_only: Compare backbone atoms only?
+    :type stereo: bool
+    :param dummy: Consider dummy atoms?
+    :type dummy: bool
+    :returns: Keys to equivalent bonds
+    :rtype: frozenset
+    """
+    bnd_key = tuple(bnd_key)
+    bnd_keys = list(map(tuple, map(sorted, bond_keys(gra))))
+    bnd_keys += list(map(tuple, map(reversed, bnd_keys)))
+    assert bnd_key in bnd_keys, f"{bnd_key} not in {bnd_keys}"
+
+    atm_symb_dct = atom_symbols(gra)
+    atm_ngbs_dct = atoms_neighbor_atom_keys(gra)
+
+    def _symbols(bnd_key):
+        return list(map(atm_symb_dct.__getitem__, bnd_key))
+
+    def _neighbor_symbols(bnd_key):
+        key1, key2 = bnd_key
+        nsymbs1 = sorted(map(atm_symb_dct.__getitem__, atm_ngbs_dct[key1]))
+        nsymbs2 = sorted(map(atm_symb_dct.__getitem__, atm_ngbs_dct[key2]))
+        return nsymbs1, nsymbs2
+
+    # 1. Find bonds with the same atom types
+    bnd_symbs = _symbols(bnd_key)
+    cand_keys = [k for k in bnd_keys if _symbols(k) == bnd_symbs]
+
+    # 2. Of those, find bonds with the same neighboring atom types
+    bnd_ngb_symbs = _neighbor_symbols(bnd_key)
+    cand_keys = [k for k in cand_keys if _neighbor_symbols(k) == bnd_ngb_symbs]
+
+    # 3. Find the equivalent bonds from the list of candidates.
+    # Strategy: Change the atom symbols to 'Lv' and 'Ts' and check for
+    # isomorphism.  Assumes none of the compounds have element 116 or 117.
+    bnd_keys = []
+    for key in cand_keys:
+        if are_equivalent_bonds(gra, bnd_key, key, stereo=stereo, dummy=dummy):
+            bnd_keys.append(key)
+
+    return frozenset(bnd_keys)
+#### source/automol/graph/base/_02algo.py::are_equivalent_atoms (L322)
+def are_equivalent_atoms(gra, atm1_key, atm2_key, stereo=True, dummy=True):
+    """Determine whether two atoms are isomorphically equivalent.
+
+    Two atoms are equivalent if they transform into each other under an
+    automorphism
+
+    :param gra: A graph
+    :param atm1_key: The first atom
+    :type atm1_key: int
+    :param atm2_key: The first atom
+    :type atm2_key: int
+    :param stereo: Consider stereo?
+    :type stereo: bool
+    :param dummy: Consider dummy atoms?
+    :type dummy: bool
+    :returns: True if the atoms are equivalent, False otherwise
+    :rtype: bool
+    """
+    gra1 = set_atom_symbols(gra, {atm1_key: "Ts"})
+    gra2 = set_atom_symbols(gra, {atm2_key: "Ts"})
+    are_equiv = bool(isomorphism(gra1, gra2, stereo=stereo, dummy=dummy))
+    return are_equiv
+#### source/automol/graph/base/_02algo.py::are_equivalent_bonds (L346)
+def are_equivalent_bonds(gra, bnd1_key, bnd2_key, stereo=True, dummy=True):
+    """Determine whether two bonds are isomorphically equivalent.
+
+    Two bonds are equivalent if they transform into each other under an
+    automorphism
+
+    :param gra: A graph
+    :param bnd1_key: The first atom
+    :type bnd1_key: int
+    :param bnd2_key: The first atom
+    :type bnd2_key: int
+    :param stereo: Consider stereo?
+    :type stereo: bool
+    :param dummy: Consider dummy atoms?
+    :type dummy: bool
+    :returns: True if the atoms are equivalent, False otherwise
+    :rtype: bool
+    """
+    order_matters = isinstance(bnd1_key, collections.abc.Sequence) and isinstance(
+        bnd2_key, collections.abc.Sequence
+    )
+
+    bnd1_key = list(bnd1_key)
+    bnd2_key = list(bnd2_key)
+    gra1 = set_atom_symbols(gra, {bnd1_key[0]: "Lv", bnd1_key[1]: "Ts"})
+    gra2 = set_atom_symbols(gra, {bnd2_key[0]: "Lv", bnd2_key[1]: "Ts"})
+    are_equiv = bool(isomorphism(gra1, gra2, stereo=stereo, dummy=dummy))
+
+    # If order doesn't matter, check swap atoms and check again
+    if not order_matters:
+        gra2 = set_atom_symbols(gra, {bnd2_key[1]: "Lv", bnd2_key[0]: "Ts"})
+        are_equiv |= bool(isomorphism(gra1, gra2, stereo=stereo, dummy=dummy))
+
+    return are_equiv

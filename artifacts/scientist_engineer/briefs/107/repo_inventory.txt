@@ -1,0 +1,1939 @@
+workdir: /app/task_107
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-107:v0.1.2
+code_files_total: 1611
+## directories (file counts)
+source/sympy/polys: 43
+source/sympy/core/tests: 41
+source/sympy/polys/tests: 40
+source/mpmath/tests: 38
+source/sympy/core: 38
+source/sympy/physics/quantum: 38
+source/sympy/physics/quantum/tests: 38
+source/sympy/printing: 36
+source/sympy/printing/tests: 36
+source/sympy/polys/domains: 32
+source/sympy/matrices/expressions/tests: 26
+source/sympy/matrices/expressions: 25
+source/sympy/physics/mechanics/tests: 25
+source/sympy/combinatorics: 24
+source/sympy/combinatorics/tests: 23
+source/sympy/matrices: 21
+source/sympy/stats: 20
+source/sympy/utilities/tests: 20
+source/sympy/physics/mechanics: 19
+source/sympy/utilities: 19
+source/sympy/matrices/tests: 18
+source/sympy/codegen: 17
+source/sympy/integrals: 17
+source/sympy/plotting/pygletplot: 17
+source/sympy/simplify: 17
+source/sympy/codegen/tests: 16
+source/sympy/ntheory/tests: 16
+source/sympy/series/tests: 16
+source/sympy/simplify/tests: 16
+source/sympy/functions/special: 15
+source/sympy/functions/special/tests: 15
+source/sympy/ntheory: 15
+source/sympy/polys/matrices: 15
+source/sympy/polys/matrices/tests: 15
+source/sympy/series: 15
+source/sympy/vector: 15
+source/mpmath: 14
+source/mpmath/functions: 14
+source/sympy/parsing/tests: 14
+source/sympy/stats/tests: 14
+## terms_from_instruction
+strong: Integral, SymPy, diff, expr, integrand, integrate, pre_fix_expected_failure, report.json, runner_failure, workflow_completed
+common: symbolic, sympy, supplied, calculus, documentation, integrals, tutorial, integration, workbench, integral, running, command, fails, notes, documents, integrate, indefinite, respect, variable, introductory, antiderivative, unevaluated, expressions, https, latest
+## import_reach_from_reproduce.py (path, depth)
+source/sympy/__init__.py  (depth 1)
+source/mpmath/__init__.py  (depth 2)
+source/sympy/algebras/__init__.py  (depth 2)
+source/sympy/assumptions/__init__.py  (depth 2)
+source/sympy/assumptions/ask.py  (depth 2)
+source/sympy/assumptions/refine.py  (depth 2)
+source/sympy/calculus/__init__.py  (depth 2)
+source/sympy/calculus/singularities.py  (depth 2)
+source/sympy/concrete/__init__.py  (depth 2)
+source/sympy/core/__init__.py  (depth 2)
+source/sympy/core/cache.py  (depth 2)
+source/sympy/core/evalf.py  (depth 2)
+source/sympy/core/sympify.py  (depth 2)
+source/sympy/discrete/__init__.py  (depth 2)
+source/sympy/functions/__init__.py  (depth 2)
+source/sympy/geometry/__init__.py  (depth 2)
+source/sympy/integrals/__init__.py  (depth 2)
+source/sympy/interactive/__init__.py  (depth 2)
+source/sympy/logic/__init__.py  (depth 2)
+source/sympy/matrices/__init__.py  (depth 2)
+source/sympy/ntheory/__init__.py  (depth 2)
+source/sympy/ntheory/continued_fraction.py  (depth 2)
+source/sympy/ntheory/egyptian_fraction.py  (depth 2)
+source/sympy/parsing/__init__.py  (depth 2)
+source/sympy/plotting/__init__.py  (depth 2)
+source/sympy/plotting/plot.py  (depth 2)
+source/sympy/plotting/plot_implicit.py  (depth 2)
+source/sympy/plotting/textplot.py  (depth 2)
+source/sympy/polys/__init__.py  (depth 2)
+source/sympy/printing/__init__.py  (depth 2)
+source/sympy/printing/jscode.py  (depth 2)
+source/sympy/printing/latex.py  (depth 2)
+source/sympy/printing/mathml.py  (depth 2)
+source/sympy/printing/preview.py  (depth 2)
+source/sympy/printing/pycode.py  (depth 2)
+source/sympy/printing/python.py  (depth 2)
+source/sympy/printing/rcode.py  (depth 2)
+source/sympy/release.py  (depth 2)
+source/sympy/series/__init__.py  (depth 2)
+source/sympy/series/approximants.py  (depth 2)
+## ranked_source_paths (score, path, matched_terms)
+  39.0  source/sympy/integrals/integrals.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrand', 'integrate']
+  37.0  source/sympy/integrals/manualintegrate.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrand', 'integrate']
+  35.5  source/sympy/core/expr.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  32.5  source/sympy/integrals/risch.py  ['Integral', 'diff', 'expr', 'integrand', 'integrate']
+  32.0  source/sympy/core/function.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  31.5  source/sympy/integrals/laplace.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  31.0  source/sympy/core/evalf.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrand']
+  30.5  source/sympy/integrals/meijerint.py  ['Integral', 'diff', 'expr', 'integrand', 'integrate']
+  30.0  source/sympy/core/numbers.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  30.0  source/sympy/solvers/ode/ode.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  30.0  source/sympy/utilities/lambdify.py  ['Integral', 'SymPy', 'diff', 'expr']
+  29.5  source/sympy/functions/elementary/piecewise.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  28.5  source/sympy/algebras/quaternion.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  28.0  source/sympy/core/basic.py  ['Integral', 'SymPy', 'diff', 'expr']
+  28.0  source/sympy/integrals/heurisch.py  ['Integral', 'diff', 'expr', 'integrate']
+  28.0  source/sympy/printing/latex.py  ['Integral', 'SymPy', 'diff', 'expr']
+  28.0  source/sympy/solvers/solvers.py  ['Integral', 'SymPy', 'diff', 'expr']
+  27.5  source/sympy/polys/polytools.py  ['SymPy', 'diff', 'expr', 'integrate']
+  27.5  source/sympy/simplify/hyperexpand.py  ['diff', 'expr', 'integrand', 'integrate']
+  27.0  source/sympy/core/exprtools.py  ['Integral', 'diff', 'expr', 'integrand']
+  27.0  source/sympy/integrals/transforms.py  ['Integral', 'SymPy', 'expr', 'integrate']
+  27.0  source/sympy/solvers/ode/systems.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  27.0  source/sympy/solvers/pde.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  26.5  source/sympy/matrices/matrixbase.py  ['SymPy', 'diff', 'expr', 'integrate']
+  25.5  source/sympy/core/mul.py  ['Integral', 'SymPy', 'diff', 'expr']
+  25.5  source/sympy/functions/combinatorial/numbers.py  ['SymPy', 'diff', 'expr', 'integrate']
+  25.0  source/sympy/diffgeom/diffgeom.py  ['Integral', 'SymPy', 'diff', 'expr']
+  25.0  source/sympy/functions/special/beta_functions.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrand']
+  25.0  source/sympy/physics/control/lti.py  ['Integral', 'SymPy', 'diff', 'expr']
+  25.0  source/sympy/simplify/simplify.py  ['Integral', 'SymPy', 'expr']
+  25.0  source/sympy/solvers/ode/single.py  ['Integral', 'SymPy', 'diff', 'expr', 'integrate']
+  24.5  source/sympy/core/relational.py  ['SymPy', 'diff', 'expr', 'integrate']
+  24.0  source/sympy/concrete/expr_with_limits.py  ['Integral', 'expr', 'integrand']
+  24.0  source/sympy/integrals/intpoly.py  ['SymPy', 'diff', 'expr', 'integrate']
+  24.0  source/sympy/physics/continuum_mechanics/beam.py  ['SymPy', 'diff', 'expr', 'integrate']
+  24.0  source/sympy/vector/integrals.py  ['Integral', 'diff', 'integrand', 'integrate']
+  23.5  source/sympy/concrete/summations.py  ['Integral', 'diff', 'expr']
+  23.5  source/sympy/functions/special/error_functions.py  ['Integral', 'SymPy', 'diff', 'integrate']
+  23.5  source/sympy/holonomic/holonomic.py  ['diff', 'expr', 'integrand', 'integrate']
+  23.5  source/sympy/matrices/expressions/blockmatrix.py  ['SymPy', 'diff', 'expr']
+  23.5  source/sympy/solvers/solveset.py  ['SymPy', 'expr']
+  23.5  source/sympy/stats/crv.py  ['Integral', 'diff', 'expr', 'integrand', 'integrate']
+  23.0  source/sympy/functions/special/hyper.py  ['SymPy', 'diff', 'expr', 'integrand']
+  23.0  source/sympy/matrices/expressions/matexpr.py  ['SymPy', 'diff', 'expr']
+  22.5  source/sympy/calculus/finite_diff.py  ['diff', 'expr']
+  22.5  source/sympy/codegen/ast.py  ['SymPy', 'diff', 'expr']
+  22.5  source/sympy/printing/pycode.py  ['Integral', 'SymPy', 'expr']
+  22.0  source/sympy/core/power.py  ['SymPy', 'diff', 'expr']
+  22.0  source/sympy/functions/elementary/complexes.py  ['Integral', 'SymPy', 'expr']
+  22.0  source/sympy/integrals/prde.py  ['diff', 'expr', 'integrand']
+  22.0  source/sympy/integrals/rationaltools.py  ['Integral', 'diff', 'integrate']
+  22.0  source/sympy/polys/ring_series.py  ['SymPy', 'diff', 'expr', 'integrate']
+  22.0  source/sympy/printing/mathml.py  ['Integral', 'diff', 'expr']
+  22.0  source/sympy/printing/pretty/pretty.py  ['SymPy', 'diff', 'expr']
+  22.0  source/sympy/printing/str.py  ['Integral', 'SymPy', 'diff', 'expr']
+  22.0  source/sympy/vector/basisdependent.py  ['Integral', 'SymPy', 'diff', 'expr']
+  21.5  source/sympy/functions/special/delta_functions.py  ['Integral', 'SymPy', 'diff']
+  21.5  source/sympy/integrals/deltafunctions.py  ['Integral', 'diff', 'integrate']
+  21.5  source/sympy/logic/boolalg.py  ['SymPy', 'diff', 'expr']
+  21.5  source/sympy/physics/vector/functions.py  ['SymPy', 'diff', 'expr', 'integrate']
+## snippets
+### reproduce.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+TASK_DIR = Path(__file__).resolve().parent
+SOURCE_DIR = TASK_DIR / "source"
+FIXTURE_FILE = TASK_DIR / "fixtures" / "cases.json"
+REPORT_FILE = TASK_DIR / "outputs" / "report.json"
+
+
+def write_report(report: dict[str, object], exit_code: int) -> int:
+    REPORT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(report, indent=2, sort_keys=True) + "\n"
+    REPORT_FILE.write_text(payload, encoding="utf-8")
+    print(payload, end="")
+    return exit_code
+
+
+def main() -> int:
+    try:
+        import sys
+        sys.path.insert(0, str(SOURCE_DIR))
+        from sympy import Symbol, integrate, sympify
+    except Exception as exc:  # noqa: BLE001 - report infrastructure failures.
+        return write_report(
+            {
+                "schema_version": "1.0",
+                "status": "runner_failure",
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            },
+            2,
+        )
+
+    try:
+        fixture = json.loads(FIXTURE_FILE.read_text(encoding="utf-8"))
+        cases = fixture["cases"]
+        case_results = []
+        step = 1e-6
+        tolerance = 1e-5
+        for case in cases:
+            symbol_names = case["symbols"]
+            symbol_map = {name: Symbol(name, real=True) for name in symbol_names}
+            integrand = sympify(case["integrand"], locals=symbol_map)
+            variable = symbol_map[case["variable"]]
+            antiderivative = integrate(integrand, variable)
+            pointwise_checks = []
+            for sample in case["samples"]:
+                sample_point = {
+                    symbol_map[name]: value
+                    for name, value in sample.items()
+                }
+                center = float(sample_point[variable])
+                plus_point = dict(sample_point)
+                minus_point = dict(sample_point)
+                plus_point[variable] = center + step
+                minus_point[variable] = center - step
+                forward = complex(antiderivative.subs(plus_point).evalf(80))
+                backward = complex(antiderivative.subs(minus_point).evalf(80))
+                finite_difference = (forward - backward) / (2.0 * step)
+                target_value = complex(integrand.subs(sample_point).evalf(80))
+                pointwise_checks.append(
+                    abs(finite_difference - target_value) < tolerance
+                )
+            case_passed = all(pointwise_checks)
+            case_results.append(case_passed)
+    except Exception as exc:  # noqa: BLE001 - report infrastructure failures.
+        return write_report(
+            {
+                "schema_version": "1.0",
+                "status": "runner_failure",
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            },
+            2,
+        )
+    finally:
+        if sys.path and sys.path[0] == str(SOURCE_DIR):
+            sys.path.pop(0)
+
+    passed_case_count = sum(1 for result in case_results if result)
+    case_count = len(case_results)
+    success = bool(case_count > 0 and passed_case_count == case_count)
+    report = {
+        "schema_version": "1.0",
+        "status": "workflow_completed" if success else "pre_fix_expected_failure",
+        "observation": {
+            "case_count": case_count,
+            "passed_case_count": passed_case_count,
+            "all_cases_passed": success,
+        },
+    }
+    return write_report(report, 0 if success else 1)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+### reproduction.md
+# Public reproduction
+
+Run from the task directory:
+
+```bash
+python reproduce.py
+```
+
+The command loads the supplied symbolic-calculus cases, runs the normal
+public integration workflow, and records the aggregate check in
+`outputs/report.json`.
+
+Expected report states:
+
+- `pre_fix_expected_failure`, exit code `1`: at least one supplied case fails
+  at one or more public sample points;
+- `workflow_completed`, exit code `0`: all supplied cases pass;
+- `runner_failure`, exit code `2`: an import, fixture, path, serialization, or
+  other infrastructure error prevented the mathematical check from running.
+### paper.md
+# SymPy symbolic integration
+
+This task is grounded in the public SymPy documentation for symbolic calculus.
+The notes below are the offline material needed for this task; the URLs are
+included only as provenance for the public documentation.
+
+## Public API notes
+
+The SymPy integrals module documents `integrate(f, x)` as the public call for an
+indefinite integral of an expression with respect to one variable. The
+introductory calculus tutorial describes this indefinite-integral use as
+computing an antiderivative, also called a primitive.
+
+The same tutorial documents `diff(expr, x)` as the public derivative operation.
+For a returned elementary antiderivative `F` of an integrand `f`, the usual
+calculus consistency condition is that local changes in `F` with respect to the
+integration variable match `f` away from poles or other singular points.
+
+If `integrate` cannot compute a closed form, the tutorial says it may return an
+unevaluated `Integral` object. The supplied workbench cases are ordinary
+symbolic expressions for which the public workflow returns evaluated symbolic
+expressions rather than unevaluated integrals.
+
+Relevant public references:
+
+- SymPy 1.14.0 documentation, Integrals:
+  `https://docs.sympy.org/latest/modules/integrals/integrals.html`
+- SymPy 1.14.0 documentation, Introductory Tutorial, Calculus:
+  `https://docs.sympy.org/latest/tutorials/intro-tutorial/calculus.html`
+## outlines_of_top_modules
+### source/sympy/integrals/integrals.py
+L35: class Integral
+  L42: def __new__(cls, function, *symbols, **assumptions)
+  L100: def __getnewargs__(self)
+  L104: def free_symbols(self)
+  L128: def _eval_is_zero(self)
+  L163: def transform(self, x, u)
+  L383: def doit(self, **hints)
+  L730: def _eval_derivative(self, sym)
+  L823: def _eval_integral(self, f, x, meijerg=None, risch=None, manual=None, heurisch=None, conds='piecewise', final=None)
+  L1166: def _eval_lseries(self, x, logx=None, cdir=0)
+  L1176: def _eval_nseries(self, x, n, logx=None, cdir=0)
+  L1187: def _eval_as_leading_term(self, x, logx, cdir)
+  L1194: def _eval_simplify(self, **kwargs)
+  L1201: def as_sum(self, n=None, method='midpoint', evaluate=True)
+  L1342: def principal_value(self, **kwargs)
+L1406: def integrate(*args, meijerg=None, conds='piecewise', risch=None, heurisch=None, manual=None, **kwargs)
+L1581: def line_integrate(field, curve, vars)
+L1634: def _(expr)
+#### source/sympy/integrals/integrals.py::Integral._eval_integral (L823)
+    def _eval_integral(self, f, x, meijerg=None, risch=None, manual=None,
+                       heurisch=None, conds='piecewise',final=None):
+        """
+        Calculate the anti-derivative to the function f(x).
+
+        Explanation
+        ===========
+
+        The following algorithms are applied (roughly in this order):
+
+        1. Simple heuristics (based on pattern matching and integral table):
+
+           - most frequently used functions (e.g. polynomials, products of
+             trig functions)
+
+        2. Integration of rational functions:
+
+           - A complete algorithm for integrating rational functions is
+             implemented (the Lazard-Rioboo-Trager algorithm).  The algorithm
+             also uses the partial fraction decomposition algorithm
+             implemented in apart() as a preprocessor to make this process
+             faster.  Note that the integral of a rational function is always
+             elementary, but in general, it may include a RootSum.
+
+        3. Full Risch algorithm:
+
+           - The Risch algorithm is a complete decision
+             procedure for integrating elementary functions, which means that
+             given any elementary function, it will either compute an
+             elementary antiderivative, or else prove that none exists.
+             Currently, part of transcendental case is implemented, meaning
+             elementary integrals containing exponentials, logarithms, and
+             (soon!) trigonometric functions can be computed.  The algebraic
+             case, e.g., functions containing roots, is much more difficult
+             and is not implemented yet.
+
+           - If the routine fails (because the integrand is not elementary, or
+             because a case is not implemented yet), it continues on to the
+             next algorithms below.  If the routine proves that the integrals
+             is nonelementary, it still moves on to the algorithms below,
+             because we might be able to find a closed-form solution in terms
+             of special functions.  If risch=True, however, it will stop here.
+
+        4. The Meijer G-Function algorithm:
+
+           - This algorithm works by first rewriting the integrand in terms of
+             very general Meijer G-Function (meijerg in SymPy), integrating
+             it, and then rewriting the result back, if possible.  This
+             algorithm is particularly powerful for definite integrals (which
+             is actually part of
+#### source/sympy/integrals/integrals.py::integrate (L1406)
+def integrate(*args, meijerg=None, conds='piecewise', risch=None, heurisch=None, manual=None, **kwargs):
+    """integrate(f, var, ...)
+
+    .. deprecated:: 1.6
+
+       Using ``integrate()`` with :class:`~.Poly` is deprecated. Use
+       :meth:`.Poly.integrate` instead. See :ref:`deprecated-integrate-poly`.
+
+    Explanation
+    ===========
+
+    Compute definite or indefinite integral of one or more variables
+    using Risch-Norman algorithm and table lookup. This procedure is
+    able to handle elementary algebraic and transcendental functions
+    and also a huge class of special functions, including Airy,
+    Bessel, Whittaker and Lambert.
+
+    var can be:
+
+    - a symbol                   -- indefinite integration
+    - a tuple (symbol, a)        -- indefinite integration with result
+                                    given with ``a`` replacing ``symbol``
+    - a tuple (symbol, a, b)     -- definite integration
+
+    Several variables can be specified, in which case the result is
+    multiple integration. (If var is omitted and the integrand is
+    univariate, the indefinite integral in that variable will be performed.)
+
+    Indefinite integrals are returned without terms that are independent
+    of the integration variables. (see examples)
+
+    Definite improper integrals often entail delicate convergence
+    conditions. Pass conds='piecewise', 'separate' or 'none' to have
+    these returned, respectively, as a Piecewise function, as a separate
+    result (i.e. result will be a tuple), or not at all (default is
+    'piecewise').
+
+    **Strategy**
+
+    SymPy uses various approaches to definite integration. One method is to
+    find an antiderivative for the integrand, and then use the fundamental
+    theorem of calculus. Various functions are implemented to integrate
+    polynomial, rational and trigonometric functions, and integrands
+    containing DiracDelta terms.
+
+    SymPy also implements the part of the Risch algorithm, which is a decision
+    procedure for integrating elementary functions, i.e., the algorithm can
+    either find an elementary antiderivative, or prove that one does not
+    exist.  There is also a (very successful, albeit somewhat slow) general
+    implementation of the heuristic Risch algorithm.  This algorithm will
+    eventually be phased out as more of the full Risch algorithm is
+    implemented. See the docstring of Integral._eval_integral() for more
+    details on computing the antiderivative using algebraic methods.
+
+    The o
+#### source/sympy/integrals/integrals.py::line_integrate (L1581)
+def line_integrate(field, curve, vars):
+    """line_integrate(field, Curve, variables)
+
+    Compute the line integral.
+
+    Examples
+    ========
+
+    >>> from sympy import Curve, line_integrate, E, ln
+    >>> from sympy.abc import x, y, t
+    >>> C = Curve([E**t + 1, E**t - 1], (t, 0, ln(2)))
+    >>> line_integrate(x + y, C, [x, y])
+    3*sqrt(2)
+
+    See Also
+    ========
+
+    sympy.integrals.integrals.integrate, Integral
+    """
+    from sympy.geometry import Curve
+    F = sympify(field)
+    if not F:
+        raise ValueError(
+            "Expecting function specifying field as first argument.")
+    if not isinstance(curve, Curve):
+        raise ValueError("Expecting Curve entity as second argument.")
+    if not is_sequence(vars):
+        raise ValueError("Expecting ordered iterable for variables.")
+    if len(curve.functions) != len(vars):
+        raise ValueError("Field variable size does not match curve dimension.")
+
+    if curve.parameter in vars:
+        raise ValueError("Curve parameter clashes with field parameters.")
+
+    # Calculate derivatives for line parameter functions
+    # F(r) -> F(r(t)) and finally F(r(t)*r'(t))
+    Ft = F
+    dldt = 0
+    for i, var in enumerate(vars):
+        _f = curve.functions[i]
+        _dn = diff(_f, curve.parameter)
+        # ...arc length
+        dldt = dldt + (_dn * _dn)
+        Ft = Ft.subs(var, _f)
+    Ft = Ft * sqrt(dldt)
+
+    integral = Integral(Ft, curve.limits).doit(deep=False)
+    return integral
+### source/sympy/integrals/manualintegrate.py
+L73: class Rule
+  L78: def eval(self)
+  L82: def contains_dont_know(self)
+L87: class AtomicRule
+  L89: def contains_dont_know(self)
+L94: class ConstantRule
+  L96: def eval(self)
+L101: class ConstantTimesRule
+  L107: def eval(self)
+  L110: def contains_dont_know(self)
+L115: class PowerRule
+  L120: def eval(self)
+L128: class NestedPowRule
+  L133: def eval(self)
+L140: class AddRule
+  L144: def eval(self)
+  L147: def contains_dont_know(self)
+L152: class URule
+  L158: def eval(self)
+  L167: def contains_dont_know(self)
+L172: class PartsRule
+  L179: def eval(self)
+  L184: def contains_dont_know(self)
+L190: class CyclicPartsRule
+  L195: def eval(self)
+  L203: def contains_dont_know(self)
+L208: class TrigRule
+L213: class SinRule
+  L215: def eval(self)
+L220: class CosRule
+  L222: def eval(self)
+L227: class SecTanRule
+  L229: def eval(self)
+L234: class CscCotRule
+  L236: def eval(self)
+L241: class Sec2Rule
+  L243: def eval(self)
+L248: class Csc2Rule
+  L250: def eval(self)
+L255: class HyperbolicRule
+L260: class SinhRule
+  L262: def eval(self)
+L267: class CoshRule
+  L269: def eval(self)
+L274: class ExpRule
+  L279: def eval(self)
+L284: class ReciprocalRule
+  L288: def eval(self)
+L293: class ArcsinRule
+  L295: def eval(self)
+L300: class ArcsinhRule
+  L302: def eval(self)
+L307: class ReciprocalSqrtQuadraticRule
+  L313: def eval(self)
+L319: class SqrtQuadraticDenomRule
+  L326: def eval(self)
+L355: class SqrtQuadraticRule
+  L361: def eval(self)
+L367: class AlternativeRule
+  L371: def eval(self)
+  L374: def contains_dont_know(self)
+L379: class DontKnowRule
+  L381: def eval(self)
+  L384: def contains_dont_know(self)
+L389: class DerivativeRule
+  L391: def eval(self)
+L402: class RewriteRule
+  L407: def eval(self)
+  L410: def contains_dont_know(self)
+L415: class CompleteSquareRule
+L421: class PiecewiseRule
+  L424: def eval(self)
+  L428: def contains_dont_know(self)
+L433: class HeavisideRule
+  L438: def eval(self)
+  L446: def contains_dont_know(self)
+L451: class DiracDeltaRule
+  L456: def eval(self)
+L464: class TrigSubstitutionRule
+  L471: def eval(self)
+  L510: def contains_dont_know(self)
+L515: class ArctanRule
+  L521: def eval(self)
+L527: class OrthogonalPolyRule
+L532: class JacobiRule
+  L536: def eval(self)
+L545: class GegenbauerRule
+  L548: def eval(self)
+L557: class ChebyshevTRule
+  L558: def eval(self)
+L567: class ChebyshevURule
+  L568: def eval(self)
+L576: class LegendreRule
+  L577: def eval(self)
+L583: class HermiteRule
+  L584: def eval(self)
+L590: class LaguerreRule
+  L591: def eval(self)
+L597: class AssocLaguerreRule
+  L600: def eval(self)
+L605: class IRule
+L611: class CiRule
+  L612: def eval(self)
+L618: class ChiRule
+  L619: def eval(self)
+L625: class EiRule
+  L626: def eval(self)
+L632: class SiRule
+  L633: def eval(self)
+L639: class ShiRule
+  L640: def eval(self)
+L646: class LiRule
+  L647: def eval(self)
+L653: class ErfRule
+  L658: def eval(self)
+L671: class FresnelCRule
+  L676: def eval(self)
+L684: class FresnelSRule
+  L689: def eval(self)
+L697: class PolylogRule
+#### source/sympy/integrals/manualintegrate.py::manual_diff (L738)
+def manual_diff(f, symbol):
+    """Derivative of f in form expected by find_substitutions
+
+    SymPy's derivatives for some trig functions (like cot) are not in a form
+    that works well with finding substitutions; this replaces the
+    derivatives for those particular forms with something that works better.
+
+    """
+    if f.args:
+        arg = f.args[0]
+        if isinstance(f, tan):
+            return arg.diff(symbol) * sec(arg)**2
+        elif isinstance(f, cot):
+            return -arg.diff(symbol) * csc(arg)**2
+        elif isinstance(f, sec):
+            return arg.diff(symbol) * sec(arg) * tan(arg)
+        elif isinstance(f, csc):
+            return -arg.diff(symbol) * csc(arg) * cot(arg)
+        elif isinstance(f, Add):
+            return sum(manual_diff(arg, symbol) for arg in f.args)
+        elif isinstance(f, Mul):
+            if len(f.args) == 2 and isinstance(f.args[0], Number):
+                return f.args[0] * manual_diff(f.args[1], symbol)
+    return f.diff(symbol)
+#### source/sympy/integrals/manualintegrate.py::integral_steps (L1989)
+def integral_steps(integrand, symbol, **options):
+    """Returns the steps needed to compute an integral.
+
+    Explanation
+    ===========
+
+    This function attempts to mirror what a student would do by hand as
+    closely as possible.
+
+    SymPy Gamma uses this to provide a step-by-step explanation of an
+    integral. The code it uses to format the results of this function can be
+    found at
+    https://github.com/sympy/sympy_gamma/blob/master/app/logic/intsteps.py.
+
+    Examples
+    ========
+
+    >>> from sympy import exp, sin
+    >>> from sympy.integrals.manualintegrate import integral_steps
+    >>> from sympy.abc import x
+    >>> print(repr(integral_steps(exp(x) / (1 + exp(2 * x)), x))) \
+    # doctest: +NORMALIZE_WHITESPACE
+    URule(integrand=exp(x)/(exp(2*x) + 1), variable=x, u_var=_u, u_func=exp(x),
+    substep=ArctanRule(integrand=1/(_u**2 + 1), variable=_u, a=1, b=1, c=1))
+    >>> print(repr(integral_steps(sin(x), x))) \
+    # doctest: +NORMALIZE_WHITESPACE
+    SinRule(integrand=sin(x), variable=x)
+    >>> print(repr(integral_steps((x**2 + 3)**2, x))) \
+    # doctest: +NORMALIZE_WHITESPACE
+    RewriteRule(integrand=(x**2 + 3)**2, variable=x, rewritten=x**4 + 6*x**2 + 9,
+    substep=AddRule(integrand=x**4 + 6*x**2 + 9, variable=x,
+    substeps=[PowerRule(integrand=x**4, variable=x, base=x, exp=4),
+    ConstantTimesRule(integrand=6*x**2, variable=x, constant=6, other=x**2,
+    substep=PowerRule(integrand=x**2, variable=x, base=x, exp=2)),
+    ConstantRule(integrand=9, variable=x)]))
+
+    Returns
+    =======
+
+    rule : Rule
+        The first step; most rules have substeps that must also be
+        considered. These substeps can be evaluated using ``manualintegrate``
+        to obtain a result.
+
+    """
+    cachekey = integrand.xreplace({symbol: _cache_dummy})
+    if cachekey in _integral_cache:
+        if _integral_cache[cachekey] is None:
+            # Stop this attempt, because it leads around in a loop
+            return DontKnowRule(integrand, symbol)
+        else:
+            # TODO: This is for future development, as currently
+            # _integral_cache gets no values other than None
+            return (_integral_cache[cachekey].xreplace(_cache_dummy, symbol),
+                symbol)
+    else:
+        _integral_cache[cachekey] = None
+
+    integral = IntegralInfo(integrand, symbol)
+
+    def key(integral):
+        integrand = integral.integrand
+
+        if symbol not in integrand.free_symbols:
+            return Number
+        for cls in (
+#### source/sympy/integrals/manualintegrate.py::manualintegrate (L2115)
+def manualintegrate(f, var):
+    """manualintegrate(f, var)
+
+    Explanation
+    ===========
+
+    Compute indefinite integral of a single variable using an algorithm that
+    resembles what a student would do by hand.
+
+    Unlike :func:`~.integrate`, var can only be a single symbol.
+
+    Examples
+    ========
+
+    >>> from sympy import sin, cos, tan, exp, log, integrate
+    >>> from sympy.integrals.manualintegrate import manualintegrate
+    >>> from sympy.abc import x
+    >>> manualintegrate(1 / x, x)
+    log(x)
+    >>> integrate(1/x)
+    log(x)
+    >>> manualintegrate(log(x), x)
+    x*log(x) - x
+    >>> integrate(log(x))
+    x*log(x) - x
+    >>> manualintegrate(exp(x) / (1 + exp(2 * x)), x)
+    atan(exp(x))
+    >>> integrate(exp(x) / (1 + exp(2 * x)))
+    RootSum(4*_z**2 + 1, Lambda(_i, _i*log(2*_i + exp(x))))
+    >>> manualintegrate(cos(x)**4 * sin(x), x)
+    -cos(x)**5/5
+    >>> integrate(cos(x)**4 * sin(x), x)
+    -cos(x)**5/5
+    >>> manualintegrate(cos(x)**4 * sin(x)**3, x)
+    cos(x)**7/7 - cos(x)**5/5
+    >>> integrate(cos(x)**4 * sin(x)**3, x)
+    cos(x)**7/7 - cos(x)**5/5
+    >>> manualintegrate(tan(x), x)
+    -log(cos(x))
+    >>> integrate(tan(x), x)
+    -log(cos(x))
+
+    See Also
+    ========
+
+    sympy.integrals.integrals.integrate
+    sympy.integrals.integrals.Integral.doit
+    sympy.integrals.integrals.Integral
+    """
+    result = integral_steps(f, var).eval()
+    # Clear the cache of u-parts
+    _parts_u_cache.clear()
+    # If we got Piecewise with two parts, put generic first
+    if isinstance(result, Piecewise) and len(result.args) == 2:
+        cond = result.args[0][1]
+        if isinstance(cond, Eq) and result.args[1][1] == True:
+            result = result.func(
+                (result.args[1][0], Ne(*cond.args)),
+                (result.args[0][0], True))
+    return result
+### source/sympy/core/expr.py
+L33: def _corem(eq, c)
+L47: class Expr
+  L107: def is_hermitian(self)
+  L116: def is_antihermitian(self)
+  L125: def _diff_wrt(self)
+  L168: def sort_key(self, order=None)
+  L203: def _hashable_content(self)
+  L228: def _add_handler(self)
+  L232: def _mul_handler(self)
+  L235: def __pos__(self)
+  L238: def __neg__(self)
+  L245: def __abs__(self)
+  L251: def __add__(self, other)
+  L256: def __radd__(self, other)
+  L261: def __sub__(self, other)
+  L266: def __rsub__(self, other)
+  L271: def __mul__(self, other)
+  L276: def __rmul__(self, other)
+  L281: def _pow(self, other)
+  L284: def __pow__(self, other, mod=None)
+  L302: def __rpow__(self, other)
+  L307: def __truediv__(self, other)
+  L316: def __rtruediv__(self, other)
+  L325: def __mod__(self, other)
+  L330: def __rmod__(self, other)
+  L335: def __floordiv__(self, other)
+  L341: def __rfloordiv__(self, other)
+  L348: def __divmod__(self, other)
+  L354: def __rdivmod__(self, other)
+  L358: def __int__(self)
+  L384: def __float__(self)
+  L395: def __complex__(self)
+  L401: def __ge__(self, other)
+  L406: def __le__(self, other)
+  L411: def __gt__(self, other)
+  L416: def __lt__(self, other)
+  L420: def __trunc__(self)
+  L426: def __format__(self, format_spec: str)
+  L439: def _from_mpmath(x, prec)
+  L451: def is_number(self)
+  L502: def _eval_is_comparable(self)
+  L536: def _random(self, n=None, re_min=-1, im_min=-1, re_max=1, im_max=1)
+  L614: def is_constant(self, *wrt, **flags)
+  L768: def equals(self, other, failing_expression=False)
+  L913: def _eval_is_extended_positive_negative(self, positive)
+  L952: def _eval_is_extended_positive(self)
+  L955: def _eval_is_extended_negative(self)
+  L958: def _eval_interval(self, x, a, b)
+  L1039: def _eval_power(self, expt)
+  L1044: def _eval_conjugate(self)
+  L1050: def conjugate(self)
+  L1055: def dir(self, x, cdir)
+  L1078: def _eval_transpose(self)
+  L1087: def transpose(self)
+  L1091: def _eval_adjoint(self)
+  L1104: def adjoint(self)
+  L1109: def _parse_order(cls, order)
+  L1137: def as_ordered_factors(self, order=None)
+  L1141: def as_poly(self, *gens, **args)
+  L1175: def as_ordered_terms(self, order=None, data: Literal[False]=False)
+  L1222: def as_terms(self)
+  L1276: def removeO(self)
+  L1280: def getO(self)
+  L1284: def getn(self)
+  L1330: def count_ops(self, visual=False)
+  L1334: def args_cnc(self, cset=False, warn=True, split_1=True)
+  L1397: def coeff(self, x: Expr | complex, n=1, right=False, _first=True)
+  L1681: def as_expr(self, *gens)
+  L1701: def as_coefficient(self, expr: Expr)
+  L1771: def as_independent(self, *deps, **hint)
+  L1962: def as_real_imag(self, deep=True, **hints)
+  L1991: def as_powers_dict(self)
+  L2010: def as_coefficients_dict(self, *syms)
+  L2064: def as_base_exp(self)
+  L2068: def as_coeff_mul(self, *deps, **kwargs)
+  L2103: def as_coeff_add(self, *deps)
+  L2139: def primitive(self)
+  L2165: def as_content_primitive(self, radical=False, clear=True)
+  L2222: def as_numer_denom(self)
+  L2238: def normal(self)
+  L2258: def extract_multiplicatively(self, c: Expr | complex)
+  L2399: def extract_additively(self, c)
+  L2495: def expr_free_symbols(self)
+  L2525: def could_extract_minus_sign(self)
+  L2555: def extract_branch_factor(self, allow_half=False)
+  L2632: def is_polynomial(self, *syms)
+  L2706: def _eval_is_polynomial(self, syms)
+  L2715: def is_rational_function(self, *syms)
+  L2775: def _eval_is_rational_function(self, syms)
+  L2783: def is_meromorphic(self, x, a)
+  L2844: def _eval_is_meromorphic(self, x, a)
+  L2852: def is_algebraic_expr(self, *syms)
+  L2904: def _eval_is_algebraic_expr(self, syms)
+  L2916: def series(self, x=None, x0=0, n=6, dir='+', logx=None, cdir=0)
+  L3185: def aseries(self, x=None, n=6, bound=0, hir=False)
+  L3350: def taylor_term(self, n, x, *previous_terms)
+  L3363: def lseries(self, x=None, x0=0, dir='+', logx=None, cdir=0)
+  L3383: def _eval_lseries(self, x, logx=None, cdir=0)
+  L3412: def nseries(self, x=None, x0=0, n=6, dir='+', logx=None, cdir=0)
+  L3479: def _eval_nseries(self, x, n, logx, cdir)
+  L3495: def limit(self, x, xlim, dir='+')
+  L3502: def as_leading_term(self, *symbols, logx=None, cdir=0)
+  L3538: def _eval_as_leading_term(self, x, logx, cdir)
+  L3541: def as_coeff_exponent(self, x)
+  L3553: def leadterm(self, x, logx=None, cdir=0)
+  L3581: def as_coeff_Mul(self, rational: bool=False)
+  L3585: def as_coeff_Add(self, rational=False)
+  L3589: def fps(self, x=None, x0=0, dir=1, hyper=True, order=4, rational=True, full=False)
+  L3601: def fourier_series(self, limits=None)
+  L3615: def diff(self, *symbols, **assumptions)
+  L3626: def _eval_expand_complex(self, **hints)
+  L3631: def _expand_hint(expr, hint, deep=True, **hints)
+  L3661: def expand(self, deep=True, modulus=None, power_base=True, power_exp=True, mul=True, log=True, multinomial=True, basic=True, **hints)
+  L3756: def integrate(self, *args, **kwargs)
+  L3761: def nsimplify(self, constants=(), tolerance=None, full=False)
+  L3766: def separate(self, deep=False, force=False)
+  L3771: def collect(self, syms, func=None, evaluate=True, exact=False, distribute_order_term=True)
+  L3776: def together(self, *args, **kwargs)
+  L3781: def apart(self, x=None, **args)
+  L3786: def ratsimp(self)
+#### source/sympy/core/expr.py::Expr._diff_wrt (L125)
+    def _diff_wrt(self) -> bool:
+        """Return True if one can differentiate with respect to this
+        object, else False.
+
+        Explanation
+        ===========
+
+        Subclasses such as Symbol, Function and Derivative return True
+        to enable derivatives wrt them. The implementation in Derivative
+        separates the Symbol and non-Symbol (_diff_wrt=True) variables and
+        temporarily converts the non-Symbols into Symbols when performing
+        the differentiation. By default, any object deriving from Expr
+        will behave like a scalar with self.diff(self) == 1. If this is
+        not desired then the object must also set `is_scalar = False` or
+        else define an _eval_derivative routine.
+
+        Note, see the docstring of Derivative for how this should work
+        mathematically. In particular, note that expr.subs(yourclass, Symbol)
+        should be well-defined on a structural level, or this will lead to
+        inconsistent results.
+
+        Examples
+        ========
+
+        >>> from sympy import Expr
+        >>> e = Expr()
+        >>> e._diff_wrt
+        False
+        >>> class MyScalar(Expr):
+        ...     _diff_wrt = True
+        ...
+        >>> MyScalar().diff(MyScalar())
+        1
+        >>> class MySymbol(Expr):
+        ...     _diff_wrt = True
+        ...     is_scalar = False
+        ...
+        >>> MySymbol().diff(MySymbol())
+        Derivative(MySymbol(), MySymbol())
+        """
+        return False
+#### source/sympy/core/expr.py::Expr.as_expr (L1681)
+    def as_expr(self, *gens):
+        """
+        Convert a polynomial to a SymPy expression.
+
+        Examples
+        ========
+
+        >>> from sympy import sin
+        >>> from sympy.abc import x, y
+
+        >>> f = (x**2 + x*y).as_poly(x, y)
+        >>> f.as_expr()
+        x**2 + x*y
+
+        >>> sin(x).as_expr()
+        sin(x)
+
+        """
+        return self
+#### source/sympy/core/expr.py::Expr.expr_free_symbols (L2495)
+    def expr_free_symbols(self):
+        """
+        Like ``free_symbols``, but returns the free symbols only if
+        they are contained in an expression node.
+
+        Examples
+        ========
+
+        >>> from sympy.abc import x, y
+        >>> (x + y).expr_free_symbols # doctest: +SKIP
+        {x, y}
+
+        If the expression is contained in a non-expression object, do not return
+        the free symbols. Compare:
+
+        >>> from sympy import Tuple
+        >>> t = Tuple(x + y)
+        >>> t.expr_free_symbols # doctest: +SKIP
+        set()
+        >>> t.free_symbols
+        {x, y}
+        """
+        sympy_deprecation_warning("""
+        The expr_free_symbols property is deprecated. Use free_symbols to get
+        the free symbols of an expression.
+        """,
+            deprecated_since_version="1.9",
+            active_deprecations_target="deprecated-expr-free-symbols")
+        return {j for i in self.args for j in i.expr_free_symbols}
+#### source/sympy/core/expr.py::Expr.is_algebraic_expr (L2852)
+    def is_algebraic_expr(self, *syms):
+        """
+        This tests whether a given expression is algebraic or not, in the
+        given symbols, syms. When syms is not given, all free symbols
+        will be used. The rational function does not have to be in expanded
+        or in any kind of canonical form.
+
+        This function returns False for expressions that are "algebraic
+        expressions" with symbolic exponents. This is a simple extension to the
+        is_rational_function, including rational exponentiation.
+
+        Examples
+        ========
+
+        >>> from sympy import Symbol, sqrt
+        >>> x = Symbol('x', real=True)
+        >>> sqrt(1 + x).is_rational_function()
+        False
+        >>> sqrt(1 + x).is_algebraic_expr()
+        True
+
+        This function does not attempt any nontrivial simplifications that may
+        result in an expression that does not appear to be an algebraic
+        expression to become one.
+
+        >>> from sympy import exp, factor
+        >>> a = sqrt(exp(x)**2 + 2*exp(x) + 1)/(exp(x) + 1)
+        >>> a.is_algebraic_expr(x)
+        False
+        >>> factor(a).is_algebraic_expr()
+        True
+
+        See Also
+        ========
+
+        is_rational_function
+
+        References
+        ==========
+
+        .. [1] https://en.wikipedia.org/wiki/Algebraic_expression
+
+        """
+        if syms:
+            syms = set(map(sympify, syms))
+        else:
+            syms = self.free_symbols
+            if not syms:
+                return True
+
+        return self._eval_is_algebraic_expr(syms)
+#### source/sympy/core/expr.py::Expr._eval_is_algebraic_expr (L2904)
+    def _eval_is_algebraic_expr(self, syms) -> bool | None:
+        if self in syms:
+            return True
+        if not self.has_free(*syms):
+            return True
+        # subclasses should return True or False
+        return None
+#### source/sympy/core/expr.py::Expr.diff (L3615)
+    def diff(self, *symbols, **assumptions):
+        assumptions.setdefault("evaluate", True)
+        return _derivative_dispatch(self, *symbols, **assumptions)
+#### source/sympy/core/expr.py::Expr.integrate (L3756)
+    def integrate(self, *args, **kwargs):
+        """See the integrate function in sympy.integrals"""
+        from sympy.integrals.integrals import integrate
+        return integrate(self, *args, **kwargs)
+#### source/sympy/core/expr.py::AtomicExpr._eval_is_algebraic_expr (L4040)
+    def _eval_is_algebraic_expr(self, syms):
+        return True
+#### source/sympy/core/expr.py::AtomicExpr.expr_free_symbols (L4047)
+    def expr_free_symbols(self):
+        sympy_deprecation_warning("""
+        The expr_free_symbols property is deprecated. Use free_symbols to get
+        the free symbols of an expression.
+        """,
+            deprecated_since_version="1.9",
+            active_deprecations_target="deprecated-expr-free-symbols")
+        return {self}
+### source/sympy/integrals/risch.py
+L53: def integer_powers(exprs)
+L120: class DifferentialExtension
+  L170: def __init__(self, f=None, x=None, handle_first='log', dummy=False, extension=None, rewrite_complex=None)
+  L289: def __getattr__(self, attr)
+  L295: def _rewrite_exps_pows(self, exps, pows, numpows, sympows, log_new_extension)
+  L402: def _rewrite_logs(self, logs, symlogs)
+  L436: def _auto_attrs(self)
+  L451: def _exp_part(self, exps)
+  L560: def _log_part(self, logs)
+  L614: def _important_attrs(self)
+  L633: def __repr__(self)
+  L640: def __str__(self)
+  L648: def __eq__(self, other)
+  L655: def reset(self)
+  L676: def indices(self, extension)
+  L705: def increment_level(self)
+  L726: def decrement_level(self)
+L748: def update_sets(seq, atoms, func)
+L756: class DecrementLevel
+  L762: def __init__(self, DE)
+  L766: def __enter__(self)
+  L769: def __exit__(self, exc_type, exc_value, traceback)
+L773: class NonElementaryIntegralException
+L786: def gcdex_diophantine(a, b, c)
+L809: def frac_in(f, t, *, cancel=False, **kwargs)
+L833: def as_poly_1t(p, t, z)
+L879: def derivation(p, DE, coefficientD=False, basic=False)
+L931: def get_case(d, t)
+L951: def splitfactor(p, DE, coefficientD=False, z=None)
+L994: def splitfactor_sqf(p, DE, coefficientD=False, z=None, basic=False)
+L1032: def canonical_representation(a, d, DE)
+L1058: def hermite_reduce(a, d, DE)
+L1114: def polynomial_reduce(p, DE)
+L1136: def laurent_series(a, d, F, n, DE)
+L1202: def recognize_derivative(a, d, DE, z=None)
+L1228: def recognize_log_derivative(a, d, DE, z=None)
+L1258: def residue_reduce(a, d, DE, z=None, invert=True)
+L1346: def residue_reduce_to_basic(H, DE, z)
+L1358: def residue_reduce_derivation(H, DE, z)
+L1371: def integrate_primitive_polynomial(p, DE)
+L1417: def integrate_primitive(a, d, DE, z=None)
+L1466: def integrate_hyperexponential_polynomial(p, DE, z)
+L1518: def integrate_hyperexponential(a, d, DE, z=None, conds='piecewise')
+L1583: def integrate_hypertangent_polynomial(p, DE)
+L1602: def integrate_nonlinear_no_specials(a, d, DE, z=None)
+L1649: class NonElementaryIntegral
+L1699: def risch_integrate(f, x, extension=None, handle_first='log', separate_integral=False, rewrite_complex=None, conds='piecewise')
+#### source/sympy/integrals/risch.py::integrate_primitive_polynomial (L1371)
+def integrate_primitive_polynomial(p, DE):
+    """
+    Integration of primitive polynomials.
+
+    Explanation
+    ===========
+
+    Given a primitive monomial t over k, and ``p`` in k[t], return q in k[t],
+    r in k, and a bool b in {True, False} such that r = p - Dq is in k if b is
+    True, or r = p - Dq does not have an elementary integral over k(t) if b is
+    False.
+    """
+    Zero = Poly(0, DE.t)
+    q = Poly(0, DE.t)
+
+    if not p.expr.has(DE.t):
+        return (Zero, p, True)
+
+    from .prde import limited_integrate
+    while True:
+        if not p.expr.has(DE.t):
+            return (q, p, True)
+
+        Dta, Dtb = frac_in(DE.d, DE.T[DE.level - 1])
+
+        with DecrementLevel(DE):  # We had better be integrating the lowest extension (x)
+                                  # with ratint().
+            a = p.LC()
+            aa, ad = frac_in(a, DE.t)
+
+            try:
+                rv = limited_integrate(aa, ad, [(Dta, Dtb)], DE)
+                if rv is None:
+                    raise NonElementaryIntegralException
+                (ba, bd), c = rv
+            except NonElementaryIntegralException:
+                return (q, p, False)
+
+        m = p.degree(DE.t)
+        q0 = c[0].as_poly(DE.t)*Poly(DE.t**(m + 1)/(m + 1), DE.t) + \
+            (ba.as_expr()/bd.as_expr()).as_poly(DE.t)*Poly(DE.t**m, DE.t)
+
+        p = p - derivation(q0, DE)
+        q = q + q0
+#### source/sympy/integrals/risch.py::integrate_primitive (L1417)
+def integrate_primitive(a, d, DE, z=None):
+    """
+    Integration of primitive functions.
+
+    Explanation
+    ===========
+
+    Given a primitive monomial t over k and f in k(t), return g elementary over
+    k(t), i in k(t), and b in {True, False} such that i = f - Dg is in k if b
+    is True or i = f - Dg does not have an elementary integral over k(t) if b
+    is False.
+
+    This function returns a Basic expression for the first argument.  If b is
+    True, the second argument is Basic expression in k to recursively integrate.
+    If b is False, the second argument is an unevaluated Integral, which has
+    been proven to be nonelementary.
+    """
+    # XXX: a and d must be canceled, or this might return incorrect results
+    z = z or Dummy("z")
+    s = list(zip(reversed(DE.T), reversed([f(DE.x) for f in DE.Tfuncs])))
+
+    g1, h, r = hermite_reduce(a, d, DE)
+    g2, b = residue_reduce(h[0], h[1], DE, z=z)
+    if not b:
+        i = cancel(a.as_expr()/d.as_expr() - (g1[1]*derivation(g1[0], DE) -
+            g1[0]*derivation(g1[1], DE)).as_expr()/(g1[1]**2).as_expr() -
+            residue_reduce_derivation(g2, DE, z))
+        i = NonElementaryIntegral(cancel(i).subs(s), DE.x)
+        return ((g1[0].as_expr()/g1[1].as_expr()).subs(s) +
+            residue_reduce_to_basic(g2, DE, z), i, b)
+
+    # h - Dg2 + r
+    p = cancel(h[0].as_expr()/h[1].as_expr() - residue_reduce_derivation(g2,
+        DE, z) + r[0].as_expr()/r[1].as_expr())
+    p = p.as_poly(DE.t)
+
+    q, i, b = integrate_primitive_polynomial(p, DE)
+
+    ret = ((g1[0].as_expr()/g1[1].as_expr() + q.as_expr()).subs(s) +
+        residue_reduce_to_basic(g2, DE, z))
+    if not b:
+        # TODO: This does not do the right thing when b is False
+        i = NonElementaryIntegral(cancel(i.as_expr()).subs(s), DE.x)
+    else:
+        i = cancel(i.as_expr())
+
+    return (ret, i, b)
+#### source/sympy/integrals/risch.py::integrate_hyperexponential_polynomial (L1466)
+def integrate_hyperexponential_polynomial(p, DE, z):
+    """
+    Integration of hyperexponential polynomials.
+
+    Explanation
+    ===========
+
+    Given a hyperexponential monomial t over k and ``p`` in k[t, 1/t], return q in
+    k[t, 1/t] and a bool b in {True, False} such that p - Dq in k if b is True,
+    or p - Dq does not have an elementary integral over k(t) if b is False.
+    """
+    t1 = DE.t
+    dtt = DE.d.exquo(Poly(DE.t, DE.t))
+    qa = Poly(0, DE.t)
+    qd = Poly(1, DE.t)
+    b = True
+
+    if p.is_zero:
+        return(qa, qd, b)
+
+    from sympy.integrals.rde import rischDE
+
+    with DecrementLevel(DE):
+        for i in range(-p.degree(z), p.degree(t1) + 1):
+            if not i:
+                continue
+            elif i < 0:
+                # If you get AttributeError: 'NoneType' object has no attribute 'nth'
+                # then this should really not have expand=False
+                # But it shouldn't happen because p is already a Poly in t and z
+                a = p.as_poly(z, expand=False).nth(-i)
+            else:
+                # If you get AttributeError: 'NoneType' object has no attribute 'nth'
+                # then this should really not have expand=False
+                a = p.as_poly(t1, expand=False).nth(i)
+
+            aa, ad = frac_in(a, DE.t, field=True)
+            aa, ad = aa.cancel(ad, include=True)
+            iDt = Poly(i, t1)*dtt
+            iDta, iDtd = frac_in(iDt, DE.t, field=True)
+            try:
+                va, vd = rischDE(iDta, iDtd, Poly(aa, DE.t), Poly(ad, DE.t), DE)
+                va, vd = frac_in((va, vd), t1, cancel=True)
+            except NonElementaryIntegralException:
+                b = False
+            else:
+                qa = qa*vd + va*Poly(t1**i)*qd
+                qd *= vd
+
+    return (qa, qd, b)
+#### source/sympy/integrals/risch.py::integrate_hyperexponential (L1518)
+def integrate_hyperexponential(a, d, DE, z=None, conds='piecewise'):
+    """
+    Integration of hyperexponential functions.
+
+    Explanation
+    ===========
+
+    Given a hyperexponential monomial t over k and f in k(t), return g
+    elementary over k(t), i in k(t), and a bool b in {True, False} such that
+    i = f - Dg is in k if b is True or i = f - Dg does not have an elementary
+    integral over k(t) if b is False.
+
+    This function returns a Basic expression for the first argument.  If b is
+    True, the second argument is Basic expression in k to recursively integrate.
+    If b is False, the second argument is an unevaluated Integral, which has
+    been proven to be nonelementary.
+    """
+    # XXX: a and d must be canceled, or this might return incorrect results
+    z = z or Dummy("z")
+    s = list(zip(reversed(DE.T), reversed([f(DE.x) for f in DE.Tfuncs])))
+
+    g1, h, r = hermite_reduce(a, d, DE)
+    g2, b = residue_reduce(h[0], h[1], DE, z=z)
+    if not b:
+        i = cancel(a.as_expr()/d.as_expr() - (g1[1]*derivation(g1[0], DE) -
+            g1[0]*derivation(g1[1], DE)).as_expr()/(g1[1]**2).as_expr() -
+            residue_reduce_derivation(g2, DE, z))
+        i = NonElementaryIntegral(cancel(i.subs(s)), DE.x)
+        return ((g1[0].as_expr()/g1[1].as_expr()).subs(s) +
+            residue_reduce_to_basic(g2, DE, z), i, b)
+
+    # p should be a polynomial in t and 1/t, because Sirr == k[t, 1/t]
+    # h - Dg2 + r
+    p = cancel(h[0].as_expr()/h[1].as_expr() - residue_reduce_derivation(g2,
+        DE, z) + r[0].as_expr()/r[1].as_expr())
+    pp = as_poly_1t(p, DE.t, z)
+
+    qa, qd, b = integrate_hyperexponential_polynomial(pp, DE, z)
+
+    i = pp.nth(0, 0)
+
+    ret = ((g1[0].as_expr()/g1[1].as_expr()).subs(s) \
+        + residue_reduce_to_basic(g2, DE, z))
+
+    qas = qa.as_expr().subs(s)
+    qds = qd.as_expr().subs(s)
+    if conds == 'piecewise' and DE.x not in qds.free_symbols:
+        # We have to be careful if the exponent is S.Zero!
+
+        # XXX: Does qd = 0 always necessarily correspond to the exponential
+        # equaling 1?
+        ret += Piecewise(
+                (qas/qds, Ne(qds, 0)),
+                (integrate((p - i).subs(DE.t, 1).subs(s), DE.x), True)
+            )
+    else:
+        ret += qas/qds
+
+    if not b:
+        i = p - (qd*derivation(qa, DE) - qa*derivation(qd, DE)).as_expr()/\
+            (qd**2).as_expr()
+        i = NonElementaryIntegral(cancel(i).subs(s), DE.x)
+    return (ret, i, b)
+### source/sympy/core/function.py
+L69: def _coeff_isneg(a)
+L103: class PoleError
+L107: class ArgumentIndexError
+  L108: def __str__(self)
+L113: class BadSignatureError
+L118: class BadArgumentsError
+L124: def arity(cls)
+L155: class FunctionClass
+  L164: def __init__(cls, *args, **kwargs)
+  L200: def __signature__(self)
+  L216: def free_symbols(self)
+  L220: def xreplace(self)
+  L227: def nargs(self)
+  L265: def _valid_nargs(self, n: int)
+  L277: def __repr__(cls)
+L281: class Application
+  L295: def __new__(cls, *args, **options)
+  L340: def eval(cls, *args)
+  L372: def func(self)
+  L375: def _eval_subs(self, old, new)
+L382: class Function
+  L441: def _diff_wrt(self)
+  L445: def __new__(cls, *args, **options)
+  L453: def _new_(cls, *args, **options)
+  L483: def _should_evalf(cls, arg)
+  L507: def class_key(cls)
+  L534: def _eval_evalf(self, prec)
+  L600: def _eval_derivative(self, s)
+  L616: def _eval_is_commutative(self)
+  L619: def _eval_is_meromorphic(self, x, a)
+  L634: def is_singular(cls, a)
+  L646: def _eval_aseries(self, n, args0, x, logx)
+  L657: def _eval_nseries(self, x, n, logx, cdir=0)
+  L765: def fdiff(self, argindex=1)
+  L789: def _eval_as_leading_term(self, x, logx, cdir)
+L818: class DefinedFunction
+  L822: def __new__(cls, *args, **options)
+L826: class AppliedUndef
+  L836: def __new__(cls, *args, **options)
+  L845: def _eval_as_leading_term(self, x, logx, cdir)
+  L849: def _diff_wrt(self)
+L867: class UndefSageHelper
+  L871: def __get__(self, ins, typ)
+L882: class UndefinedFunction
+  L889: def __new__(mcl, name, bases=(AppliedUndef,), __dict__=None, **kwargs)
+  L922: def __instancecheck__(cls, instance)
+  L927: def __hash__(self)
+  L930: def __eq__(self, other)
+  L935: def __ne__(self, other)
+  L939: def _diff_wrt(self)
+L948: def _reduce_undef(f)
+L951: def _rebuild_undef(name, kwargs)
+L966: class WildFunction
+  L1017: def __init__(cls, name, **assumptions)
+  L1030: def matches(self, expr, repl_dict=None, old=False)
+L1045: class Derivative
+  L1227: def _diff_wrt(self)
+  L1260: def __new__(cls, expr, *variables, **kwargs)
+  L1508: def canonical(cls)
+  L1513: def _sort_variable_count(cls, vc)
+  L1608: def _eval_is_commutative(self)
+  L1611: def _eval_derivative(self, v)
+  L1631: def doit(self, **hints)
+  L1642: def doit_numerically(self, z0)
+  L1662: def expr(self)
+  L1666: def _wrt_variables(self)
+  L1672: def variables(self)
+  L1687: def variable_count(self)
+  L1691: def derivative_count(self)
+  L1695: def free_symbols(self)
+  L1703: def kind(self)
+  L1706: def _eval_subs(self, old, new)
+  L1805: def _eval_lseries(self, x, logx, cdir=0)
+  L1810: def _eval_nseries(self, x, n, logx, cdir=0)
+  L1819: def _eval_as_leading_term(self, x, logx, cdir)
+  L1828: def as_finite_difference(self, points=1, x0=None, wrt=None)
+  L1918: def _get_zero_with_shape_like(cls, expr)
+  L1922: def _dispatch_eval_derivative_n_times(cls, expr, v, count)
+L1930: def _derivative_dispatch(expr, *variables, **kwargs)
+L1941: class Lambda
+  L1981: def __new__(cls, signature, expr)
+  L2002: def _check_signature(cls, sig)
+  L2023: def signature(self)
+  L2028: def expr(self)
+  L2033: def variables(self)
+  L2044: def nargs(self)
+  L2051: def free_symbols(self)
+  L2054: def __call__(self, *args)
+  L2075: def _match_signature(self, sig, args)
+  L2093: def is_identity(self)
+  L2097: def _eval_evalf(self, prec)
+L2101: class Subs
+  L2186: def __new__(cls, expr, variables, point, **assumptions)
+  L2248: def _eval_is_commutative(self)
+  L2251: def doit(self, **hints)
+  L2311: def evalf(self, prec=None, **options)
+  L2317: def variables(self)
+  L2324: def expr(self)
+  L2329: def point(self)
+  L2334: def free_symbols(self)
+  L2339: def expr_free_symbols(self)
+  L2351: def __eq__(self, other)
+  L2356: def __ne__(self, other)
+  L2359: def __hash__(self)
+  L2362: def _hashable_content(self)
+  L2367: def _eval_subs(self, old, new)
+  L2391: def _eval_derivative(self, s)
+  L2418: def _eval_nseries(self, x, n, logx, cdir=0)
+  L2433: def _eval_as_leading_term(self, x, logx, cdir)
+L2446: def diff(f, *symbols, **kwargs)
+L2516: def expand(e, deep=True, modulus=None, power_base=True, power_exp=True, mul=True, log=True, multinomial=True, basic=True, **hints)
+L2849: def _mexpand(expr, recursive=False)
+L2866: def expand_mul(expr, deep=True)
+L2884: def expand_multinomial(expr, deep=True)
+L2902: def expand_log(expr, deep=True, force=False, factor=False)
+L2947: def expand_func(expr, deep=True)
+L2965: def expand_trig(expr, deep=True)
+L2983: def expand_complex(expr, deep=True)
+L3007: def expand_power_base(expr, deep=True, force=False)
+L3092: def expand_power_exp(expr, deep=True)
+#### source/sympy/core/function.py::Function._diff_wrt (L441)
+    def _diff_wrt(self):
+        return False
+#### source/sympy/core/function.py::Function.fdiff (L765)
+    def fdiff(self, argindex=1):
+        """
+        Returns the first derivative of the function.
+        """
+        if not (1 <= argindex <= len(self.args)):
+            raise ArgumentIndexError(self, argindex)
+        ix = argindex - 1
+        A = self.args[ix]
+        if A._diff_wrt:
+            if len(self.args) == 1 or not A.is_Symbol:
+                return _derivative_dispatch(self, A)
+            for i, v in enumerate(self.args):
+                if i != ix and A in v.free_symbols:
+                    # it can't be in any other argument's free symbols
+                    # issue 8510
+                    break
+            else:
+                return _derivative_dispatch(self, A)
+
+        # See issue 4624 and issue 4719, 5600 and 8510
+        D = Dummy('xi_%i' % argindex, dummy_index=hash(A))
+        args = self.args[:ix] + (D,) + self.args[ix + 1:]
+        return Subs(Derivative(self.func(*args), D), D, A)
+#### source/sympy/core/function.py::AppliedUndef._diff_wrt (L849)
+    def _diff_wrt(self):
+        """
+        Allow derivatives wrt to undefined functions.
+
+        Examples
+        ========
+
+        >>> from sympy import Function, Symbol
+        >>> f = Function('f')
+        >>> x = Symbol('x')
+        >>> f(x)._diff_wrt
+        True
+        >>> f(x).diff(x)
+        Derivative(f(x), x)
+        """
+        return True
+#### source/sympy/core/function.py::UndefinedFunction._diff_wrt (L939)
+    def _diff_wrt(self):
+        return False
+#### source/sympy/core/function.py::Derivative._diff_wrt (L1227)
+    def _diff_wrt(self):
+        """An expression may be differentiated wrt a Derivative if
+        it is in elementary form.
+
+        Examples
+        ========
+
+        >>> from sympy import Function, Derivative, cos
+        >>> from sympy.abc import x
+        >>> f = Function('f')
+
+        >>> Derivative(f(x), x)._diff_wrt
+        True
+        >>> Derivative(cos(x), x)._diff_wrt
+        False
+        >>> Derivative(x + 1, x)._diff_wrt
+        False
+
+        A Derivative might be an unevaluated form of what will not be
+        a valid variable of differentiation if evaluated. For example,
+
+        >>> Derivative(f(f(x)), x).doit()
+        Derivative(f(x), x)*Derivative(f(f(x)), f(x))
+
+        Such an expression will present the same ambiguities as arise
+        when dealing with any other product, like ``2*x``, so ``_diff_wrt``
+        is False:
+
+        >>> Derivative(f(f(x)), x)._diff_wrt
+        False
+        """
+        return self.expr._diff_wrt and isinstance(self.doit(), Derivative)
+#### source/sympy/core/function.py::Derivative._sort_variable_count (L1513)
+    def _sort_variable_count(cls, vc):
+        """
+        Sort (variable, count) pairs into canonical order while
+        retaining order of variables that do not commute during
+        differentiation:
+
+        * symbols and functions commute with each other
+        * derivatives commute with each other
+        * a derivative does not commute with anything it contains
+        * any other object is not allowed to commute if it has
+          free symbols in common with another object
+
+        Examples
+        ========
+
+        >>> from sympy import Derivative, Function, symbols
+        >>> vsort = Derivative._sort_variable_count
+        >>> x, y, z = symbols('x y z')
+        >>> f, g, h = symbols('f g h', cls=Function)
+
+        Contiguous items are collapsed into one pair:
+
+        >>> vsort([(x, 1), (x, 1)])
+        [(x, 2)]
+        >>> vsort([(y, 1), (f(x), 1), (y, 1), (f(x), 1)])
+        [(y, 2), (f(x), 2)]
+
+        Ordering is canonical.
+
+        >>> def vsort0(*v):
+        ...     # docstring helper to
+        ...     # change vi -> (vi, 0), sort, and return vi vals
+        ...     return [i[0] for i in vsort([(i, 0) for i in v])]
+
+        >>> vsort0(y, x)
+        [x, y]
+        >>> vsort0(g(y), g(x), f(y))
+        [f(y), g(x), g(y)]
+
+        Symbols are sorted as far to the left as possible but never
+        move to the left of a derivative having the same symbol in
+        its variables; the same applies to AppliedUndef which are
+        always sorted after Symbols:
+
+        >>> dfx = f(x).diff(x)
+        >>> assert vsort0(dfx, y) == [y, dfx]
+        >>> assert vsort0(dfx, x) == [dfx, x]
+        """
+        if not vc:
+            return []
+        vc = list(vc)
+        if len(vc) == 1:
+            return [Tuple(*vc[0])]
+        V = list(range(len(vc)))
+        E = []
+        v = lambda i: vc[i][0]
+        D = Dummy()
+        def _block(d, v, wrt=False):
+            # return True if v should not come before d else False
+            if d == v:
+                return wrt
+            if d.is_Symbol:
+                return False
+            if isinstance(d, Derivative):
+                # a derivative blocks if any of it's variables contain
+                # v; the wrt flag will return True for an exact match
+                # and will cause an AppliedUndef to block if v is in
+                # the arguments
+                if any(_block(k, v, wrt=True)
+                        for k in d._wrt_variables):
+                    return True
+                ret
+#### source/sympy/core/function.py::Derivative.expr (L1662)
+    def expr(self):
+        return self._args[0]
+#### source/sympy/core/function.py::Derivative._wrt_variables (L1666)
+    def _wrt_variables(self):
+        # return the variables of differentiation without
+        # respect to the type of count (int or symbolic)
+        return [i[0] for i in self.variable_count]
+#### source/sympy/core/function.py::Derivative.variables (L1672)
+    def variables(self):
+        # TODO: deprecate?  YES, make this 'enumerated_variables' and
+        #       name _wrt_variables as variables
+        # TODO: support for `d^n`?
+        rv = []
+        for v, count in self.variable_count:
+            if not count.is_Integer:
+                raise TypeError(filldedent('''
+                Cannot give expansion for symbolic count. If you just
+                want a list of all variables of differentiation, use
+                _wrt_variables.'''))
+            rv.extend([v]*count)
+        return tuple(rv)
+#### source/sympy/core/function.py::Derivative.variable_count (L1687)
+    def variable_count(self):
+        return self._args[1:]
+#### source/sympy/core/function.py::Derivative.as_finite_difference (L1828)
+    def as_finite_difference(self, points=1, x0=None, wrt=None):
+        """ Expresses a Derivative instance as a finite difference.
+
+        Parameters
+        ==========
+
+        points : sequence or coefficient, optional
+            If sequence: discrete values (length >= order+1) of the
+            independent variable used for generating the finite
+            difference weights.
+            If it is a coefficient, it will be used as the step-size
+            for generating an equidistant sequence of length order+1
+            centered around ``x0``. Default: 1 (step-size 1)
+
+        x0 : number or Symbol, optional
+            the value of the independent variable (``wrt``) at which the
+            derivative is to be approximated. Default: same as ``wrt``.
+
+        wrt : Symbol, optional
+            "with respect to" the variable for which the (partial)
+            derivative is to be approximated for. If not provided it
+            is required that the derivative is ordinary. Default: ``None``.
+
+
+        Examples
+        ========
+
+        >>> from sympy import symbols, Function, exp, sqrt, Symbol
+        >>> x, h = symbols('x h')
+        >>> f = Function('f')
+        >>> f(x).diff(x).as_finite_difference()
+        -f(x - 1/2) + f(x + 1/2)
+
+        The default step size and number of points are 1 and
+        ``order + 1`` respectively. We can change the step size by
+        passing a symbol as a parameter:
+
+        >>> f(x).diff(x).as_finite_difference(h)
+        -f(-h/2 + x)/h + f(h/2 + x)/h
+
+        We can also specify the discretized values to be used in a
+        sequence:
+
+        >>> f(x).diff(x).as_finite_difference([x, x+h, x+2*h])
+        -3*f(x)/(2*h) + 2*f(h + x)/h - f(2*h + x)/(2*h)
+
+        The algorithm is not restricted to use equidistant spacing, nor
+        do we need to make the approximation around ``x0``, but we can get
+        an expression estimating the derivative at an offset:
+
+        >>> e, sq2 = exp(1), sqrt(2)
+        >>> xl = [x-h, x+h, x+e*h]
+        >>> f(x).diff(x, 1).as_finite_difference(xl, x+h*sq2)  # doctest: +ELLIPSIS
+        2*h*((h + sqrt(2)*h)/(2*h) - (-sqrt(2)*h + h)/(2*h))*f(E*h + x)/...
+
+        To approximate ``Derivative`` around ``x0`` using a non-equidistant
+        spacing step, the algorithm supports assignment of undefined
+        functions to ``points``:
+
+        >>> dx = Function('dx')
+        >>> f(x).diff(x).as_finite_difference(points=dx(x), x0=x-h)
+        -f(-h + x - dx(-h + x)/2)/dx(-h + x) + 
+### source/sympy/integrals/laplace.py
+L48: def DEBUG_WRAP(func)
+L78: def _debug(text)
+L85: def _simplifyconds(expr, s, a)
+L177: def expand_dirac_delta(expr)
+L186: def _laplace_transform_integration(f, t, s_, *, simplify)
+L298: def _laplace_deep_collect(f, t)
+L315: def _laplace_build_rules()
+L535: def _laplace_rule_timescale(f, t, s)
+L557: def _laplace_rule_heaviside(f, t, s)
+L599: def _laplace_rule_exp(f, t, s)
+L622: def _laplace_rule_delta(f, t, s)
+L667: def _laplace_trig_split(fn)
+L686: def _laplace_trig_expsum(f, t)
+L719: def _laplace_trig_ltex(xm, t, s)
+L860: def _laplace_rule_trig(fn, t_, s)
+L893: def _laplace_rule_diff(f, t, s)
+L922: def _laplace_rule_sdiff(f, t, s)
+L973: def _laplace_expand(f, t, s)
+L1002: def _laplace_apply_prog_rules(f, t, s)
+L1020: def _laplace_apply_simple_rules(f, t, s)
+L1047: def _piecewise_to_heaviside(f, t)
+L1094: def laplace_correspondence(f, fdict, /)
+L1154: def laplace_initial_conds(f, t, fdict, /)
+L1200: def _laplace_transform(fn, t_, s_, *, simplify)
+L1267: class LaplaceTransform
+  L1283: def _compute_transform(self, f, t, s, **hints)
+  L1288: def _as_integral(self, f, t, s)
+  L1291: def doit(self, **hints)
+L1323: def laplace_transform(f, t, s, legacy_matrix=True, **hints)
+L1469: def _inverse_laplace_transform_integration(F, s, t_, plane, *, simplify)
+L1550: def _complete_the_square_in_denom(f, s)
+L1562: def _inverse_laplace_build_rules()
+L1603: def _inverse_laplace_apply_simple_rules(f, s, t)
+L1632: def _inverse_laplace_diff(f, s, t, plane)
+L1649: def _inverse_laplace_time_shift(F, s, t, plane)
+L1681: def _inverse_laplace_freq_shift(F, s, t, plane)
+L1698: def _inverse_laplace_time_diff(F, s, t, plane)
+L1719: def _inverse_laplace_irrational(fn, s, t, plane)
+L2034: def _inverse_laplace_early_prog_rules(F, s, t, plane)
+L2047: def _inverse_laplace_apply_prog_rules(F, s, t, plane)
+L2062: def _inverse_laplace_expand(fn, s, t, plane)
+L2089: def _inverse_laplace_rational(fn, s, t, plane, *, simplify)
+L2147: def _inverse_laplace_transform(fn, s_, t_, plane, *, simplify, dorational)
+L2203: class InverseLaplaceTransform
+  L2217: def __new__(cls, F, s, x, plane, **opts)
+  L2223: def fundamental_plane(self)
+  L2229: def _compute_transform(self, F, s, t, **hints)
+  L2233: def _as_integral(self, F, s, t)
+  L2240: def doit(self, **hints)
+L2274: def inverse_laplace_transform(F, s, t, plane=None, **hints)
+L2335: def _fast_inverse_laplace(e, s, t)
+#### source/sympy/integrals/laplace.py::_laplace_transform_integration (L186)
+def _laplace_transform_integration(f, t, s_, *, simplify):
+    """ The backend function for doing Laplace transforms by integration.
+
+    This backend assumes that the frontend has already split sums
+    such that `f` is to an addition anymore.
+    """
+    s = Dummy('s')
+
+    if f.has(DiracDelta):
+        return None
+
+    F = integrate(f*exp(-s*t), (t, S.Zero, S.Infinity))
+
+    if not F.has(Integral):
+        return _simplify(F.subs(s, s_), simplify), S.NegativeInfinity, S.true
+
+    if not F.is_Piecewise:
+        return None
+
+    F, cond = F.args[0]
+    if F.has(Integral):
+        return None
+
+    def process_conds(conds):
+        """ Turn ``conds`` into a strip and auxiliary conditions. """
+        from sympy.solvers.inequalities import _solve_inequality
+        a = S.NegativeInfinity
+        aux = S.true
+        conds = conjuncts(to_cnf(conds))
+        p, q, w1, w2, w3, w4, w5 = symbols(
+            'p q w1 w2 w3 w4 w5', cls=Wild, exclude=[s])
+        patterns = (
+            p*Abs(arg((s + w3)*q)) < w2,
+            p*Abs(arg((s + w3)*q)) <= w2,
+            Abs(periodic_argument((s + w3)**p*q, w1)) < w2,
+            Abs(periodic_argument((s + w3)**p*q, w1)) <= w2,
+            Abs(periodic_argument((polar_lift(s + w3))**p*q, w1)) < w2,
+            Abs(periodic_argument((polar_lift(s + w3))**p*q, w1)) <= w2)
+        for c in conds:
+            a_ = S.Infinity
+            aux_ = []
+            for d in disjuncts(c):
+                if d.is_Relational and s in d.rhs.free_symbols:
+                    d = d.reversed
+                if d.is_Relational and isinstance(d, (Ge, Gt)):
+                    d = d.reversedsign
+                for pat in patterns:
+                    m = d.match(pat)
+                    if m:
+                        break
+                if m and m[q].is_positive and m[w2]/m[p] == pi/2:
+                    d = -re(s + m[w3]) < 0
+                m = d.match(p - cos(w1*Abs(arg(s*w5))*w2)*Abs(s**w3)**w4 < 0)
+                if not m:
+                    m = d.match(
+                        cos(p - Abs(periodic_argument(s**w1*w5, q))*w2) *
+                        Abs(s**w3)**w4 < 0)
+                if not m:
+                    m = d.match(
+                        p - cos(
+                            Abs(periodic_argument(polar_lift(s)**w1*w5, q))*w2
+                            )*Abs(s**w3)**w4 < 0)
+                if m and all(m[wild].is_positive for wild in [
+                        w1, w2, w3, w4, w5]):
+                    d = re(s) > m[p
+#### source/sympy/integrals/laplace.py::_laplace_rule_diff (L893)
+def _laplace_rule_diff(f, t, s):
+    """
+    This function looks for derivatives in the time domain and replaces it
+    by factors of `s` and initial conditions in the frequency domain. For
+    example, if it gets ``(diff(f(t), t), t, s)``, it will compute
+    ``s*LaplaceTransform(f(t), t, s) - f(0)``.
+    """
+
+    a = Wild('a', exclude=[t])
+    n = Wild('n', exclude=[t])
+    g = WildFunction('g')
+    ma1 = f.match(a*Derivative(g, (t, n)))
+    if ma1 and ma1[n].is_integer:
+        m = [z.has(t) for z in ma1[g].args]
+        if sum(m) == 1:
+            _debug('     rule: time derivative (4.1.8)')
+            d = []
+            for k in range(ma1[n]):
+                if k == 0:
+                    y = ma1[g].subs(t, 0)
+                else:
+                    y = Derivative(ma1[g], (t, k)).subs(t, 0)
+                d.append(s**(ma1[n]-k-1)*y)
+            r, pr, cr = _laplace_transform(ma1[g], t, s, simplify=False)
+            return (ma1[a]*(s**ma1[n]*r - Add(*d)),  pr, cr)
+    return None
+#### source/sympy/integrals/laplace.py::_laplace_rule_sdiff (L922)
+def _laplace_rule_sdiff(f, t, s):
+    """
+    This function looks for multiplications with polynoimials in `t` as they
+    correspond to differentiation in the frequency domain. For example, if it
+    gets ``(t*f(t), t, s)``, it will compute
+    ``-Derivative(LaplaceTransform(f(t), t, s), s)``.
+    """
+
+    if f.is_Mul:
+        pfac = [1]
+        ofac = [1]
+        for fac in Mul.make_args(f):
+            if fac.is_polynomial(t):
+                pfac.append(fac)
+            else:
+                ofac.append(fac)
+        if len(pfac) > 1:
+            pex = prod(pfac)
+            pc = Poly(pex, t).all_coeffs()
+            N = len(pc)
+            if N > 1:
+                oex = prod(ofac)
+                r_, p_, c_ = _laplace_transform(oex, t, s, simplify=False)
+                deri = [r_]
+                d1 = False
+                try:
+                    d1 = -diff(deri[-1], s)
+                except ValueError:
+                    d1 = False
+                if r_.has(LaplaceTransform):
+                    for k in range(N-1):
+                        deri.append((-1)**(k+1)*Derivative(r_, s, k+1))
+                elif d1:
+                    deri.append(d1)
+                    for k in range(N-2):
+                        deri.append(-diff(deri[-1], s))
+                if d1:
+                    r = Add(*[pc[N-n-1]*deri[n] for n in range(N)])
+                    return (r, p_, c_)
+    # We still have to cover the possibility that there is a symbolic positive
+    # integer exponent.
+    n = Wild('n', exclude=[t])
+    g = Wild('g')
+    if ma1 := f.match(t**n*g):
+        if ma1[n].is_integer and ma1[n].is_positive:
+            r_, p_, c_ = _laplace_transform(ma1[g], t, s, simplify=False)
+            return (-1)**ma1[n]*diff(r_, (s, ma1[n])), p_, c_
+    return None
+#### source/sympy/integrals/laplace.py::LaplaceTransform._as_integral (L1288)
+    def _as_integral(self, f, t, s):
+        return Integral(f*exp(-s*t), (t, S.Zero, S.Infinity))
+#### source/sympy/integrals/laplace.py::_inverse_laplace_transform_integration (L1469)
+def _inverse_laplace_transform_integration(F, s, t_, plane, *, simplify):
+    """ The backend function for inverse Laplace transforms. """
+    from sympy.integrals.meijerint import meijerint_inversion, _get_coeff_exp
+    from sympy.integrals.transforms import inverse_mellin_transform
+
+    # There are two strategies we can try:
+    # 1) Use inverse mellin transform, related by a simple change of variables.
+    # 2) Use the inversion integral.
+
+    t = Dummy('t', real=True)
+
+    def pw_simp(*args):
+        """ Simplify a piecewise expression from hyperexpand. """
+        if len(args) != 3:
+            return Piecewise(*args)
+        arg = args[2].args[0].argument
+        coeff, exponent = _get_coeff_exp(arg, t)
+        e1 = args[0].args[0]
+        e2 = args[1].args[0]
+        return (
+            Heaviside(1/Abs(coeff) - t**exponent)*e1 +
+            Heaviside(t**exponent - 1/Abs(coeff))*e2)
+
+    if F.is_rational_function(s):
+        F = F.apart(s)
+
+    if F.is_Add:
+        f = Add(
+            *[_inverse_laplace_transform_integration(X, s, t, plane, simplify)
+              for X in F.args])
+        return _simplify(f.subs(t, t_), simplify), True
+
+    try:
+        f, cond = inverse_mellin_transform(F, s, exp(-t), (None, S.Infinity),
+                                           needeval=True, noconds=False)
+    except IntegralTransformError:
+        f = None
+
+    if f is None:
+        f = meijerint_inversion(F, s, t)
+        if f is None:
+            return None
+        if f.is_Piecewise:
+            f, cond = f.args[0]
+            if f.has(Integral):
+                return None
+        else:
+            cond = S.true
+        f = f.replace(Piecewise, pw_simp)
+
+    if f.is_Piecewise:
+        # many of the functions called below can't work with piecewise
+        # (b/c it has a bool in args)
+        return f.subs(t, t_), cond
+
+    u = Dummy('u')
+
+    def simp_heaviside(arg, H0=S.Half):
+        a = arg.subs(exp(-t), u)
+        if a.has(t):
+            return Heaviside(arg, H0)
+        from sympy.solvers.inequalities import _solve_inequality
+        rel = _solve_inequality(a > 0, u)
+        if rel.lts == u:
+            k = log(rel.gts)
+            return Heaviside(t + k, H0)
+        else:
+            k = log(rel.lts)
+            return Heaviside(-(t + k), H0)
+
+    f = f.replace(Heaviside, simp_heaviside)
+
+    def simp_exp(arg):
+        return expand_complex(exp(arg))
+
+    f = f.replace(exp, simp_exp)
+
+    return _simplify(f.subs(t, t_), simplify), cond
+(inventory truncated)

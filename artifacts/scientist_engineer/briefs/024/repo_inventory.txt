@@ -1,0 +1,1288 @@
+workdir: /app/task_024
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-024:v0.1.2
+code_files_total: 200
+## directories (file counts)
+source/pymc: 16
+source/tests: 16
+source/tests/logprob: 16
+source/pymc/distributions: 14
+source/pymc/logprob: 14
+source/tests/distributions: 14
+source/pymc/variational: 10
+source/tests/sampling: 7
+source/tests/variational: 7
+source/pymc/backends: 6
+source/pymc/gp: 6
+source/pymc/sampling: 6
+source/pymc/step_methods: 6
+source/pymc/step_methods/hmc: 6
+source/tests/backends: 6
+source/tests/gp: 6
+source/tests/step_methods: 4
+source/tests/step_methods/hmc: 4
+.: 3
+source/pymc/ode: 3
+source/pymc/smc: 3
+source/pymc/stats: 3
+source/pymc/tuning: 3
+source/scripts: 3
+source: 3
+source/tests/ode: 3
+source/tests/stats: 3
+source/tests/tuning: 3
+source/benchmarks/benchmarks: 2
+source/tests/smc: 2
+source/docs/source: 1
+source/pymc/plots: 1
+## terms_from_instruction
+strong: PeerJ, PyMC3, ZeroSumNormal, distributions, entry, eta_lp, every, factorial_calibration_study, factorial_calibration_study.json, g_lp, identity, matrix, multivariate.py, pre_fix_expected_failure, public_reproduction_report, pymc, python, reproduce.py, reproduction.md, runner_failure, s_lp, sigma, workflow_completed
+common: centered, model, protocol, effects, laboratory, posterior, gaussian, interaction, distribution, laboratories, standard, contrast, peerj, https, factorial, protocols, contains, observations, support, python, contrasts, version, documentation, qquad, zerosumnormal
+## import_reach_from_reproduce.py (path, depth)
+source/pymc/__init__.py  (depth 1)
+source/pymc/_version.py  (depth 2)
+source/pymc/backends/__init__.py  (depth 2)
+source/pymc/blocking.py  (depth 2)
+source/pymc/data.py  (depth 2)
+source/pymc/distributions/__init__.py  (depth 2)
+source/pymc/exceptions.py  (depth 2)
+source/pymc/func_utils.py  (depth 2)
+source/pymc/gp/__init__.py  (depth 2)
+source/pymc/logprob/__init__.py  (depth 2)
+source/pymc/math.py  (depth 2)
+source/pymc/model.py  (depth 2)
+source/pymc/model_graph.py  (depth 2)
+source/pymc/ode/__init__.py  (depth 2)
+source/pymc/plots/__init__.py  (depth 2)
+source/pymc/printing.py  (depth 2)
+source/pymc/pytensorf.py  (depth 2)
+source/pymc/sampling/__init__.py  (depth 2)
+source/pymc/smc/__init__.py  (depth 2)
+source/pymc/stats/__init__.py  (depth 2)
+source/pymc/step_methods/__init__.py  (depth 2)
+source/pymc/tuning/__init__.py  (depth 2)
+source/pymc/util.py  (depth 2)
+source/pymc/variational/__init__.py  (depth 2)
+source/pymc/vartypes.py  (depth 2)
+source/pymc/backends/arviz.py  (depth 3)
+source/pymc/backends/base.py  (depth 3)
+source/pymc/backends/mcbackend.py  (depth 3)
+source/pymc/backends/ndarray.py  (depth 3)
+source/pymc/distributions/bound.py  (depth 3)
+source/pymc/distributions/censored.py  (depth 3)
+source/pymc/distributions/continuous.py  (depth 3)
+source/pymc/distributions/discrete.py  (depth 3)
+source/pymc/distributions/distribution.py  (depth 3)
+source/pymc/distributions/mixture.py  (depth 3)
+source/pymc/distributions/multivariate.py  (depth 3)
+source/pymc/distributions/simulator.py  (depth 3)
+source/pymc/distributions/timeseries.py  (depth 3)
+source/pymc/distributions/transforms.py  (depth 3)
+source/pymc/distributions/truncated.py  (depth 3)
+## ranked_source_paths (score, path, matched_terms)
+  48.5  source/pymc/distributions/multivariate.py  ['ZeroSumNormal', 'distributions', 'entry', 'identity', 'matrix', 'pymc', 'python', 'sigma']
+  34.0  source/pymc/distributions/timeseries.py  ['distributions', 'entry', 'matrix', 'pymc', 'python', 'sigma']
+  30.5  source/pymc/variational/opvi.py  ['distributions', 'every', 'identity', 'matrix', 'pymc', 'python']
+  30.0  source/pymc/distributions/continuous.py  ['distributions', 'pymc', 'python', 'sigma']
+  30.0  source/pymc/distributions/simulator.py  ['distributions', 'every', 'identity', 'pymc', 'python']
+  30.0  source/pymc/model.py  ['distributions', 'entry', 'pymc', 'python', 'sigma']
+  29.5  source/pymc/distributions/distribution.py  ['distributions', 'entry', 'pymc', 'python']
+  28.0  source/pymc/gp/gp.py  ['entry', 'matrix', 'pymc', 'python', 'sigma']
+  28.0  source/pymc/pytensorf.py  ['distributions', 'every', 'identity', 'pymc', 'python']
+  27.5  source/pymc/distributions/dist_math.py  ['distributions', 'every', 'matrix', 'pymc', 'sigma']
+  27.5  source/pymc/distributions/mixture.py  ['distributions', 'pymc', 'python', 'sigma']
+  27.0  source/pymc/distributions/discrete.py  ['distributions', 'pymc', 'python', 'sigma']
+  27.0  source/pymc/logprob/basic.py  ['distributions', 'every', 'identity', 'pymc', 'python', 'sigma']
+  27.0  source/pymc/sampling/mcmc.py  ['entry', 'every', 'identity', 'matrix', 'pymc']
+  26.0  source/pymc/distributions/transforms.py  ['distributions', 'pymc', 'python', 'sigma']
+  26.0  source/pymc/gp/hsgp_approx.py  ['matrix', 'pymc', 'python', 'sigma']
+  25.5  source/pymc/distributions/censored.py  ['distributions', 'pymc', 'python', 'sigma']
+  25.5  source/pymc/distributions/truncated.py  ['distributions', 'pymc', 'python', 'sigma']
+  25.0  source/pymc/distributions/bound.py  ['distributions', 'pymc', 'python', 'sigma']
+  25.0  source/pymc/func_utils.py  ['distributions', 'pymc', 'python', 'sigma']
+  23.5  source/pymc/gp/cov.py  ['matrix', 'pymc', 'python', 'sigma']
+  23.5  source/pymc/step_methods/metropolis.py  ['distributions', 'every', 'matrix', 'pymc']
+  23.5  source/pymc/testing.py  ['distributions', 'entry', 'identity', 'pymc', 'python']
+  22.5  source/pymc/distributions/shape_utils.py  ['distributions', 'pymc', 'python']
+  22.5  source/pymc/model_graph.py  ['pymc', 'python', 'sigma']
+  22.0  source/pymc/sampling/forward.py  ['distributions', 'every', 'pymc', 'python']
+  20.5  source/pymc/smc/kernels.py  ['every', 'identity', 'pymc']
+  20.0  source/pymc/variational/approximations.py  ['distributions', 'pymc', 'sigma']
+  19.5  source/pymc/gp/util.py  ['distributions', 'matrix', 'pymc']
+  19.5  source/pymc/smc/sampling.py  ['distributions', 'entry', 'pymc']
+  19.0  source/pymc/_version.py  ['pymc', 'python']
+  19.0  source/pymc/data.py  ['pymc', 'sigma']
+  19.0  source/pymc/ode/ode.py  ['matrix', 'pymc', 'python']
+  19.0  source/pymc/util.py  ['pymc', 'python']
+  18.5  source/pymc/initial_point.py  ['distributions', 'entry', 'pymc']
+  18.0  source/pymc/math.py  ['matrix', 'pymc']
+  18.0  source/pymc/step_methods/hmc/nuts.py  ['matrix', 'pymc', 'python']
+  18.0  source/pymc/step_methods/hmc/quadpotential.py  ['every', 'matrix', 'pymc']
+  18.0  source/pymc/variational/updates.py  ['matrix', 'pymc']
+  17.5  source/pymc/printing.py  ['distributions', 'pymc']
+  17.5  source/pymc/variational/inference.py  ['distributions', 'pymc']
+  16.5  source/docs/source/conf.py  ['entry', 'every', 'pymc', 'python']
+  15.5  source/pymc/step_methods/compound.py  ['matrix', 'pymc']
+  15.5  source/pymc/tuning/scaling.py  ['matrix', 'pymc']
+  15.0  source/pymc/logprob/tensor.py  ['distributions', 'pymc']
+  15.0  source/pymc/logprob/utils.py  ['entry', 'pymc']
+  14.7  source/pymc/distributions/__init__.py  ['ZeroSumNormal', 'distributions', 'pymc']
+  14.5  source/pymc/ode/utils.py  ['identity', 'matrix']
+  14.5  source/pymc/sampling/jax.py  ['distributions', 'pymc']
+  14.5  source/scripts/run_mypy.py  ['distributions', 'multivariate.py', 'pymc', 'python']
+  14.4  source/pymc/__init__.py  ['distributions', 'pymc']
+  14.0  source/pymc/logprob/order.py  ['distributions', 'pymc']
+  14.0  source/pymc/sampling/parallel.py  ['pymc', 'python']
+  14.0  source/pymc/step_methods/hmc/hmc.py  ['matrix', 'pymc']
+  14.0  source/pymc/tuning/starting.py  ['pymc']
+  13.5  source/pymc/blocking.py  ['pymc']
+  13.0  source/pymc/backends/arviz.py  ['pymc']
+  13.0  source/pymc/step_methods/arraystep.py  ['every', 'pymc']
+  13.0  source/pymc/step_methods/hmc/base_hmc.py  ['matrix', 'pymc']
+  12.0  source/pymc/backends/base.py  ['pymc']
+## snippets
+### reproduce.py
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+from typing import Any
+
+
+TASK_DIR = Path(__file__).resolve().parent
+SOURCE_DIR = TASK_DIR / "source"
+OUTPUT_DIR = TASK_DIR / "outputs"
+FIXTURE_PATH = TASK_DIR / "fixtures" / "factorial_calibration_study.json"
+
+
+def load_case() -> dict[str, Any]:
+    case = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    required = {
+        "case_name",
+        "laboratories",
+        "protocols",
+        "cell_estimates",
+        "cell_standard_errors",
+        "prior_scales",
+        "sampling",
+        "planned_contrasts",
+    }
+    missing = sorted(required - set(case))
+    if missing:
+        raise ValueError(f"fixture is missing fields: {', '.join(missing)}")
+    return case
+
+
+def finite_matrix(np, value: object, shape: tuple[int, int], field: str):
+    matrix = np.asarray(value, dtype=float)
+    if matrix.shape != shape:
+        raise ValueError(f"{field} must have shape {shape}, got {matrix.shape}")
+    if not np.all(np.isfinite(matrix)):
+        raise ValueError(f"{field} contains non-finite values")
+    return matrix
+
+
+def validate_case(np, case: dict[str, Any]) -> dict[str, Any]:
+    laboratories = list(case["laboratories"])
+    protocols = list(case["protocols"])
+    if len(laboratories) < 3 or len(protocols) < 3:
+        raise ValueError("the study requires at least three laboratories and protocols")
+    if len(set(laboratories)) != len(laboratories):
+        raise ValueError("laboratory names must be unique")
+    if len(set(protocols)) != len(protocols):
+        raise ValueError("protocol names must be unique")
+
+    shape = (len(laboratories), len(protocols))
+    cell_estimates = finite_matrix(np, case["cell_estimates"], shape, "cell_estimates")
+    cell_standard_errors = finite_matrix(
+        np,
+        case["cell_standard_errors"],
+        shape,
+        "cell_standard_errors",
+    )
+    if np.any(cell_standard_errors <= 0):
+        raise ValueError("cell_standard_errors must be positive")
+
+    prior_scales = dict(case["prior_scales"])
+    for field in ("grand_mean", "laboratory", "protocol", "interaction"):
+        value = float(prior_scales[field])
+        if not np.isfinite(value) or value <= 0:
+            raise ValueError(f"prior scale {field} must be positive and finite")
+        prior_scales[field] = value
+
+    sampling = dict(case["sampling"])
+    for field in ("draws", "tune", "chains", "cores", "seed"):
+        sampling[field] = int(sampling[field])
+    sampling["target_accept"] = float(sampling["target_accept"])
+    if sampling["draws"] < 100 or sampling["tune"] < 0:
+        raise ValueError("sampling settings are not sufficient for the public workflow")
+    if sampling["chains"] != 1 or sampling["cores"] != 1:
+        raise ValueError("the public workflow requires one bounded chain and core")
+    if not 0.5 < sampling["target_accept"] < 1.0:
+        raise ValueError("target_accept must lie between 0.5 and 1.0")
+
+    laboratory_index = {name: index for index, name in enumerate(laboratories)}
+    protocol_index = {name: index for index, name in enumerate(protocols)}
+    planned_contrasts = list(case["planned_contrasts"])
+    if not planned_contrasts:
+        raise ValueError("at least one planned contrast is required")
+
+    normalized_contrasts: list[dict[str, Any]] = []
+    contrast_names: set[str] = set()
+    for contrast in planned_contrasts:
+        name = str(contrast["name"])
+        if not name or name in contrast_names:
+            raise ValueError("planned contrast names must be non-empty and unique")
+        contrast_names.add(name)
+
+        terms = list(contrast["terms"])
+        if len(terms) < 2:
+            raise ValueError(f"contrast {name} requires at least two terms")
+        normalized_terms = []
+        coefficient_sum = 0.0
+        for term in terms:
+            laboratory = str(term["laboratory"])
+            protocol = str(term["protocol"])
+            if laboratory not in laboratory_index:
+                raise ValueError(f"contrast {name} uses unknown laboratory {laboratory}")
+            if protocol not in protocol_index:
+                raise ValueError(f"contrast {name} uses unknown protocol {protocol}")
+            coefficient = float(term["coefficient"])
+            if not np.isfinite(coefficient):
+                raise ValueError(f"contrast {name} has a non-finite coefficient")
+            coefficient_sum += coefficient
+            normalized_terms.append(
+                {
+                    "laboratory": laboratory,
+                    "protocol": protocol,
+                    "laboratory_index": laboratory_index[laboratory],
+                    "protocol_index": protocol_index[protocol],
+                    "coefficient": coefficient,
+                }
+            )
+        if not np.isclose(coefficient_sum, 0.0, atol=1e-12, rtol=0.0):
+            raise ValueError(f"contrast {name} coefficients must sum to zero")
+
+        normalized_contrasts.append(
+            {
+                "name": name,
+                "terms": normalized_terms,
+            }
+        )
+
+    return {
+        "case_name": str(case["case_name"]),
+        "laboratories": laboratories,
+        "protocols": protocols,
+        "cell_estimates": cell_estimates,
+        "cell_standard_errors": cell_standard_errors,
+        "prior_scales": prior_scales,
+        "sampling": sampling,
+        "planned_contrasts": normalized_contrasts,
+    }
+
+
+def flatten_posterior(np, posterior, variable: str, trailing_shape: tuple[int, ...]):
+    values = np.asarray(posterior[variable], dtype=float)
+    expected_ndim = 2 + len(trailing_shape)
+    if values.ndim != expected_ndim:
+        raise RuntimeError(
+            f"posterior variable {variable} has ndim {values.ndim}, expected {expected_ndim}"
+        )
+    if trailing_shape and tuple(values.shape[-len(trailing_shape) :]) != trailing_shape:
+        raise RuntimeError(
+            f"posterior variable {variable} has trailing shape "
+            f"{values.shape[-len(trailing_shape):]}, expected {trailing_shape}"
+        )
+    reshaped = values.reshape((-1,) + trailing_shape) if trailing_shape else values.reshape(-1)
+    if reshaped.shape[0] < 2:
+        raise RuntimeError(f"posterior variable {variable} has too few samples")
+    if not np.all(np.isfinite(reshaped)):
+        raise RuntimeError(f"posterior variable {variable} contains non-finite samples")
+    return reshaped
+
+
+def summarize_contrast(np, values) -> dict[str, float]:
+    return {
+        "mean": float(np.mean(values)),
+        "sd": float(np.std(values, ddof=1)),
+        "interval_90": [
+            float(np.quantile(values, 0.05)),
+            float(np.quantile(values, 0.95)),
+        ],
+    }
+
+
+def run_workflow(pm, np, raw_case: dict[str, Any]) -> dict[str, Any]:
+    case = validate_case(np, raw_case)
+    laboratories = case["laboratories"]
+    protocols = case["protocols"]
+    n_laboratories = len(laboratories)
+    n_protocols = len(protocols)
+    scales = case["prior
+### reproduction.md
+# Public reproduction
+
+Run the centered factorial-effects workflow with:
+
+```bash
+python reproduce.py
+```
+
+The script reads the fixed offline study in
+`fixtures/factorial_calibration_study.json`. It builds one Gaussian model with
+laboratory, protocol, and laboratory-by-protocol effects, runs bounded
+fixed-seed posterior sampling, and evaluates three pre-planned interaction
+contrasts.
+
+It writes:
+
+```text
+outputs/public_reproduction_report.json
+```
+
+The report contains finite sample counts, zero-sum residuals, and posterior
+contrast means and standard deviations observed from the candidate model. It
+does not contain fixed expected summaries or evaluate an analytic probability
+density.
+
+The report uses three statuses:
+
+- `workflow_completed`: the candidate model produced finite posterior
+  observations and constraint diagnostics; this is not a correctness claim;
+- `pre_fix_expected_failure`: the model ran but did not produce a usable finite
+  observation; and
+- `runner_failure`: imports, fixture validation, model construction, sampling,
+  extraction, shape checks, or report generation failed before a usable
+  scientific comparison existed.
+
+The public command is a diagnostic workbench. Authoritative distribution
+comparisons and unseen-shape coverage are implemented in the private verifier.
+### paper.md
+# Centered factorial effects and equivalent Gaussian parameterizations
+
+This offline packet contains the statistical definitions needed to interpret
+the supplied calibration workflow. It is based on the version-matched PyMC
+distribution documentation, the PyMC3 framework paper, and the Stan User's
+Guide discussion of centered vectors.
+
+## 1. Factorial calibration model
+
+Suppose laboratories `l = 1, ..., L` measure the same response under protocols
+`p = 1, ..., P`. A two-way Gaussian effects model can be written as
+
+$$
+y_{lp} \sim
+\mathcal{N}(\mu + a_l + b_p + g_{lp}, s_{lp}),
+$$
+
+where `mu` is the grand mean, `a_l` is a laboratory effect, `b_p` is a
+protocol effect, `g_lp` is a laboratory-by-protocol interaction, and `s_lp`
+is the known standard error of the observed cell summary.
+
+Without identifying constraints, constants can be moved between the grand mean
+and the main effects without changing fitted responses. A common convention is
+
+$$
+\sum_{l=1}^{L} a_l = 0,
+\qquad
+\sum_{p=1}^{P} b_p = 0.
+$$
+
+The interaction represents only the non-additive part of the response when it
+is centered across both axes:
+
+$$
+\sum_{l=1}^{L} g_{lp} = 0 \quad \text{for every } p,
+\qquad
+\sum_{p=1}^{P} g_{lp} = 0 \quad \text{for every } l.
+$$
+
+These constraints define the interpretation of the effects. They are not
+additional observations.
+
+## 2. Documented centered Gaussian distribution
+
+The source-version PyMC documentation describes `ZeroSumNormal` as a centered
+Gaussian distribution for which one or more selected trailing axes sum to zero.
+For one constrained axis of length `K`, the covariance is
+
+$$
+\operatorname{Cov}(x) =
+\sigma^2\left(I - \frac{1}{K}J\right),
+$$
+
+where `I` is the identity matrix and every entry of `J` is one. The parameter
+`sigma` is the standard deviation of the underlying unconstrained Normal used
+by the construction. In this source version it is a positive scalar.
+
+By default the rightmost axis is constrained. The public API can constrain more
+than one trailing axis. A matrix constrained over its last two axes therefore
+has zero sums along both of those axes.
+
+## 3. Orthonormal reduced coordinates
+
+A zero-sum vector can be represented without redundancy. Let the columns of
+`B` form an orthonormal basis for the subspace perpendicular to the all-ones
+vector:
+
+$$
+B^T B = I,
+\qquad
+B^T \mathbf{1} = 0.
+$$
+
+If
+
+$$
+z \sim \mathcal{N}(0, \sigma^2 I),
+\qquad
+x = Bz,
+$$
+
+then `x` has the centered covariance above and lies on the zero-sum support.
+Subtracting the mean from an unconstrained Gaussian vector is another way to
+construct the same covariance.
+
+For a two-way interaction, bases for the laboratory and protocol centered
+subspaces can be combined to represent exactly the matrices whose row and
+column sums are zero.
+
+## 4. Reparameterization coherence
+
+A full constrained representation and an orthonormal reduced-coordinate
+representation are two coordinate systems for the same statistical model. In a
+linear-Gaussian analysis with the same priors, observations, and standard
+errors, they must produce the same posterior fitted responses and the same
+posterior summaries for any fixed linear contrast, up to numerical and Monte
+Carlo error.
+
+This statement does not depend on a particular optimizer or sampler. Different
+computational paths may represent the model differently internally, but they do
+not define different prior shrinkage or different scientific contrasts.
+
+## 5. Planned interaction contrasts
+
+A difference-in-differences contrast
+## outlines_of_top_modules
+### source/pymc/distributions/multivariate.py
+L100: class SimplexContinuous
+L105: def simplex_cont_transform(op, rv)
+L116: def quaddist_matrix(cov=None, chol=None, tau=None, lower=True, *args, **kwargs)
+L147: def quaddist_parse(value, mu, cov, mat_type='cov')
+L171: def quaddist_chol(delta, chol_mat)
+L185: def quaddist_tau(delta, chol_mat)
+L199: class MvNormal
+  L266: def dist(cls, mu, cov=None, tau=None, chol=None, lower=True, **kwargs)
+  L273: def moment(rv, size, mu, cov)
+  L280: def logp(value, mu, cov)
+L304: class MvStudentTRV
+  L311: def make_node(self, rng, size, dtype, nu, mu, cov)
+  L318: def __call__(self, nu, mu=None, cov=None, size=None, **kwargs)
+  L327: def _supp_shape_from_params(self, dist_params, param_shapes=None)
+  L336: def rng_fn(cls, rng, nu, mu, cov, size)
+L351: class MvStudentT
+  L394: def dist(cls, nu, Sigma=None, mu=None, scale=None, tau=None, chol=None, lower=True, **kwargs)
+  L415: def moment(rv, size, nu, mu, scale)
+  L422: def logp(value, nu, mu, scale)
+L446: class Dirichlet
+  L473: def dist(cls, a, **kwargs)
+  L480: def moment(rv, size, a)
+  L487: def logp(value, a)
+L518: class Multinomial
+  L552: def dist(cls, n, p, *args, **kwargs)
+  L572: def moment(rv, size, n, p)
+  L583: def logp(value, n, p)
+L614: class DirichletMultinomialRV
+  L621: def _supp_shape_from_params(self, dist_params, param_shapes=None)
+  L630: def rng_fn(cls, rng, n, a, size)
+L658: class DirichletMultinomial
+  L689: def dist(cls, n, a, *args, **kwargs)
+  L695: def moment(rv, size, n, a)
+  L699: def logp(value, n, a)
+L735: class _OrderedMultinomial
+  L743: def dist(cls, eta, cutpoints, n, *args, **kwargs)
+L762: class OrderedMultinomial
+  L839: def __new__(cls, name, *args, compute_p=True, **kwargs)
+  L846: def dist(cls, *args, **kwargs)
+L850: def posdef(AA)
+L858: class PosDefMatrix
+  L869: def make_node(self, x)
+  L876: def perform(self, node, inputs, outputs)
+  L885: def infer_shape(self, fgraph, node, shapes)
+  L888: def grad(self, inp, grads)
+  L892: def __str__(self)
+L899: class WishartRV
+  L906: def _supp_shape_from_params(self, dist_params, param_shapes=None)
+  L916: def rng_fn(cls, rng, nu, V, size)
+L928: class Wishart
+  L967: def dist(cls, nu, V, *args, **kwargs)
+  L986: def logp(X, nu, V)
+L1021: def WishartBartlett(name, S, nu, is_cholesky=False, return_cholesky=False, initval=None)
+L1103: def _lkj_normalizing_constant(eta, n)
+L1131: class _LKJCholeskyCovBaseRV
+  L1138: def make_node(self, rng, size, dtype, n, eta, D)
+  L1151: def _supp_shape_from_params(self, dist_params, param_shapes)
+  L1155: def rng_fn(self, rng, n, eta, D, size)
+L1182: class _LKJCholeskyCovRV
+  L1186: def update(self, node)
+L1190: class _LKJCholeskyCov
+  L1198: def dist(cls, n, eta, sd_dist, **kwargs)
+  L1214: def rv_op(cls, n, eta, sd_dist, size=None)
+L1244: def change_LKJCholeksyCovRV_size(op, dist, new_size, expand=False)
+L1255: def _LKJCholeksyCovRV_moment(op, rv, rng, n, eta, sd_dist)
+L1263: def _LKJCholeksyCovRV_default_transform(op, rv)
+L1269: def _LKJCholeksyCovRV_logp(op, values, rng, n, eta, sd_dist, **kwargs)
+L1308: class LKJCholeskyCov
+  L1450: def __new__(cls, name, eta, n, sd_dist, *, compute_corr=True, store_in_trace=True, **kwargs)
+  L1462: def dist(cls, eta, n, sd_dist, *, compute_corr=True, **kwargs)
+  L1471: def helper_deterministics(cls, n, packed_chol)
+L1482: class LKJCorrRV
+  L1489: def make_node(self, rng, size, dtype, n, eta)
+  L1500: def _supp_shape_from_params(self, dist_params, **kwargs)
+  L1506: def rng_fn(cls, rng, n, eta, size)
+  L1526: def _random_corr_matrix(cls, rng, n, eta, flat_size)
+L1548: class LKJCorr
+  L1593: def dist(cls, n, eta, **kwargs)
+  L1598: def moment(rv, *args)
+  L1601: def logp(value, n, eta)
+L1646: def lkjcorr_default_transform(op, rv)
+L1650: class MatrixNormalRV
+  L1657: def _supp_shape_from_params(self, dist_params, param_shapes=None)
+  L1666: def rng_fn(cls, rng, mu, rowchol, colchol, size=None)
+L1689: class MatrixNormal
+  L1780: def dist(cls, mu, rowcov=None, rowchol=None, colcov=None, colchol=None, *args, **kwargs)
+  L1829: def moment(rv, size, mu, rowchol, colchol)
+  L1832: def logp(value, mu, rowchol, colchol)
+L1873: class KroneckerNormalRV
+  L1880: def _supp_shape_from_params(self, dist_params, param_shapes=None)
+  L1888: def rng_fn(self, rng, mu, sigma, *covs, size=None)
+L1904: class KroneckerNormal
+  L1994: def dist(cls, mu, covs=None, chols=None, evds=None, sigma=None, *args, **kwargs)
+  L2016: def moment(rv, size, mu, covs, chols, evds)
+  L2023: def logp(value, mu, sigma, *covs)
+L2071: class CARRV
+  L2078: def make_node(self, rng, size, dtype, mu, W, alpha, tau)
+  L2099: def _supp_shape_from_params(self, dist_params, param_shapes=None)
+  L2108: def rng_fn(cls, rng: np.random.RandomState, mu, W, alpha, tau, size)
+L2154: class CAR
+  L2200: def dist(cls, mu, W, alpha, tau, *args, **kwargs)
+  L2203: def moment(rv, size, mu, W, alpha, tau)
+  L2206: def logp(value, mu, W, alpha, tau)
+L2260: class ICARRV
+  L2267: def __call__(self, W, node1, node2, N, sigma, zero_sum_stdev, size=None, **kwargs)
+  L2270: def _supp_shape_from_params(self, dist_params, param_shapes=None)
+  L2279: def rng_fn(cls, rng, size, W, node1, node2, N, sigma, zero_sum_stdev)
+L2286: class ICAR
+  L2374: def dist(cls, W, sigma=1, zero_sum_stdev=0.001, **kwargs)
+  L2410: def moment(rv, size, W, node1, node2, N, sigma, zero_sum_stdev)
+  L2413: def logp(value, W, node1, node2, N, sigma, zero_sum_stdev)
+L2426: class StickBreakingWeightsRV
+  L2433: def make_node(self, rng, size, dtype, alpha, K)
+  L2442: def _supp_shape_from_params(self, dist_params, param_shapes)
+  L2447: def rng_fn(cls, rng, alpha, K, size)
+L2477: class StickBreakingWeights
+  L2515: def dist(cls, alpha, K, *args, **kwargs)
+  L2521: def moment(rv, size, alpha, K)
+  L2539: def logp(value, alpha, K)
+L2588: class ZeroSumNormalRV
+#### source/pymc/distributions/multivariate.py::quaddist_matrix (L116)
+def quaddist_matrix(cov=None, chol=None, tau=None, lower=True, *args, **kwargs):
+    if chol is not None and not lower:
+        chol = chol.T
+
+    if len([i for i in [tau, cov, chol] if i is not None]) != 1:
+        raise ValueError("Incompatible parameterization. Specify exactly one of tau, cov, or chol.")
+
+    if cov is not None:
+        cov = pt.as_tensor_variable(cov)
+        if cov.ndim != 2:
+            raise ValueError("cov must be two dimensional.")
+    elif tau is not None:
+        tau = pt.as_tensor_variable(tau)
+        if tau.ndim != 2:
+            raise ValueError("tau must be two dimensional.")
+        # TODO: What's the correct order/approach (in the non-square case)?
+        # `pytensor.tensor.nlinalg.tensorinv`?
+        cov = matrix_inverse(tau)
+    else:
+        # TODO: What's the correct order/approach (in the non-square case)?
+        chol = pt.as_tensor_variable(chol)
+        if chol.ndim != 2:
+            raise ValueError("chol must be two dimensional.")
+
+        # tag as lower triangular to enable pytensor rewrites of chol(l.l') -> l
+        chol.tag.lower_triangular = True
+        cov = chol.dot(chol.T)
+
+    return cov
+#### source/pymc/distributions/multivariate.py::LKJCorrRV._random_corr_matrix (L1526)
+    def _random_corr_matrix(cls, rng, n, eta, flat_size):
+        # original implementation in R see:
+        # https://github.com/rmcelreath/rethinking/blob/master/R/distributions.r
+        beta = eta - 1.0 + n / 2.0
+        r12 = 2.0 * stats.beta.rvs(a=beta, b=beta, size=flat_size, random_state=rng) - 1.0
+        P = np.full((flat_size, n, n), np.eye(n))
+        P[..., 0, 1] = r12
+        P[..., 1, 1] = np.sqrt(1.0 - r12**2)
+        for mp1 in range(2, n):
+            beta -= 0.5
+            y = stats.beta.rvs(a=mp1 / 2.0, b=beta, size=flat_size, random_state=rng)
+            z = stats.norm.rvs(loc=0, scale=1, size=(flat_size, mp1), random_state=rng)
+            z = z / np.sqrt(np.einsum("ij,ij->i", z, z))[..., np.newaxis]
+            P[..., 0:mp1, mp1] = np.sqrt(y[..., np.newaxis]) * z
+            P[..., mp1, mp1] = np.sqrt(1.0 - y)
+        C = np.einsum("...ji,...jk->...ik", P, P)
+        return C
+#### source/pymc/distributions/multivariate.py::zerosumnormal_moment (L2769)
+def zerosumnormal_moment(op, rv, *rv_inputs):
+    return pt.zeros_like(rv)
+#### source/pymc/distributions/multivariate.py::zerosumnormal_logp (L2780)
+def zerosumnormal_logp(op, values, normal_dist, sigma, support_shape, **kwargs):
+    (value,) = values
+    shape = value.shape
+    n_zerosum_axes = op.ndim_supp
+
+    _deg_free_support_shape = pt.inc_subtensor(shape[-n_zerosum_axes:], -1)
+    _full_size = pt.prod(shape)
+    _degrees_of_freedom = pt.prod(_deg_free_support_shape)
+
+    zerosums = [
+        pt.all(pt.isclose(pt.mean(value, axis=-axis - 1), 0, atol=1e-9))
+        for axis in range(n_zerosum_axes)
+    ]
+
+    out = pt.sum(
+        pm.logp(normal_dist, value) * _degrees_of_freedom / _full_size,
+        axis=tuple(np.arange(-n_zerosum_axes, 0)),
+    )
+
+    return check_parameters(out, *zerosums, msg="mean(value, axis=n_zerosum_axes) = 0")
+### source/pymc/distributions/timeseries.py
+L60: class RandomWalkRV
+L67: class RandomWalk
+  L75: def __new__(cls, *args, innovation_dist, steps=None, **kwargs)
+  L87: def dist(cls, init_dist, innovation_dist, steps=None, **kwargs)
+  L127: def get_steps(cls, innovation_dist, steps, shape, dims, observed)
+  L154: def rv_op(cls, init_dist, innovation_dist, steps, size=None)
+L208: def change_random_walk_size(op, dist, new_size, expand)
+L218: def random_walk_moment(op, rv, init_dist, innovation_dist, steps)
+L232: def random_walk_logp(op, values, *inputs, **kwargs)
+L245: class PredefinedRandomWalk
+  L248: def __new__(cls, name, *args, **kwargs)
+  L253: def dist(cls, *args, **kwargs)
+  L259: def get_dists(cls, *args, **kwargs)
+L263: class GaussianRandomWalk
+  L284: def get_dists(cls, mu=0.0, sigma=1.0, *, init_dist=None, **kwargs)
+L307: class MvGaussianRandomWalk
+  L338: def get_dists(cls, mu, *, cov=None, tau=None, chol=None, lower=True, init_dist=None, **kwargs)
+L359: class MvStudentTRandomWalk
+  L392: def get_dists(cls, *, nu, mu, scale=None, tau=None, chol=None, lower=True, init_dist=None, **kwargs)
+L417: class AutoRegressiveRV
+  L425: def __init__(self, *args, ar_order, constant_term, **kwargs)
+  L430: def update(self, node: Node)
+L436: class AR
+  L497: def __new__(cls, name, rho, *args, steps=None, constant=False, ar_order=None, **kwargs)
+  L512: def dist(cls, rho, sigma=None, tau=None, *, init_dist=None, steps=None, constant=False, ar_order=None, **kwargs)
+  L569: def _get_ar_order(cls, rhos: TensorVariable, ar_order: Optional[int], constant: bool)
+  L599: def ndim_supp(cls, *args)
+  L603: def rv_op(cls, rhos, sigma, init_dist, steps, ar_order, constant_term, size=None)
+L666: def change_ar_size(op, dist, new_size, expand=False)
+L680: def ar_logp(op, values, rhos, sigma, init_dist, steps, noise_rng, **kwargs)
+L713: def ar_moment(op, rv, rhos, sigma, init_dist, steps, noise_rng)
+L718: class GARCH11RV
+  L724: def update(self, node: Node)
+L730: class GARCH11
+  L756: def __new__(cls, *args, steps=None, **kwargs)
+  L767: def dist(cls, omega, alpha_1, beta_1, initial_vol, *, steps=None, **kwargs)
+  L785: def rv_op(cls, omega, alpha_1, beta_1, initial_vol, init_dist, steps, size=None)
+L836: def change_garch11_size(op, dist, new_size, expand=False)
+L848: def garch11_logp(op, values, omega, alpha_1, beta_1, initial_vol, init_dist, steps, noise_rng, **kwargs)
+L873: def garch11_moment(op, rv, omega, alpha_1, beta_1, initial_vol, init_dist, steps, noise_rng)
+L878: class EulerMaruyamaRV
+  L886: def __init__(self, *args, dt, sde_fn, **kwargs)
+  L891: def update(self, node: Node)
+L897: class EulerMaruyama
+  L918: def __new__(cls, name, dt, sde_fn, *args, steps=None, **kwargs)
+  L930: def dist(cls, dt, sde_fn, sde_pars, *, init_dist=None, steps=None, **kwargs)
+  L967: def rv_op(cls, init_dist, steps, sde_pars, dt, sde_fn, size=None)
+L1017: def change_eulermaruyama_size(op, dist, new_size, expand=False)
+L1034: def eulermaruyama_logp(op, values, init_dist, steps, *sde_pars_noise_arg, **kwargs)
+### source/pymc/variational/opvi.py
+L93: class VariationalInferenceError
+L97: class NotImplementedInference
+L101: class ExplicitInferenceError
+L105: class AEVBInferenceError
+L109: class ParametrizationError
+L113: class GroupError
+L117: def _known_scan_ignored_inputs(terms)
+L129: def append_name(name)
+L144: def node_property(f)
+L161: def try_to_set_test_value(node_in, node_out, s)
+L182: class ObjectiveUpdates
+L188: def _warn_not_used(smth, where)
+L192: class ObjectiveFunction
+  L203: def __init__(self, op: Operator, tf: TestFunction)
+  L211: def updates(self, obj_n_mc=None, tf_n_mc=None, obj_optimizer=adagrad_window, test_optimizer=adagrad_window, more_obj_params=None, more_tf_params=None, more_updates=None, more_replacements=None, total_grad_norm_constraint=None)
+  L279: def add_test_updates(self, updates, tf_n_mc=None, test_optimizer=adagrad_window, more_tf_params=None, more_replacements=None, total_grad_norm_constraint=None)
+  L300: def add_obj_updates(self, updates, obj_n_mc=None, obj_optimizer=adagrad_window, more_obj_params=None, more_replacements=None, total_grad_norm_constraint=None)
+  L324: def step_function(self, obj_n_mc=None, tf_n_mc=None, obj_optimizer=adagrad_window, test_optimizer=adagrad_window, more_obj_params=None, more_tf_params=None, more_updates=None, more_replacements=None, total_grad_norm_constraint=None, score=False, fn_kwargs=None)
+  L398: def score_function(self, sc_n_mc=None, more_replacements=None, fn_kwargs=None)
+  L427: def __call__(self, nmc, **kwargs)
+L437: class Operator
+  L457: def __init__(self, approx)
+  L476: def apply(self, f)
+  L496: def __call__(self, f=None)
+  L512: def __str__(self)
+L518: def collect_shared_to_list(params)
+L542: class TestFunction
+  L543: def __init__(self)
+  L548: def params(self)
+  L551: def __call__(self, z)
+  L554: def setup(self, approx)
+  L558: def from_function(cls, f)
+L566: class Group
+  L687: def register(cls, sbcls)
+  L700: def group_for_params(cls, params)
+  L709: def group_for_short_name(cls, name)
+  L717: def __new__(cls, group=None, vfam=None, params=None, *args, **kwargs)
+  L730: def __init__(self, group, vfam=None, params=None, random_seed=None, model=None, options=None, **kwargs)
+  L760: def _prepare_start(self, start=None)
+  L774: def get_param_spec_for(cls, **kwargs)
+  L780: def _check_user_params(self, **kwargs)
+  L813: def _initial_type(self, name)
+  L826: def _input_type(self, name)
+  L840: def __init_group__(self, group)
+  L878: def _finalize_init(self)
+  L883: def params_dict(self)
+  L891: def params(self)
+  L898: def _new_initial_shape(self, size, dim, more_replacements=None)
+  L917: def ndim(self)
+  L921: def ddim(self)
+  L924: def _new_initial(self, size, deterministic, more_replacements=None)
+  L970: def symbolic_random(self)
+  L984: def set_size_and_deterministic(self, node: Variable, s, d: bool, more_replacements: dict=None)
+  L1015: def to_flat_input(self, node)
+  L1019: def symbolic_sample_over_posterior(self, node)
+  L1036: def symbolic_single_sample(self, node)
+  L1045: def make_size_and_deterministic_replacements(self, s, d, more_replacements=None)
+  L1076: def symbolic_normalizing_constant(self)
+  L1092: def symbolic_logq_not_scaled(self)
+  L1100: def symbolic_logq(self)
+  L1105: def logq(self)
+  L1110: def logq_norm(self)
+  L1114: def __str__(self)
+  L1122: def std(self)
+  L1127: def cov(self)
+  L1132: def mean(self)
+  L1136: def var_to_data(self, shared: pt.TensorVariable)
+  L1155: def mean_data(self)
+  L1160: def std_data(self)
+L1169: class Approximation
+  L1195: def __init__(self, groups, model=None)
+  L1225: def has_logq(self)
+  L1228: def collect(self, item)
+  L1235: def scale_cost_to_minibatch(self)
+  L1240: def scale_cost_to_minibatch(self, value)
+  L1244: def symbolic_normalizing_constant(self)
+  L1260: def symbolic_logq(self)
+  L1265: def logq(self)
+  L1270: def logq_norm(self)
+  L1275: def _sized_symbolic_varlogp_and_datalogp(self)
+  L1283: def sized_symbolic_varlogp(self)
+  L1288: def sized_symbolic_datalogp(self)
+  L1293: def sized_symbolic_logp(self)
+  L1298: def logp(self)
+  L1303: def varlogp(self)
+  L1308: def datalogp(self)
+  L1313: def _single_symbolic_varlogp_and_datalogp(self)
+  L1319: def single_symbolic_varlogp(self)
+  L1325: def single_symbolic_datalogp(self)
+  L1331: def single_symbolic_logp(self)
+  L1337: def logp_norm(self)
+  L1342: def varlogp_norm(self)
+  L1347: def datalogp_norm(self)
+  L1352: def replacements(self)
+  L1358: def make_size_and_deterministic_replacements(self, s, d, more_replacements=None)
+  L1384: def set_size_and_deterministic(self, node, s, d, more_replacements=None)
+  L1412: def to_flat_input(self, node, more_replacements=None)
+  L1418: def symbolic_sample_over_posterior(self, node, more_replacements=None)
+  L1433: def symbolic_single_sample(self, node, more_replacements=None)
+  L1443: def get_optimization_replacements(self, s, d)
+  L1455: def sample_node(self, node, size=None, deterministic=False, more_replacements=None)
+  L1489: def rslice(self, name)
+  L1510: def sample_dict_fn(self)
+  L1527: def sample(self, draws=500, *, random_seed: RandomState=None, return_inferencedata=True, **kwargs)
+  L1572: def ndim(self)
+  L1576: def ddim(self)
+  L1580: def symbolic_random(self)
+  L1583: def __str__(self)
+  L1591: def all_histograms(self)
+  L1595: def any_histograms(self)
+  L1599: def joint_histogram(self)
+  L1605: def params(self)
+#### source/pymc/variational/opvi.py::Group.symbolic_sample_over_posterior (L1019)
+    def symbolic_sample_over_posterior(self, node):
+        """*Dev* - performs sampling of node applying independent samples from posterior each time.
+        Note that it is done symbolically and this node needs :func:`set_size_and_deterministic` call
+        """
+        node = self.to_flat_input(node)
+        random = self.symbolic_random.astype(self.symbolic_initial.dtype)
+        random = pt.specify_shape(random, self.symbolic_initial.type.shape)
+
+        def sample(post, *_):
+            return graph_replace(node, {self.input: post}, strict=False)
+
+        nodes, _ = pytensor.scan(
+            sample, random, non_sequences=_known_scan_ignored_inputs(makeiter(random))
+        )
+        assert self.input not in set(pytensor.graph.graph_inputs(makeiter(nodes)))
+        return nodes
+#### source/pymc/variational/opvi.py::Approximation.symbolic_sample_over_posterior (L1418)
+    def symbolic_sample_over_posterior(self, node, more_replacements=None):
+        """*Dev* - performs sampling of node applying independent samples from posterior each time.
+        Note that it is done symbolically and this node needs :func:`set_size_and_deterministic` call
+        """
+        node = self.to_flat_input(node)
+
+        def sample(*post):
+            return graph_replace(node, dict(zip(self.inputs, post)), strict=False)
+
+        nodes, _ = pytensor.scan(
+            sample, self.symbolic_randoms, non_sequences=_known_scan_ignored_inputs(makeiter(node))
+        )
+        assert not (set(self.inputs) & set(pytensor.graph.graph_inputs(makeiter(nodes))))
+        return nodes
+### source/pymc/distributions/continuous.py
+L137: class PositiveContinuous
+L141: class UnitContinuous
+L145: class CircularContinuous
+L149: class BoundedContinuous
+L157: def pos_cont_transform(op, rv)
+L162: def unit_cont_transform(op, rv)
+L167: def circ_cont_transform(op, rv)
+L172: def bounded_cont_transform(op, rv, bound_args_indices=None)
+L200: def assert_negative_support(var, label, distname, value=-1e-06)
+L211: def get_tau_sigma(tau=None, sigma=None)
+L262: class Uniform
+  L309: def dist(cls, lower=0, upper=1, **kwargs)
+  L314: def moment(rv, size, lower, upper)
+  L321: def logp(value, lower, upper)
+  L334: def logcdf(value, lower, upper)
+  L351: def icdf(value, lower, upper)
+L358: def uniform_default_transform(op, rv)
+L362: class FlatRV
+  L370: def rng_fn(cls, rng, size)
+L377: class Flat
+  L385: def __new__(cls, *args, **kwargs)
+  L390: def dist(cls, **kwargs)
+  L394: def moment(rv, size)
+  L397: def logp(value)
+  L400: def logcdf(value)
+L406: class HalfFlatRV
+  L414: def rng_fn(cls, rng, size)
+L421: class HalfFlat
+  L426: def __new__(cls, *args, **kwargs)
+  L431: def dist(cls, **kwargs)
+  L435: def moment(rv, size)
+  L438: def logp(value)
+  L441: def logcdf(value)
+L445: class Normal
+  L513: def dist(cls, mu=0, sigma=None, tau=None, **kwargs)
+  L523: def moment(rv, size, mu, sigma)
+  L529: def logp(value, mu, sigma)
+  L537: def logcdf(value, mu, sigma)
+  L544: def icdf(value, mu, sigma)
+L554: class TruncatedNormalRV
+  L562: def rng_fn(cls, rng: np.random.RandomState, mu: Union[np.ndarray, float], sigma: Union[np.ndarray, float], lower: Union[np.ndarray, float], upper: Union[np.ndarray, float], size: Optional[Union[List[int], int]])
+L584: class TruncatedNormal
+  L665: def dist(cls, mu: Optional[DIST_PARAMETER_TYPES]=None, sigma: Optional[DIST_PARAMETER_TYPES]=None, *, tau: Optional[DIST_PARAMETER_TYPES]=None, lower: Optional[DIST_PARAMETER_TYPES]=None, upper: Optional[DIST_PARAMETER_TYPES]=None, **kwargs)
+  L684: def moment(rv, size, mu, sigma, lower, upper)
+  L709: def logp(value, mu, sigma, lower, upper)
+L747: def truncated_normal_default_transform(op, rv)
+L751: class HalfNormal
+  L820: def dist(cls, sigma: Optional[DIST_PARAMETER_TYPES]=None, tau: Optional[DIST_PARAMETER_TYPES]=None, *args, **kwargs)
+  L831: def moment(rv, size, loc, sigma)
+  L837: def logp(value, loc, sigma)
+  L846: def logcdf(value, loc, sigma)
+  L860: def icdf(value, loc, sigma)
+L866: class WaldRV
+  L874: def rng_fn(cls, rng, mu, lam, alpha, size)
+L881: class Wald
+  L963: def dist(cls, mu: Optional[DIST_PARAMETER_TYPES]=None, lam: Optional[DIST_PARAMETER_TYPES]=None, phi: Optional[DIST_PARAMETER_TYPES]=None, alpha: Optional[DIST_PARAMETER_TYPES]=0.0, **kwargs)
+  L977: def moment(rv, size, mu, lam, alpha)
+  L984: def get_mu_lam_phi(mu, lam, phi)
+  L1003: def logp(value, mu, lam, alpha)
+  L1023: def logcdf(value, mu, lam, alpha)
+L1051: class BetaClippedRV
+  L1053: def rng_fn(cls, rng, alpha, beta, size)
+L1060: class Beta
+  L1137: def dist(cls, alpha: Optional[DIST_PARAMETER_TYPES]=None, beta: Optional[DIST_PARAMETER_TYPES]=None, mu: Optional[DIST_PARAMETER_TYPES]=None, sigma: Optional[DIST_PARAMETER_TYPES]=None, nu: Optional[DIST_PARAMETER_TYPES]=None, *args, **kwargs)
+  L1153: def moment(rv, size, alpha, beta)
+  L1160: def get_alpha_beta(self, alpha=None, beta=None, mu=None, sigma=None, nu=None)
+  L1179: def logp(value, alpha, beta)
+  L1193: def logcdf(value, alpha, beta)
+L1212: class KumaraswamyRV
+  L1220: def rng_fn(cls, rng, a, b, size)
+L1228: class Kumaraswamy
+  L1274: def dist(cls, a: DIST_PARAMETER_TYPES, b: DIST_PARAMETER_TYPES, *args, **kwargs)
+  L1280: def moment(rv, size, a, b)
+  L1286: def logp(value, a, b)
+  L1300: def logcdf(value, a, b)
+L1319: class Exponential
+  L1362: def dist(cls, lam=None, scale=None, *args, **kwargs)
+  L1375: def moment(rv, size, mu)
+  L1380: def logp(value, mu)
+  L1389: def logcdf(value, mu)
+  L1403: def icdf(value, mu)
+L1413: class Laplace
+  L1459: def dist(cls, mu, b, *args, **kwargs)
+  L1465: def moment(rv, size, mu, b)
+  L1471: def logp(value, mu, b)
+  L1479: def logcdf(value, mu, b)
+  L1498: def icdf(value, mu, b)
+L1506: class AsymmetricLaplaceRV
+  L1514: def rng_fn(cls, rng, b, kappa, mu, size=None)
+L1526: class AsymmetricLaplace
+  L1574: def dist(cls, kappa=None, mu=None, b=None, q=None, *args, **kwargs)
+  L1583: def get_kappa(cls, kappa=None, q=None)
+  L1598: def moment(rv, size, b, kappa, mu)
+  L1605: def logp(value, b, kappa, mu)
+L1619: class LogNormal
+  L1689: def dist(cls, mu=0, sigma=None, tau=None, *args, **kwargs)
+  L1697: def moment(rv, size, mu, sigma)
+  L1703: def logp(value, mu, sigma)
+  L1717: def logcdf(value, mu, sigma)
+  L1730: def icdf(value, mu, sigma)
+L1738: class StudentTRV
+  L1746: def rng_fn(cls, rng, nu, mu, sigma, size=None)
+L1753: class StudentT
+  L1820: def dist(cls, nu, mu=0, *, sigma=None, lam=None, **kwargs)
+  L1827: def moment(rv, size, nu, mu, sigma)
+  L1833: def logp(value, nu, mu, sigma)
+  L1850: def logcdf(value, nu, mu, sigma)
+L1867: class Pareto
+  L1917: def dist(cls, alpha, m, **kwargs)
+  L1923: def moment(rv, size, alpha, m)
+  L1929: def logp(value, alpha, m)
+  L1939: def logcdf(value, alpha, m)
+  L1959: def icdf(value, alpha, m)
+L1971: def pareto_default_transform(op, rv)
+L1975: class Cauchy
+  L2024: def dist(cls, alpha, beta, *args, **kwargs)
+  L2030: def moment(rv, size, alpha, beta)
+  L2036: def logp(value, alpha, beta)
+  L2044: def logcdf(value, alpha, beta)
+  L2052: def icdf(value, alpha, beta)
+#### source/pymc/distributions/continuous.py::assert_negative_support (L200)
+def assert_negative_support(var, label, distname, value=-1e-6):
+    warnings.warn(
+        "The assert_negative_support function will be deprecated in future versions!"
+        " See https://github.com/pymc-devs/pymc/issues/5162",
+        DeprecationWarning,
+    )
+    msg = f"The variable specified for {label} has negative support for {distname}, "
+    msg += "likely making it unsuitable for this parameter."
+    return Assert(msg)(var, pt.all(pt.ge(var, 0.0)))
+#### source/pymc/distributions/continuous.py::get_tau_sigma (L211)
+def get_tau_sigma(tau=None, sigma=None):
+    r"""
+    Find precision and standard deviation. The link between the two
+    parameterizations is given by the inverse relationship:
+
+    .. math::
+        \tau = \frac{1}{\sigma^2}
+
+    Parameters
+    ----------
+    tau: array-like, optional
+    sigma: array-like, optional
+
+    Results
+    -------
+    Returns tuple (tau, sigma)
+
+    Notes
+    -----
+    If neither tau nor sigma is provided, returns (1., 1.)
+    """
+    if tau is None:
+        if sigma is None:
+            sigma = 1.0
+            tau = 1.0
+        else:
+            if isinstance(sigma, Variable):
+                # Keep tau negative, if sigma was negative, so that it will fail when used
+                tau = (sigma**-2.0) * pt.sign(sigma)
+            else:
+                sigma_ = np.asarray(sigma)
+                if np.any(sigma_ <= 0):
+                    raise ValueError("sigma must be positive")
+                tau = sigma_**-2.0
+
+    else:
+        if sigma is not None:
+            raise ValueError("Can't pass both tau and sigma")
+        else:
+            if isinstance(tau, Variable):
+                # Keep sigma negative, if tau was negative, so that it will fail when used
+                sigma = pt.abs(tau) ** (-0.5) * pt.sign(tau)
+            else:
+                tau_ = np.asarray(tau)
+                if np.any(tau_ <= 0):
+                    raise ValueError("tau must be positive")
+                sigma = tau_**-0.5
+
+    return floatX(tau), floatX(sigma)
+### source/pymc/distributions/simulator.py
+L35: class SimulatorRV
+  L54: def rng_fn(cls, *args, **kwargs)
+  L58: def distance(cls, *args, **kwargs)
+  L62: def sum_stat(cls, *args, **kwargs)
+L66: class Simulator
+  L144: def __new__(cls, name, *args, **kwargs)
+  L149: def dist(cls, fn, *unnamed_params, params=None, distance='gaussian', sum_stat='identity', epsilon=1, ndim_supp=0, ndims_params=None, dtype='floatX', class_name: str='Simulator', **kwargs)
+  L221: def rv_op(cls, *params, fn, ndim_supp, ndims_params, dtype, distance, sum_stat, epsilon, class_name, **kwargs)
+L253: def simulator_moment(op, rv, *inputs)
+L261: def simulator_logp(op, values, *inputs, **kwargs)
+L280: def identity(x)
+L285: def gaussian(epsilon, obs_data, sim_data)
+L290: def laplace(epsilon, obs_data, sim_data)
+L295: class KullbackLeibler
+  L298: def __init__(self, obs_data)
+  L308: def __call__(self, epsilon, obs_data, sim_data)
+L315: def create_sum_stat_op_from_fn(fn)
+L339: def create_distance_op_from_fn(fn)
+#### source/pymc/distributions/simulator.py::identity (L280)
+def identity(x):
+    """Identity function, used as a summary statistics."""
+    return x
+#### source/pymc/distributions/simulator.py::gaussian (L285)
+def gaussian(epsilon, obs_data, sim_data):
+    """Gaussian kernel."""
+    return -0.5 * ((obs_data - sim_data) / epsilon) ** 2
+### source/pymc/model.py
+L105: class ContextMeta
+  L110: def __new__(cls, name, bases, dct, **kwargs)
+  L139: def __init__(cls, name, bases, nmspc, context_class: Optional[Type]=None, **kwargs)
+  L147: def get_context(cls, error_if_none=True, allow_block_model_access=False)
+  L163: def get_contexts(cls)
+  L192: def context_class(cls)
+  L210: def __init_subclass__(cls, **kwargs)
+  L216: def __call__(cls, *args, **kwargs)
+L225: def modelcontext(model: Optional['Model'])
+L240: class ValueGradFunction
+  L274: def __init__(self, costs, grad_vars, extra_vars_and_values=None, *, dtype=None, casting='no', compute_grads=True, **kwargs)
+  L350: def set_weights(self, values)
+  L355: def set_extra_values(self, extra_vars)
+  L360: def get_extra_values(self)
+  L366: def __call__(self, grad_vars, grad_out=None, extra_vars=None)
+  L392: def profile(self)
+L397: class Model
+  L490: def __new__(cls, *args, **kwargs)
+  L501: def _validate_name(name)
+  L506: def __init__(self, name='', coords=None, check_bounds=True, *, coords_mutable=None, pytensor_config=None, model=None)
+  L559: def model(self)
+  L563: def parent(self)
+  L567: def root(self)
+  L574: def isroot(self)
+  L577: def logp_dlogp_function(self, grad_vars=None, tempered=False, **kwargs)
+  L611: def compile_logp(self, vars: Optional[Union[Variable, Sequence[Variable]]]=None, jacobian: bool=True, sum: bool=True)
+  L632: def compile_dlogp(self, vars: Optional[Union[Variable, Sequence[Variable]]]=None, jacobian: bool=True)
+  L649: def compile_d2logp(self, vars: Optional[Union[Variable, Sequence[Variable]]]=None, jacobian: bool=True)
+  L666: def logp(self, vars: Optional[Union[Variable, Sequence[Variable]]]=None, jacobian: bool=True, sum: bool=True)
+  L745: def dlogp(self, vars: Optional[Union[Variable, Sequence[Variable]]]=None, jacobian: bool=True)
+  L784: def d2logp(self, vars: Optional[Union[Variable, Sequence[Variable]]]=None, jacobian: bool=True)
+  L824: def datalogp(self)
+  L830: def varlogp(self)
+  L836: def varlogp_nojac(self)
+  L842: def observedlogp(self)
+  L847: def potentiallogp(self)
+  L858: def value_vars(self)
+  L865: def unobserved_value_vars(self)
+  L888: def disc_vars(self)
+  L896: def discrete_value_vars(self)
+  L901: def cont_vars(self)
+  L909: def continuous_value_vars(self)
+  L914: def basic_RVs(self)
+  L926: def unobserved_RVs(self)
+  L937: def RV_dims(self)
+  L949: def coords(self)
+  L954: def dim_lengths(self)
+  L961: def shape_from_dims(self, dims)
+  L976: def add_coord(self, name: str, values: Optional[Sequence]=None, mutable: bool=False, *, length: Optional[Union[int, Variable]]=None)
+  L1031: def add_coords(self, coords: Dict[str, Optional[Sequence]], *, lengths: Optional[Dict[str, Optional[Union[int, Variable]]]]=None)
+  L1045: def set_dim(self, name: str, new_length: int, coord_values: Optional[Sequence]=None)
+  L1075: def initial_point(self, random_seed: SeedSequenceSeed=None)
+  L1092: def initial_values(self)
+  L1103: def set_initval(self, rv_var, initval)
+  L1111: def set_data(self, name: str, values: Union[Sequence, np.ndarray], coords: Optional[Dict[str, Sequence]]=None)
+  L1247: def register_rv(self, rv_var, name, observed=None, total_size=None, dims=None, transform=UNSET, initval=None)
+  L1316: def make_obs_var(self, rv_var: TensorVariable, data: np.ndarray, dims, transform: Union[Any, None], total_size: Union[int, None])
+  L1409: def create_value_var(self, rv_var: TensorVariable, transform: Any, value_var: Optional[Variable]=None)
+  L1459: def add_named_variable(self, var, dims: Optional[Tuple[Union[str, None], ...]]=None)
+  L1485: def prefix(self)
+  L1492: def name_for(self, name)
+  L1503: def name_of(self, name)
+  L1513: def __getitem__(self, key)
+  L1522: def __contains__(self, key)
+  L1525: def replace_rvs_by_values(self, graphs: Sequence[TensorVariable], **kwargs)
+  L1545: def compile_fn(self, outs: Union[Variable, Sequence[Variable]], *, inputs: Optional[Sequence[Variable]]=None, mode=None, point_fn: bool=True, **kwargs)
+  L1589: def profile(self, outs, *, n=1000, point=None, profile=True, **kwargs)
+  L1619: def update_start_vals(self, a: Dict[str, np.ndarray], b: Dict[str, np.ndarray])
+  L1631: def eval_rv_shapes(self)
+  L1657: def check_start_vals(self, start)
+  L1707: def point_logps(self, point=None, round_vals=2)
+  L1736: def debug(self, point: Optional[Dict[str, np.ndarray]]=None, fn: Literal['logp', 'dlogp', 'random']='logp', verbose: bool=False)
+L1888: class BlockModelAccess
+  L1891: def __init__(self, *args, error_msg_on_access='Model access is blocked', **kwargs)
+L1895: def new_or_existing_block_model_access(*args, **kwargs)
+L1903: def set_data(new_data, model=None, *, coords=None)
+L1975: def compile_fn(outs: Union[Variable, Sequence[Variable]], *, inputs: Optional[Sequence[Variable]]=None, mode=None, point_fn: bool=True, model: Optional[Model]=None, **kwargs)
+L2015: def Point(*args, filter_model_vars=False, **kwargs)
+L2039: def Deterministic(name, var, model=None, dims=None)
+L2126: def Potential(name, var: TensorVariable, model=None, dims=None)
+#### source/pymc/model.py::modelcontext (L225)
+def modelcontext(model: Optional["Model"]) -> "Model":
+    """
+    Return the given model or, if none was supplied, try to find one in
+    the context stack.
+    """
+    if model is None:
+        model = Model.get_context(error_if_none=False)
+
+        if model is None:
+            # TODO: This should be a ValueError, but that breaks
+            # ArviZ (and others?), so might need a deprecation.
+            raise TypeError("No model on context stack.")
+    return model
+#### source/pymc/model.py::Model.model (L559)
+    def model(self):
+        return self
+#### source/pymc/model.py::Model.__contains__ (L1522)
+    def __contains__(self, key):
+        return key in self.named_vars or self.name_for(key) in self.named_vars
+#### source/pymc/model.py::new_or_existing_block_model_access (L1895)
+def new_or_existing_block_model_access(*args, **kwargs):
+    """Return a BlockModelAccess in the stack or create a new one if none is found."""
+    model = Model.get_context(error_if_none=False, allow_block_model_access=True)
+    if isinstance(model, BlockModelAccess):
+        return model
+    return BlockModelAccess(*args, **kwargs)
+### source/pymc/distributions/distribution.py
+L86: class _Unpickling
+L90: class DistributionMeta
+  L102: def __new__(cls, name, bases, clsdict)
+L170: def _make_nice_attr_error(oldcode: str, newcode: str)
+L177: class SymbolicRandomVariable
+  L206: def __init__(self, *args, ndim_supp, **kwargs)
+  L212: def update(self, node: Node)
+L222: class Distribution
+  L228: def __new__(cls, name: str, *args, rng=None, dims: Optional[Dims]=None, initval=None, observed=None, total_size=None, transform=UNSET, **kwargs)
+  L338: def dist(cls, dist_params, *, shape: Optional[Shape]=None, **kwargs)
+L407: def inline_symbolic_random_variable(fgraph, node)
+L427: def _moment(op, rv, *rv_inputs)
+L431: def moment(rv: TensorVariable)
+L441: class Discrete
+  L444: def __new__(cls, name, *args, **kwargs)
+L451: class Continuous
+L455: class CustomDistRV
+  L466: def rng_fn(cls, rng, *args)
+L472: class _CustomDist
+  L478: def dist(cls, *dist_params, logp: Optional[Callable]=None, logcdf: Optional[Callable]=None, random: Optional[Callable]=None, moment: Optional[Callable]=None, ndim_supp: int=0, ndims_params: Optional[Sequence[int]]=None, dtype: str='floatX', class_name: str='CustomDist', **kwargs)
+  L533: def rv_op(cls, *dist_params, logp: Optional[Callable], logcdf: Optional[Callable], random: Optional[Callable], moment: Optional[Callable], ndim_supp: int, ndims_params: Optional[Sequence[int]], dtype: str, class_name: str, **kwargs)
+L577: class CustomSymbolicDistRV
+  L589: def update(self, node: Node)
+L604: class _CustomSymbolicDist
+  L608: def dist(cls, *dist_params, dist: Callable, logp: Optional[Callable]=None, logcdf: Optional[Callable]=None, moment: Optional[Callable]=None, ndim_supp: int=0, dtype: str='floatX', class_name: str='CustomDist', **kwargs)
+  L645: def rv_op(cls, *dist_params, dist: Callable, logp: Optional[Callable], logcdf: Optional[Callable], moment: Optional[Callable], size=None, ndim_supp: int, class_name: str)
+L727: class CustomDist
+  L943: def __new__(cls, name, *dist_params, dist: Optional[Callable]=None, random: Optional[Callable]=None, logp: Optional[Callable]=None, logcdf: Optional[Callable]=None, moment: Optional[Callable]=None, ndim_supp: int=0, ndims_params: Optional[Sequence[int]]=None, dtype: str='floatX', **kwargs)
+  L995: def dist(cls, *dist_params, dist: Optional[Callable]=None, random: Optional[Callable]=None, logp: Optional[Callable]=None, logcdf: Optional[Callable]=None, moment: Optional[Callable]=None, ndim_supp: int=0, ndims_params: Optional[Sequence[int]]=None, dtype: str='floatX', **kwargs)
+  L1034: def parse_dist_params(cls, dist_params)
+  L1046: def check_valid_dist_random(cls, dist, random, dist_params)
+  L1056: def is_symbolic_random(self, random, dist_params)
+L1078: def default_not_implemented(rv_name, method_name)
+L1092: def default_moment(rv, size, *rv_inputs, rv_name=None, has_fallback=False, ndim_supp=0)
+L1105: class DiracDeltaRV
+  L1111: def make_node(self, rng, size, dtype, c)
+  L1116: def rng_fn(cls, rng, c, size=None)
+L1125: class DiracDelta
+  L1140: def dist(cls, c, *args, **kwargs)
+  L1146: def moment(rv, size, c)
+  L1151: def logp(value, c)
+  L1158: def logcdf(value, c)
+L1166: class PartialObservedRV
+L1173: def create_partial_observed_rv(rv: TensorVariable, mask: Union[np.ndarray, TensorVariable])
+L1277: def partial_observed_rv_logprob(op, values, dist, mask, **kwargs)
+L1296: def partial_observed_rv_moment(op, partial_obs_rv, rv, mask)
+### source/pymc/gp/gp.py
+L47: def _handle_sigma_noise_parameters(sigma, noise)
+L60: class Base
+  L65: def __init__(self, *, mean_func=Zero(), cov_func=Constant(0.0))
+  L69: def __add__(self, other)
+  L77: def prior(self, name, X, *args, **kwargs)
+  L80: def marginal_likelihood(self, name, X, *args, **kwargs)
+  L83: def conditional(self, name, Xnew, *args, **kwargs)
+  L86: def predict(self, Xnew, point=None, given=None, diag=False, model=None)
+L91: class Latent
+  L146: def __init__(self, *, mean_func=Zero(), cov_func=Constant(0.0))
+  L149: def _build_prior(self, name, X, reparameterize=True, jitter=JITTER_DEFAULT, **kwargs)
+  L160: def prior(self, name, X, reparameterize=True, jitter=JITTER_DEFAULT, **kwargs)
+  L195: def _get_given_vals(self, given)
+  L210: def _build_conditional(self, Xnew, X, f, cov_total, mean_total, jitter)
+  L221: def conditional(self, name, Xnew, given=None, jitter=JITTER_DEFAULT, **kwargs)
+L260: class TP
+  L291: def __init__(self, *, mean_func=Zero(), scale_func=Constant(0.0), cov_func=None, nu=None)
+  L304: def __add__(self, other)
+  L307: def _build_prior(self, name, X, reparameterize=True, jitter=JITTER_DEFAULT, **kwargs)
+  L318: def prior(self, name, X, reparameterize=True, jitter=JITTER_DEFAULT, **kwargs)
+  L349: def _build_conditional(self, Xnew, X, f, jitter)
+  L363: def conditional(self, name, Xnew, jitter=JITTER_DEFAULT, **kwargs)
+L394: class Marginal
+  L440: def _build_marginal_likelihood(self, X, noise_func, jitter)
+  L447: def marginal_likelihood(self, name, X, y, sigma=None, noise=None, jitter=JITTER_DEFAULT, is_observed=True, **kwargs)
+  L501: def _get_given_vals(self, given)
+  L523: def _build_conditional(self, Xnew, pred_noise, diag, X, y, noise_func, cov_total, mean_total, jitter)
+  L547: def conditional(self, name, Xnew, pred_noise=False, given=None, jitter=JITTER_DEFAULT, **kwargs)
+  L588: def predict(self, Xnew, point=None, diag=False, pred_noise=False, given=None, jitter=JITTER_DEFAULT, model=None)
+  L632: def _predict_at(self, Xnew, diag=False, pred_noise=False, given=None, jitter=JITTER_DEFAULT)
+L658: class MarginalApprox
+  L725: def __init__(self, approx='VFE', *, mean_func=Zero(), cov_func=Constant(0.0))
+  L731: def __add__(self, other)
+  L738: def _build_marginal_likelihood_loglik(self, y, X, Xu, sigma, jitter)
+  L767: def marginal_likelihood(self, name, X, Xu, y, sigma=None, noise=None, jitter=JITTER_DEFAULT, **kwargs)
+  L810: def _build_conditional(self, Xnew, pred_noise, diag, X, Xu, y, sigma, cov_total, mean_total, jitter)
+  L845: def _get_given_vals(self, given)
+  L860: def conditional(self, name, Xnew, pred_noise=False, given=None, jitter=JITTER_DEFAULT, **kwargs)
+L894: class MarginalSparse
+  L895: def __init__(self, approx='VFE', *, mean_func=Zero(), cov_func=Constant(0.0))
+L904: class LatentKron
+  L956: def __init__(self, *, mean_func=Zero(), cov_funcs=Constant(0.0))
+  L964: def __add__(self, other)
+  L967: def _build_prior(self, name, Xs, jitter, **kwargs)
+  L975: def prior(self, name, Xs, jitter=JITTER_DEFAULT, **kwargs)
+  L1004: def _build_conditional(self, Xnew, jitter)
+  L1021: def conditional(self, name, Xnew, jitter=JITTER_DEFAULT, **kwargs)
+L1060: class MarginalKron
+  L1117: def __init__(self, *, mean_func=Zero(), cov_funcs=Constant(0.0))
+  L1125: def __add__(self, other)
+  L1128: def _build_marginal_likelihood(self, Xs)
+  L1134: def _check_inputs(self, Xs, y)
+  L1143: def marginal_likelihood(self, name, Xs, y, sigma, is_observed=True, **kwargs)
+  L1184: def _build_conditional(self, Xnew, diag, pred_noise)
+  L1222: def conditional(self, name, Xnew, pred_noise=False, diag=False, **kwargs)
+  L1258: def predict(self, Xnew, point=None, diag=False, pred_noise=False, model=None)
+  L1284: def _predict_at(self, Xnew, diag=False, pred_noise=False)
+#### source/pymc/gp/gp.py::_handle_sigma_noise_parameters (L47)
+def _handle_sigma_noise_parameters(sigma, noise):
+    """Helper function for transition of 'noise' parameter to be named 'sigma'."""
+
+    if (sigma is None and noise is None) or (sigma is not None and noise is not None):
+        raise ValueError("'sigma' argument must be specified.")
+
+    if sigma is None:
+        warnings.warn(_noise_deprecation_warning, FutureWarning)
+        return noise
+
+    return sigma

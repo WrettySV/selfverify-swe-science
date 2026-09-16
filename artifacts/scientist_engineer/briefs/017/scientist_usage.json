@@ -1,0 +1,63 @@
+{
+  "prompt_tokens": 98642,
+  "completion_tokens": 133725,
+  "total_tokens": 232367,
+  "model": "Qwen3.8-27B",
+  "calls": [
+    {
+      "prompt_tokens": 23662,
+      "completion_tokens": 42552,
+      "total_tokens": 66214,
+      "model": "Qwen3.8-27B",
+      "thinking": false,
+      "finish_reason": "stop",
+      "reasoning_chars": null,
+      "fallback_from_thinking": "no JSON object found in reply: None"
+    },
+    {
+      "prompt_tokens": 13860,
+      "completion_tokens": 7074,
+      "total_tokens": 20934,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 27272
+    },
+    {
+      "prompt_tokens": 14638,
+      "completion_tokens": 36002,
+      "total_tokens": 50640,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 106219
+    },
+    {
+      "prompt_tokens": 15150,
+      "completion_tokens": 9882,
+      "total_tokens": 25032,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 34835
+    },
+    {
+      "prompt_tokens": 16063,
+      "completion_tokens": 19635,
+      "total_tokens": 35698,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 50760
+    },
+    {
+      "prompt_tokens": 15269,
+      "completion_tokens": 18580,
+      "total_tokens": 33849,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 62899
+    }
+  ]
+}

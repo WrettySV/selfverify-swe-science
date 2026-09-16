@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 63137,
+  "completion_tokens": 98193,
+  "total_tokens": 161330,
+  "model": "Qwen3.8-27B",
+  "calls": [
+    {
+      "prompt_tokens": 20836,
+      "completion_tokens": 43318,
+      "total_tokens": 64154,
+      "model": "Qwen3.8-27B",
+      "thinking": false,
+      "finish_reason": "stop",
+      "reasoning_chars": null,
+      "fallback_from_thinking": "no JSON object found in reply: Expecting ',' delimiter: line 32 column 6 (char 6223)"
+    },
+    {
+      "prompt_tokens": 13217,
+      "completion_tokens": 4204,
+      "total_tokens": 17421,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 16766
+    },
+    {
+      "prompt_tokens": 14029,
+      "completion_tokens": 37982,
+      "total_tokens": 52011,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 115944
+    },
+    {
+      "prompt_tokens": 15055,
+      "completion_tokens": 12689,
+      "total_tokens": 27744,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 51705
+    }
+  ]
+}

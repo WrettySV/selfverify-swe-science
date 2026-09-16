@@ -26,7 +26,7 @@
     "scripts/build_report.py": "f924b5da446de081f7b622fbe49e2f71eb60f682e007c54c715fcc517531a797",
     "tests/test_study.py": "cdb799e4357f17f11a1afb88084dbe19c04aad3bd4e45fd6ba953cc01a61566e",
     "scripts/run_study.py": "60e96e47baf7abc350497cc0cd258a0766d870fa35260876ff6de4f77a4989a0",
-    "artifacts/baseline_results.json": "4cd47cda6a3e6a1e7a4682e90badb869fb05f200d780ed2d49fb12f5a47ce913",
+    "artifacts/baseline_results.json": "b3c928ffa1f265b48b57b0fe2d8ec1770adeb8d5f61a5a04414d06cb563b1fc8",
     "REPORT.md": "24c1cc4783fb1b42be2c4bb2710879d5a15a707e2dc1c8489f74a9388ec49cef",
     "REPORT.pdf": "2a9f17e7ca2a08d080a4c066eef38e164cd6cb05cf57737f13b5e6d1bc7e76ae",
     "README.md": "4d5d062013e76f6233e3020192f6d97f3d3399b3dfbd0da449261b69db53a911",

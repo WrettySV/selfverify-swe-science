@@ -1,0 +1,13 @@
+{
+  "condition": "se",
+  "agent": "codex",
+  "tasks": "work/tasks-qwen38-se-main9",
+  "env_file": "work/qwen38-se-main9/qwen38-se-8004.env",
+  "scientist_model": "Qwen3.8-27B",
+  "force_scientist": false,
+  "with_inventory": true,
+  "verify_brief": true,
+  "revise_rounds": 0,
+  "revise_n_attempts": 1,
+  "enhanced": true
+}

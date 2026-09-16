@@ -1,0 +1,49 @@
+{
+  "attempts": [
+    {
+      "verdict": {
+        "accept": false,
+        "issues": [
+          "The proposed invariant and scaling probes treat the correct ZeroSumNormal logp as a constant multiple of the full independent-normal logp; the documented orthonormal/reduced-coordinate model requires the quadratic term to remain unscaled, with only normalization/Jacobian adjusted.",
+          "two_dim_logp_scaling omits ndim_supp=2, so it does not construct the two-axis constrained matrix distribution and its expected ratio is invalid.",
+          "orthonormal_basis_equivalence only checks finiteness and does not compare to reduced coordinates, so it cannot detect the bug.",
+          "sigma_scaling_invariance uses an incorrect expected difference and can fail on a correct implementation.",
+          "An acceptance check is self-contradictory about adding a constant to a zero-sum vector, and the brief does not clearly state which probes must fail on the unpatched code."
+        ],
+        "suggested_fixes": [
+          "State the invariant as equality to the reduced-coordinate Normal/MvNormal logp plus the appropriate Jacobian, not as a scaled full independent-normal logp.",
+          "Use ndim_supp=2 for two-axis probes and compare against a reduced-coordinate representation or an MvNormal with the documented centered covariance.",
+          "Rewrite the orthonormal probe to construct an orthonormal zero-sum basis and compare logp values explicitly.",
+          "Replace the sigma scaling probe with a correct scale relation or covariance-based comparison.",
+          "Explicitly identify which probes should fail before the fix and which are only sanity checks."
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 23475,
+        "completion_tokens": 16212,
+        "total_tokens": 39687,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 56585
+      }
+    },
+    {
+      "verdict": {
+        "accept": true,
+        "issues": [],
+        "suggested_fixes": []
+      },
+      "usage": {
+        "prompt_tokens": 24080,
+        "completion_tokens": 15897,
+        "total_tokens": 39977,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 60073
+      }
+    }
+  ],
+  "accepted": true
+}

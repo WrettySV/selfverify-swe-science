@@ -1,0 +1,23 @@
+{
+  "attempts": [
+    {
+      "verdict": {
+        "accept": true,
+        "issues": [
+          "The unpatched-failure expectation is conditional and only guarantees at least one probe fails, rather than naming a single definite probe that must fail."
+        ],
+        "suggested_fixes": []
+      },
+      "usage": {
+        "prompt_tokens": 28139,
+        "completion_tokens": 5829,
+        "total_tokens": 33968,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 24711
+      }
+    }
+  ],
+  "accepted": true
+}

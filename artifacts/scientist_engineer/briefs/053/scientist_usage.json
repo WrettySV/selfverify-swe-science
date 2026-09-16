@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 67070,
+  "completion_tokens": 94089,
+  "total_tokens": 161159,
+  "model": "Qwen3.8-27B",
+  "calls": [
+    {
+      "prompt_tokens": 23166,
+      "completion_tokens": 43043,
+      "total_tokens": 66209,
+      "model": "Qwen3.8-27B",
+      "thinking": false,
+      "finish_reason": "stop",
+      "reasoning_chars": null,
+      "fallback_from_thinking": "no JSON object found in reply: Unterminated string starting at: line 3 column 27 (char 48)"
+    },
+    {
+      "prompt_tokens": 14107,
+      "completion_tokens": 4617,
+      "total_tokens": 18724,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 18035
+    },
+    {
+      "prompt_tokens": 14970,
+      "completion_tokens": 22221,
+      "total_tokens": 37191,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 57285
+    },
+    {
+      "prompt_tokens": 14827,
+      "completion_tokens": 24208,
+      "total_tokens": 39035,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 98017
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "attempts": [
+    {
+      "verdict": {
+        "accept": false,
+        "issues": [
+          "suspected_loci includes torsional_coordinates, which is not shown in the inventory",
+          "reverse_invariance probe uses graph.ts_reverse, while the inventory only shows graph.ts.reverse as the public reverse API",
+          "probe graphs do not specify implicit hydrogen counts, so some constructed automol graphs may be invalid"
+        ],
+        "suggested_fixes": [
+          "Replace or verify torsional_coordinates with a rotor-coordinate function actually present in source/automol/graph/base/ts.py",
+          "Use graph.ts.reverse in the reverse_invariance probe, or import the exact public name shown in the workflow",
+          "Construct probe graphs with explicit atm_imp_hyd_dct or another validated public constructor to guarantee valid molecular graphs"
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 21775,
+        "completion_tokens": 5998,
+        "total_tokens": 27773,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 24662
+      }
+    },
+    {
+      "verdict": {
+        "accept": false,
+        "issues": [
+          "Several probes build hypervalent graphs by adding explicit H atoms while also setting 3 implicit hydrogens on the same carbons.",
+          "The ethane-like TS may have no rotatable coordinate if the only C-C bond is a fractional TS bond, so relabel/reverse probes can pass vacuously.",
+          "connectivity_change removes the only C-C bond, producing disconnected/hypervalent fragments that may not be supported by rotational_coordinates.",
+          "Invariance probes do not assert a nonempty signature before comparing presentations."
+        ],
+        "suggested_fixes": [
+          "Use valid graphs: set implicit hydrogens to 0 where H atoms are explicit, or use implicit hydrogens only, and ensure the TS has a real rotatable single bond such as a butane-like backbone.",
+          "Add a nonempty-coordinate or nonempty-signature assertion to relabel_invariance and reverse_invariance before comparing signatures.",
+          "Make the connectivity-change probe modify a connected graph, for example by changing a bond order or removing a non-essential bond, instead of disconnecting it.",
+          "Replace random relabeling with a fixed permutation for deterministic probes."
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 22082,
+        "completion_tokens": 10838,
+        "total_tokens": 32920,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 46649
+      }
+    },
+    {
+      "verdict": {
+        "accept": true,
+        "issues": [],
+        "suggested_fixes": []
+      },
+      "usage": {
+        "prompt_tokens": 22769,
+        "completion_tokens": 8706,
+        "total_tokens": 31475,
+        "model": "Qwen3.8-27B",
+        "thinking": true,
+        "finish_reason": "stop",
+        "reasoning_chars": 36386
+      }
+    }
+  ],
+  "accepted": true
+}

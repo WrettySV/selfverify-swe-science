@@ -1,0 +1,64 @@
+{
+    "id": "ddd9618e-170e-48dd-9464-5decada9717b",
+    "started_at": "2026-09-16T18:49:21.683929",
+    "updated_at": "2026-09-16T21:02:00.760413",
+    "finished_at": "2026-09-16T21:02:00.760413",
+    "n_total_trials": 18,
+    "stats": {
+        "n_completed_trials": 18,
+        "n_errored_trials": 1,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "codex__Qwen3.8-27B__tasks-se3-qwen38-main9-n2": {
+                "n_trials": 18,
+                "n_errors": 1,
+                "metrics": [
+                    {
+                        "mean": 0.3888888888888889
+                    }
+                ],
+                "pass_at_k": {
+                    "2": 0.4444444444444444
+                },
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "task_094__rsfh8qR",
+                            "task_007__2EzYnhY",
+                            "task_001__arDNAtK",
+                            "task_008__fnSzyVo",
+                            "task_039__WZguqjk",
+                            "task_094__WL7HHt9",
+                            "task_007__MtSRNin",
+                            "task_001__bDi3dAK",
+                            "task_008__TLK3vjU",
+                            "task_039__e4GwnyN",
+                            "task_107__CzEHXBw"
+                        ],
+                        "1.0": [
+                            "task_017__hrQTCYW",
+                            "task_024__kdJVecY",
+                            "task_053__upBytS7",
+                            "task_107__bUroZDw",
+                            "task_017__ufgtpPP",
+                            "task_024__sNC8bg9",
+                            "task_053__QZZ6C2A"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentTimeoutError": [
+                        "task_039__e4GwnyN"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 149102455,
+        "n_cache_tokens": 123256000,
+        "n_output_tokens": 2224256,
+        "cost_usd": null
+    }
+}

@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 36102,
+  "completion_tokens": 101665,
+  "total_tokens": 137767,
+  "model": "Qwen3.8-27B",
+  "calls": [
+    {
+      "prompt_tokens": 6353,
+      "completion_tokens": 26118,
+      "total_tokens": 32471,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 81220
+    },
+    {
+      "prompt_tokens": 9307,
+      "completion_tokens": 22599,
+      "total_tokens": 31906,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 82939
+    },
+    {
+      "prompt_tokens": 10005,
+      "completion_tokens": 39266,
+      "total_tokens": 49271,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 120562
+    },
+    {
+      "prompt_tokens": 10437,
+      "completion_tokens": 13682,
+      "total_tokens": 24119,
+      "model": "Qwen3.8-27B",
+      "thinking": true,
+      "finish_reason": "stop",
+      "reasoning_chars": 55444
+    }
+  ]
+}

@@ -1,0 +1,660 @@
+workdir: /app/task_039
+image: docker.io/kevinxulearning/swe-bench-science-environment-python-task-039:v0.1.1
+code_files_total: 348
+## directories (file counts)
+source/src/landlab/grid: 28
+source/src/landlab/utils: 19
+source/src/landlab/components/flow_director: 11
+source/src/landlab/plot: 9
+source/src/landlab/components/species_evolution: 8
+source/src/landlab/components/network_sediment_transporter: 7
+source/src/landlab/components/overland_flow: 7
+source/src/landlab/io: 7
+source/src/landlab/io/netcdf: 7
+source/src/landlab/ca: 6
+source/src/landlab/core: 6
+source/src/landlab/grid/unstructured: 6
+source/src/landlab/components/flow_accum: 5
+source/src/landlab/components/profiler: 5
+source/src/landlab/components/stream_power: 5
+source/src/landlab/graph: 5
+source/src/landlab: 4
+source/src/landlab/bmi: 4
+source/src/landlab/components/erosion_deposition: 4
+source/src/landlab/components/flexure: 4
+source/src/landlab/components/lithology: 4
+source/src/landlab/framework: 4
+source/src/landlab/graph/voronoi: 4
+.: 3
+source/src/landlab/cmd: 3
+source/src/landlab/components/advection: 3
+source/src/landlab/components/concentration_tracker: 3
+source/src/landlab/components/depression_finder: 3
+source/src/landlab/components/detachment_ltd_erosion: 3
+source/src/landlab/components/groundwater: 3
+source/src/landlab/components/lateral_erosion: 3
+source/src/landlab/components/mass_wasting_runout: 3
+source/src/landlab/components/priority_flood_flow_router: 3
+source/src/landlab/components/sink_fill: 3
+source/src/landlab/components/soil_moisture: 3
+source/src/landlab/components/space: 3
+source/src/landlab/components/weathering: 3
+source/src/landlab/data_record: 3
+source/src/landlab/field: 3
+source/src/landlab/graph/framed_voronoi: 3
+## terms_from_instruction
+strong: CITATION.cff, LICENSE.md, NetworkSedimentTransporter, RightsLink, finite, inconsistency, joss, network_sediment_transporter, network_sediment_transporter_joss, network_sediment_transporter_joss.pdf, paper_assets, pre_fix_expected_failure, published, reproduced, runner_failure, scientific, workflow_completed
+common: river, network, material, sediment, supplied, scientific, calculation, through, state, complete, python, project, paper, landlab, transport, earth, surface, snapshot, networks, finite, component, https, license, stored, physical
+## import_reach_from_reproduce.py (path, depth)
+workflow/river_experiment.py  (depth 1)
+source/src/landlab/components/__init__.py  (depth 2)
+source/src/landlab/data_record/__init__.py  (depth 2)
+source/src/landlab/grid/network.py  (depth 2)
+workflow/load_candidate.py  (depth 2)
+source/src/landlab/__init__.py  (depth 3)
+source/src/landlab/bmi/__init__.py  (depth 3)
+source/src/landlab/ca/__init__.py  (depth 3)
+source/src/landlab/ca/boundaries/__init__.py  (depth 3)
+source/src/landlab/cmd/__init__.py  (depth 3)
+source/src/landlab/components/advection/__init__.py  (depth 3)
+source/src/landlab/components/area_slope_transporter/__init__.py  (depth 3)
+source/src/landlab/components/bedrock_landslider/__init__.py  (depth 3)
+source/src/landlab/components/carbonate/__init__.py  (depth 3)
+source/src/landlab/components/chi_index/__init__.py  (depth 3)
+source/src/landlab/components/concentration_tracker/__init__.py  (depth 3)
+source/src/landlab/components/depression_finder/__init__.py  (depth 3)
+source/src/landlab/components/depth_dependent_diffusion/__init__.py  (depth 3)
+source/src/landlab/components/depth_dependent_taylor_soil_creep/__init__.py  (depth 3)
+source/src/landlab/components/detachment_ltd_erosion/__init__.py  (depth 3)
+source/src/landlab/components/diffusion/__init__.py  (depth 3)
+source/src/landlab/components/dimensionless_discharge/__init__.py  (depth 3)
+source/src/landlab/components/discharge_diffuser/__init__.py  (depth 3)
+source/src/landlab/components/drainage_density/__init__.py  (depth 3)
+source/src/landlab/components/erosion_deposition/__init__.py  (depth 3)
+source/src/landlab/components/fire_generator/__init__.py  (depth 3)
+source/src/landlab/components/flexure/__init__.py  (depth 3)
+source/src/landlab/components/flexure/_ext/__init__.py  (depth 3)
+source/src/landlab/components/flow_accum/__init__.py  (depth 3)
+source/src/landlab/components/flow_accum/flow_accumulator.py  (depth 3)
+source/src/landlab/components/flow_director/__init__.py  (depth 3)
+source/src/landlab/components/flow_router/__init__.py  (depth 3)
+source/src/landlab/components/flow_router/ext/__init__.py  (depth 3)
+source/src/landlab/components/flow_router/ext/single_flow/__init__.py  (depth 3)
+source/src/landlab/components/flow_router/ext/single_flow/priority_routing/__init__.py  (depth 3)
+source/src/landlab/components/fracture_grid/__init__.py  (depth 3)
+source/src/landlab/components/gflex/__init__.py  (depth 3)
+source/src/landlab/components/gravel_bedrock_eroder/__init__.py  (depth 3)
+source/src/landlab/components/gravel_river_transporter/__init__.py  (depth 3)
+source/src/landlab/components/groundwater/__init__.py  (depth 3)
+## ranked_source_paths (score, path, matched_terms)
+  21.0  workflow/river_experiment.py  ['NetworkSedimentTransporter', 'finite']
+  16.5  source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py  ['NetworkSedimentTransporter']
+  16.0  source/src/landlab/components/network_sediment_transporter/sediment_pulser_each_parcel.py  ['NetworkSedimentTransporter', 'network_sediment_transporter']
+  15.5  paper_assets/README.md  ['joss', 'network_sediment_transporter_joss', 'network_sediment_transporter_joss.pdf']
+  14.5  source/src/landlab/components/network_sediment_transporter/README.md  ['NetworkSedimentTransporter', 'network_sediment_transporter']
+  14.5  source/src/landlab/plot/network_sediment_transporter/plot_network_and_parcels.py  ['NetworkSedimentTransporter', 'network_sediment_transporter']
+  14.5  workflow/load_candidate.py  ['NetworkSedimentTransporter', 'scientific']
+  13.0  source/src/landlab/components/network_sediment_transporter/bed_parcel_initializers.py  ['network_sediment_transporter']
+  12.0  source/src/landlab/components/network_sediment_transporter/sediment_pulser_at_links.py  ['network_sediment_transporter']
+  11.0  source/src/landlab/components/network_sediment_transporter/sediment_pulser_base.py  ['NetworkSedimentTransporter']
+  11.0  source/src/landlab/components/species_evolution/README.md  ['joss', 'published']
+  10.5  source/src/landlab/components/groundwater/dupuit_percolator.py  ['joss']
+  10.0  source/src/landlab/components/lithology/litholayers.py  ['joss']
+  10.0  source/src/landlab/components/lithology/lithology.py  ['joss']
+   9.5  source/src/landlab/components/species_evolution/species_evolver.py  ['joss']
+   9.0  source/src/landlab/components/diffusion/diffusion.py  ['finite']
+   9.0  source/src/landlab/components/erosion_deposition/erosion_deposition.py  []
+   9.0  source/src/landlab/components/groundwater/README.md  ['joss', 'published']
+   8.5  source/src/landlab/components/flow_accum/flow_accumulator.py  []
+   8.5  source/src/landlab/components/fracture_grid/fracture_grid.py  ['finite']
+   8.5  source/src/landlab/components/lithology/README.md  ['joss', 'published']
+   8.5  source/src/landlab/components/river_flow_dynamics/river_flow_dynamics.py  ['finite']
+   8.5  source/src/landlab/components/soil_moisture/infiltrate_soil_green_ampt.py  ['published']
+   8.4  source/src/landlab/components/network_sediment_transporter/__init__.py  ['NetworkSedimentTransporter', 'network_sediment_transporter']
+   8.0  source/src/landlab/components/space/space.py  []
+   7.8  source/src/landlab/components/__init__.py  ['NetworkSedimentTransporter', 'network_sediment_transporter']
+   7.5  source/src/landlab/_registry.py  []
+   7.5  source/src/landlab/components/depth_dependent_taylor_soil_creep/hillslope_depth_dependent_taylor_flux.py  []
+   7.5  source/src/landlab/components/erosion_deposition/shared_stream_power.py  []
+   7.5  source/src/landlab/components/lateral_erosion/lateral_erosion.py  []
+   7.5  source/src/landlab/components/taylor_nonlinear_hillslope_flux/taylor_nonlinear_hillslope_flux.py  []
+   7.5  source/src/landlab/components/tidal_flow/tidal_flow_calculator.py  ['finite']
+   7.5  source/src/landlab/grid/network.py  []
+   7.0  source/src/landlab/components/overland_flow/generate_overland_flow_deAlmeida.py  []
+   7.0  source/src/landlab/data_record/data_record.py  []
+   7.0  source/src/landlab/grid/base.py  []
+   6.5  source/src/landlab/components/bedrock_landslider/bedrock_landslider.py  []
+   6.5  source/src/landlab/components/depth_dependent_diffusion/hillslope_depth_dependent_linear_flux.py  []
+   6.5  source/src/landlab/components/landslides/landslide_probability.py  []
+   6.5  source/src/landlab/components/mass_wasting_runout/mass_wasting_runout.py  []
+   6.5  source/src/landlab/components/overland_flow/kinematic_wave_rengers.py  []
+   6.5  source/src/landlab/components/sink_fill/sink_fill_barnes.py  []
+   6.5  source/src/landlab/components/space/space_large_scale_eroder.py  []
+   6.0  source/src/landlab/components/chi_index/channel_chi.py  []
+   6.0  source/src/landlab/components/flexure/flexure.py  []
+   6.0  source/src/landlab/components/gflex/flexure.py  []
+   6.0  source/src/landlab/components/gravel_bedrock_eroder/gravel_bedrock_eroder.py  []
+   6.0  source/src/landlab/components/lake_fill/lake_fill_barnes.py  []
+   6.0  source/src/landlab/components/overland_flow/generate_overland_flow_Bates.py  []
+   6.0  source/src/landlab/components/priority_flood_flow_router/priority_flood_flow_router.py  []
+   6.0  source/src/landlab/components/stream_power/fastscape_stream_power.py  []
+   6.0  source/src/landlab/components/stream_power/sed_flux_dep_incision.py  []
+   6.0  source/src/landlab/components/transport_length_diffusion/transport_length_hillslope_diffusion.py  []
+   6.0  source/src/landlab/grid/raster_gradients.py  []
+   6.0  source/src/landlab/plot/network_sediment_transporter/locate_parcel_xy.py  []
+   5.5  source/src/landlab/components/gravel_river_transporter/gravel_river_transporter.py  []
+   5.5  source/src/landlab/components/nonlinear_diffusion/Perron_nl_diffuse.py  []
+   5.5  source/src/landlab/components/overland_flow/linear_diffusion_overland_flow_router.py  []
+   5.5  source/src/landlab/components/profiler/channel_profiler.py  []
+   5.5  source/src/landlab/components/stream_power/stream_power.py  []
+## snippets
+### reproduce.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from workflow.river_experiment import run_experiment
+
+
+TASK_ROOT = Path(__file__).resolve().parent
+CASE = TASK_ROOT / "fixtures" / "public_river_network.json"
+REPORT = TASK_ROOT / "outputs" / "public_reproduction_report.json"
+
+
+def write_report(payload: dict[str, object], exit_code: int) -> int:
+    REPORT.parent.mkdir(exist_ok=True)
+    text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    REPORT.write_text(text, encoding="utf-8")
+    print(text, end="")
+    return exit_code
+
+
+def main() -> int:
+    try:
+        config = json.loads(CASE.read_text(encoding="utf-8"))
+        result = run_experiment(config)
+        network_link_count = len(config["network"]["nodes_at_link"])
+        configured_pulse_count = len(config["physical_pulses"])
+        finite_distances = (
+            result.distance_min is not None and result.distance_max is not None
+        )
+        observation = {
+            "finite": result.finite,
+            "configured_pulse_count": configured_pulse_count,
+            "observed_pulse_count": result.pulse_count,
+            "network_link_count": network_link_count,
+            "state_count": result.state_count,
+            "on_network_count": result.on_network_count,
+            "boundary_volume_m3": result.boundary_volume,
+            "distance_min_m": result.distance_min,
+            "distance_max_m": result.distance_max,
+            "workflow_observation_complete": bool(
+                result.finite
+                and result.pulse_count == configured_pulse_count
+                and result.state_count == network_link_count
+                and result.on_network_count > 0
+                and result.boundary_volume >= 0.0
+                and finite_distances
+            ),
+        }
+    except Exception as exc:  # noqa: BLE001 - infrastructure failures use state 2.
+        return write_report(
+            {
+                "schema_version": "1.0",
+                "status": "runner_failure",
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            },
+            2,
+        )
+
+    success = bool(observation["workflow_observation_complete"])
+    return write_report(
+        {
+            "schema_version": "1.0",
+            "status": "workflow_completed" if success else "pre_fix_expected_failure",
+            "observation": observation,
+        },
+        0 if success else 1,
+    )
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+### reproduction.md
+# Public reproduction
+
+Run from the task root:
+
+```bash
+python reproduce.py
+```
+
+The program loads the supplied historical Python source over the fixed scientific
+runtime, constructs a complete branching river-network experiment, and executes
+the documented `NetworkSedimentTransporter` time-stepping workflow for the
+supplied sediment record. It reports finite state, pulse coverage, network
+state shape, boundary volume, and routed-distance observations produced by the
+candidate workflow.
+
+On a source that violates the public structural and physical checks, the report
+is `pre_fix_expected_failure` and the process exits `1`.
+
+After a correct general repair, the report is `workflow_completed` and the
+process exits `0`. Import failures, dependency or path problems, exceptions,
+timeouts, empty state, and non-finite output are `runner_failure` with exit code
+`2`; they are not successful scientific reproductions.
+
+The public case is a smoke test rather than a complete definition of correctness.
+Evaluation also uses different networks, hydraulic states, material records,
+starting states, and controls that are not included here.
+### paper.md
+# Scientific source material
+
+## Primary project paper
+
+The complete redistributable article is available offline:
+
+- Allison M. Pfeiffer, Katherine R. Barnhart, Jon A. Czuba, and Eric W. H.
+  Hutton, *NetworkSedimentTransporter: A Landlab component for bed material
+  transport through river networks*, Journal of Open Source Software 5(53),
+  2341 (2020), <https://doi.org/10.21105/joss.02341>.
+- `paper_assets/network_sediment_transporter_joss.pdf`.
+- License: Creative Commons Attribution 4.0 International,
+  <https://creativecommons.org/licenses/by/4.0/>.
+
+The source snapshot also contains the project manuscript and references under
+`source/joss/published/network_sediment_transporter/`.
+
+## Landlab framework paper
+
+Katherine R. Barnhart et al., *Short communication: Landlab v2.0: a software
+package for Earth surface dynamics*, Earth Surface Dynamics 8, 379-397 (2020),
+<https://doi.org/10.5194/esurf-8-379-2020>.
+
+The full Landlab PDF is linked but not copied because Figure 1(d) is expressly
+excluded from the article's CC BY license and was reproduced through separate
+RightsLink permission. The remaining source documentation, component
+implementation, official tutorials, `CITATION.cff`, and `LICENSE.md` provide
+the fixed-version project context offline.
+
+The component describes a Lagrangian river-network model in which bed material
+is represented by parcels with shared sediment attributes and tracked through
+network links and nodes. Read the project paper, linked framework paper, source
+documentation, examples, and runnable observation together. None identifies a
+source location or a particular repair route.
+## outlines_of_top_modules
+### workflow/river_experiment.py
+L11: class PublicObservation
+L21: def _distance_from_outlet(grid, link_ids: np.ndarray, locations: np.ndarray)
+L58: def _make_parcels(config: dict, grid)
+L98: def run_experiment(config: dict)
+### source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py
+L53: class NetworkSedimentTransporter
+  L263: def __init__(self, grid: NetworkModelGrid, parcels: DataRecord, flow_director: FlowDirectorSteepest, bed_porosity: float=0.3, g: float=scipy.constants.g, fluid_density: float=1000.0, transport_method: Literal['WilcockCrowe']='WilcockCrowe', active_layer_method: Literal['WongParker', 'GrainSizeDependent', 'Constant10cm']='WongParker', active_layer_d_multiplier: int=2, slope_threshold: float=0.0001, k_transp_dep_abr: float | None=None)
+  L404: def time(self)
+  L409: def d_mean_active(self)
+  L414: def rhos_mean_active(self)
+  L418: def _create_new_parcel_time(self)
+  L450: def _update_channel_slopes(self)
+  L464: def _calculate_mean_D_and_rho(self)
+  L479: def _partition_active_and_storage_layers(self)
+  L603: def _adjust_node_elevation(self)
+  L656: def _calc_transport_wilcock_crowe(self)
+  L788: def _move_parcel_downstream(self, dt: float)
+  L946: def run_one_step(self, dt: float)
+L990: def _recalculate_channel_slope(z_up: float, z_down: float, dx: float, threshold: float)
+L1032: def _calculate_alluvium_depth(stored_volume: float, width_of_upstream_links: ArrayLike, length_of_upstream_links: ArrayLike, width_of_downstream_link: float, length_of_downstream_link: float, porosity: float)
+L1086: def _calculate_reference_shear_stress(fluid_density: float, R: ArrayLike, g: float, mean_active_grain_size: ArrayLike, frac_sand: ArrayLike)
+L1134: def _calculate_transport_dep_abrasion_rate(alpha: ArrayLike, k: ArrayLike, rhos: ArrayLike, rhow: ArrayLike, D: ArrayLike, tautaur: ArrayLike)
+L1208: def _calculate_parcel_volume_post_abrasion(starting_volume: ArrayLike, travel_distance: ArrayLike, abrasion_rate: ArrayLike)
+L1245: def _calculate_parcel_grain_diameter_post_abrasion(starting_diameter: ArrayLike, pre_abrasion_volume: ArrayLike, post_abrasion_volume: ArrayLike)
+#### source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py::NetworkSedimentTransporter._calc_transport_wilcock_crowe (L656)
+    def _calc_transport_wilcock_crowe(self) -> None:
+        """Method to determine the transport time for each parcel in the active
+        layer using a sediment transport equation.
+
+        Note: could have options here (e.g. Wilcock and Crowe, FLVB, MPM, etc)
+        """
+        # Initialize _pvelocity, the virtual velocity of each parcel
+        # (link length / link travel time)
+        self._pvelocity = np.zeros(self._num_parcels)
+
+        # parcel attribute arrays from DataRecord
+
+        Darray = self._parcels.dataset.D[:, self._time_idx]
+        Activearray = self._parcels.dataset.active_layer[:, self._time_idx].values
+        Rhoarray = self._parcels.dataset.density.values
+        Volarray = self._parcels.dataset.volume[:, self._time_idx].values
+        # link that the parcel is currently in
+        Linkarray = self._parcels.dataset.element_id[:, self._time_idx].values
+
+        R = (Rhoarray - self._fluid_density) / self._fluid_density
+
+        # parcel attribute arrays to populate below
+        frac_sand_array = np.zeros(self._num_parcels)
+        vol_act_array = np.zeros(self._num_parcels)
+        Sarray = np.zeros(self._num_parcels)
+        Harray = np.zeros(self._num_parcels)
+        Larray = np.zeros(self._num_parcels)
+
+        D_mean_activearray = np.full(self._num_parcels, np.nan)
+        active_layer_thickness_array = np.full(self._num_parcels, np.nan)
+
+        # find active sand
+        # since find active already sets all prior timesteps to False, we
+        # can use D for all timesteps here.
+        findactivesand = (
+            self._parcels.dataset.D < _SAND_SIZE
+        ) * self._active_parcel_records
+
+        parcel_volumes = self._parcels.dataset.volume.values[:, -1].copy()
+        parcel_volumes[~findactivesand[:, -1].astype(bool)] = 0.0
+
+        vol_act_sand = aggregate_items_as_sum(
+            self._parcels.dataset["element_id"].values[:, -1].astype(int),
+            parcel_volumes,
+            size=self._grid.number_of_links,
+        )
+
+        frac_sand = np.zeros_like(self._vol_act)
+        frac_sand[self._vol_act != 0.0] = (
+            vol_act_sand[self._vol_act != 0.0] / self._vol_act[self._vol_act != 0.0]
+        )
+        frac_sand[np.isnan(frac_sand)] = 0.0
+
+        # Calc attributes for each link, map to parcel arrays
+        for i in range(self._grid.number_of_links):
+            active_here = np.nonzero(
+                np.logical_and(Linkarray == i, Activearray == _ACTIVE)
+            )[0]
+            d_act_i =
+#### source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py::_calculate_transport_dep_abrasion_rate (L1134)
+def _calculate_transport_dep_abrasion_rate(
+    alpha: ArrayLike,
+    k: ArrayLike,
+    rhos: ArrayLike,
+    rhow: ArrayLike,
+    D: ArrayLike,
+    tautaur: ArrayLike,
+) -> NDArray[float]:
+    """Calculate abrasion rate for each parcel in the network, accounting for
+    increases in abrasion due to high bedload transport rates.
+
+    Parameters
+    ----------
+    alpha : array
+        Baseline abrasion rate for each parcel.
+    k : float
+        Transport-dependent coefficient. 0 = no transport-dependence. Standard
+        values ~15-45.
+    rhos : array
+        Sediment density for each parcel
+    rhow : float
+        density of fluid
+    D : array
+        Grain diameter for each parcel
+    tautaur : array
+        Ratio of the Shields stress to reference (critical) Shields stress for
+        each pacel.
+
+    Returns
+    -------
+    ndarray of float
+        Abrasion rate of parcels.
+
+    Examples
+    --------
+    >>> _calculate_transport_dep_abrasion_rate(
+    ...     [1, 1, 1, 1, 1],
+    ...     55,
+    ...     [1, 1, 1, 1, 1],
+    ...     1000.0,
+    ...     [1, 1, 1, 1, 1],
+    ...     [1, 1, 1, 1, 1],
+    ... )
+    array([1.,  1.,  1.,  1.,  1.])
+    >>> _calculate_transport_dep_abrasion_rate(0, 55, 1, 1000.0, 1, 1)
+    array([0.])
+    >>> _calculate_transport_dep_abrasion_rate(1, 8, [2.0], 1, 1, [4.3])
+    array([9.])
+    >>> _calculate_transport_dep_abrasion_rate(1, -8, [2.0], 1, 1, 4.3)
+    Traceback (most recent call last):
+    ValueError: transport dependent abrasion decreased abrasion rate (should increase)
+    """
+    alpha = np.atleast_1d(alpha)
+    rhos = np.atleast_1d(rhos)
+    D = np.atleast_1d(D)
+    tautaur = np.atleast_1d(tautaur)
+
+    abrasion_rate_xport_dep = np.asarray(alpha, dtype=float).copy()
+    abrasion_rate_xport_dep[tautaur > 3.3] = alpha[tautaur > 3.3] * (
+        1
+        + k
+        * ((rhos[tautaur > 3.3] - rhow) / rhow)
+        * D[tautaur > 3.3]
+        * (tautaur[tautaur > 3.3] - 3.3)
+    )
+
+    if np.any(alpha > abrasion_rate_xport_dep):
+        raise ValueError(
+            "transport dependent abrasion decreased abrasion rate (should increase)"
+        )
+
+    return abrasion_rate_xport_dep
+### source/src/landlab/components/network_sediment_transporter/sediment_pulser_each_parcel.py
+L13: class SedimentPulserEachParcel
+  L93: def __init__(self, grid, parcels=None, D50=0.05, D84_D50=2.1, rho_sediment=2650.0, parcel_volume=0.5, abrasion_rate=0.0, rng=None)
+  L141: def __call__(self, time, PulseDF=None)
+  L195: def _sediment_pulse_dataframe(self, time, PulseDF)
+#### source/src/landlab/components/network_sediment_transporter/sediment_pulser_each_parcel.py::SedimentPulserEachParcel._sediment_pulse_dataframe (L195)
+    def _sediment_pulse_dataframe(self, time, PulseDF):
+        """Convert PulseDF to a :class:`~.DataRecord` formatted for the
+        :class:`~.NetworkSedimentTransporter`.
+
+        Parameters
+        ----------
+        time : integer or datetime64
+
+        PulseDF : pandas dataframe
+
+            The PulseDF must include the following columns:
+                'link_#', 'pulse_volume', 'normalized_downstream_distance'
+
+            Optionally, PulseDF can include the following columns:
+               'D50', 'D84_D50', 'abrasion_rate', 'rho_sediment', 'parcel_volume'
+
+            Values in each columne are defined as follows:
+
+            'link_#': int - link number pulse enters the channel network
+            'pulse_volume: float - total volume of the pulse [m^3]
+            'normalized_downstream_distance': float - distance from link inlet
+                                                      divided by link length
+            'D50': float - median grain size [m]
+            'D84_D50': float - grain-size standard deviation [m]
+            'abrasion_rate': float - rate that grain size decreases with
+                                     distance along channel [mm/km?]
+            'rho_sediment': float - density grains [kg/m^3]
+            'parcel_volume': float - maximum volume of one parcel [m^3]
+
+
+            if the optional columns are not included in PulseDF, those parameters
+            are assumed uniform across the basin, constant with time and equal
+            to the corresponding class variables.
+
+        Returns
+        -------
+        tuple: (variables, items)
+            variables: dictionary, attribute values for all new parcels
+            item_id: dictionary, model grid element and index of element of each parcel
+
+        """
+        # split pulse into parcels.
+        p_np = []  # list of number of parcels in each pulse
+        volume = np.array([])  # list of parcel volumes from all pulses
+        for _index, row in PulseDF.iterrows():
+            # set the maximum allowable parcel volume using either
+            # the default value or value in PulseDF
+            if "parcel_volume" in PulseDF:
+                mpv = row["parcel_volume"]
+            else:
+                mpv = self._parcel_volume
+
+            # split the pulse into parcels
+            if row["pulse_volume"] < mpv:
+                # only one partial parcel volume
+                v_p = np.array([row["pulse_volume"]])
+            else:
+                # number of whole parcels
+### source/src/landlab/plot/network_sediment_transporter/plot_network_and_parcels.py
+L22: def plot_network_and_parcels(grid, parcels, parcel_time_index=None, map_buffer=0.1, parcel_filter=None, network_color=None, link_attribute=None, link_attribute_title=None, network_cmap='cividis', network_norm=None, network_linewidth=None, parcel_color=None, parcel_color_attribute=None, parcel_color_attribute_title=None, parcel_color_cmap='plasma', parcel_color_norm=None, parcel_size=None, parcel_size_attribute=None, parcel_size_attribute_title=None, parcel_size_norm=None, parcel_size_min=5, parcel_size_max=40, parcel_alpha=0.5, fig=None, output=None, **kwargs)
+L457: def _get_xy_of_polylines(x_of_polylines, y_of_polylines)
+L495: def _calc_xy_limits(xy_of_segment, buffer_frac=0.0)
+L528: def _calc_limits(values, buffer_frac=0.0)
+#### source/src/landlab/plot/network_sediment_transporter/plot_network_and_parcels.py::plot_network_and_parcels (L22)
+def plot_network_and_parcels(
+    grid,
+    parcels,
+    parcel_time_index=None,
+    map_buffer=0.1,
+    parcel_filter=None,
+    network_color=None,
+    link_attribute=None,
+    link_attribute_title=None,
+    network_cmap="cividis",
+    network_norm=None,
+    network_linewidth=None,
+    parcel_color=None,
+    parcel_color_attribute=None,
+    parcel_color_attribute_title=None,
+    parcel_color_cmap="plasma",
+    parcel_color_norm=None,
+    parcel_size=None,
+    parcel_size_attribute=None,
+    parcel_size_attribute_title=None,
+    parcel_size_norm=None,
+    parcel_size_min=5,
+    parcel_size_max=40,
+    parcel_alpha=0.5,
+    fig=None,
+    output=None,
+    **kwargs,
+):
+    """Plot a river network and parcels on the river network.
+
+    Intended to display the results of the :class:`~.NetworkSedimentTransporter`
+    component.
+
+    The river network (an instance of :class:`~.NetworkModelGrid`) is plotted either as
+    straight links between grid nodes, or (if the network was created using a
+    shapefile to set network topology) as sinuous lines representing the actual
+    link geometry.
+
+    The parcels (an instance of :class:`~.DataRecord`) are represented as dot markers
+    along the links, with the marker location set by parcel attribute
+    `location_at_link`. The default is to plot the parcel locations at the
+    last timestep in :class`~.DataRecord`, though any time index may be specified.
+
+    Use of this plotting tool is described in detail in a landlab tutorial.
+
+    Parameters
+    ----------
+    grid : NetworkModelGrid
+        Instance of NetworkModelGrid.
+    parcels : DataRecord
+        Instance of Landlab DataRecord, with the same attribute requirements as
+        :class:`~.NetworkSedimentTransporter`.
+    parcel_time_index : int, optional
+        Parcel time index to plot. Default is last timestep in parcels
+        :class:`~.DataRecord`.
+    map_buffer : float, optional
+        Increase the plot extent by at least this much. Note, because of axis
+        equal, may be more.
+    parcel_filter : array_like of bool, optional
+        Filter to plot only a selection of the parcels.
+
+    Other Parameters
+    ----------------
+    network_color : str, optional
+        Uniform color for network links.
+    link_attribute : array_like or str, optional
+        Value (as either an array or the name of an *at-link* field) used to set
+        link color. Categorical options not supported. Must be continuous.
+    link_attribute_title : str, optional
+        Str
+### workflow/load_candidate.py
+L19: def _install_aggregator_compatibility_module()
+L68: def _copy_wheel_binary_support(wheel_package: Path)
+L78: def load_candidate_landlab()
+#### workflow/load_candidate.py::load_candidate_landlab (L78)
+def load_candidate_landlab():
+    """Load candidate Python sources while reusing wheel-provided extensions."""
+    wheel_package = Path(
+        importlib.metadata.distribution("landlab").locate_file("landlab")
+    ).resolve()
+    if OVERLAY_ROOT.exists():
+        shutil.rmtree(OVERLAY_ROOT)
+    shutil.copytree(SOURCE_PACKAGE, OVERLAY_ROOT)
+    _copy_wheel_binary_support(wheel_package)
+    for suffix in importlib.machinery.EXTENSION_SUFFIXES:
+        for extension in wheel_package.rglob(f"*{suffix}"):
+            relative = extension.relative_to(wheel_package)
+            if (
+                len(relative.parts) >= 2
+                and relative.parts[0] == "data_record"
+                and relative.name.startswith("_aggregators.")
+            ):
+                continue
+            target = OVERLAY_ROOT / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(extension, target)
+    for module_name in list(sys.modules):
+        if module_name == "landlab" or module_name.startswith("landlab."):
+            del sys.modules[module_name]
+    _install_aggregator_compatibility_module()
+
+    spec = importlib.util.spec_from_file_location(
+        "landlab",
+        OVERLAY_ROOT / "__init__.py",
+        submodule_search_locations=[str(OVERLAY_ROOT), str(wheel_package)],
+    )
+    if spec is None or spec.loader is None:
+        raise RuntimeError("unable to create candidate Landlab import specification")
+
+    module = importlib.util.module_from_spec(spec)
+    module.__path__ = [str(OVERLAY_ROOT), str(wheel_package)]
+    sys.modules["landlab"] = module
+    spec.loader.exec_module(module)
+
+    from landlab.components import NetworkSedimentTransporter
+
+    implementation = Path(
+        sys.modules[NetworkSedimentTransporter.__module__].__file__ or ""
+    ).resolve()
+    if OVERLAY_ROOT not in implementation.parents:
+        raise RuntimeError("scientific component was not loaded from candidate source")
+    return module
+### source/src/landlab/components/network_sediment_transporter/bed_parcel_initializers.py
+L22: class BedParcelInitializerBase
+  L23: def __init__(self, grid, time=0.0, tau_c_50=0.04, rho_sediment=2650.0, rho_water=1000.0, gravity=scipy.constants.g, D84_D50=2.1, sed_thickness=2, abrasion_rate=0.0, median_number_of_starting_parcels=100, extra_parcel_attributes=None, rng=None)
+  L68: def __call__(self)
+  L119: def calc_d50(self)
+L123: class BedParcelInitializerDischarge
+  L210: def __init__(self, grid, time=0.0, discharge_at_link=None, mannings_n=0.035, **kwds)
+  L232: def calc_d50(self)
+L245: class BedParcelInitializerDepth
+  L330: def __init__(self, grid, time=0.0, flow_depth_at_link=None, tau_c_multiplier=1.0, **kwds)
+  L344: def calc_d50(self)
+L355: class BedParcelInitializerArea
+  L463: def __init__(self, grid, time=0.0, drainage_area_coefficient=None, drainage_area_exponent=None, **kwds)
+  L482: def calc_d50(self)
+L490: class BedParcelInitializerUserD50
+  L577: def __init__(self, grid, time=0.0, user_d50=None, **kwds)
+  L585: def calc_d50(self)
+L604: def _parcel_characteristics(total_parcel_volume_at_link, max_parcel_volume, d50, D84_D50, rho_sediment, abrasion_rate, extra_parcel_attributes, rng=None)
+L675: def _determine_approx_parcel_volume(total_parcel_volume_at_link, median_number_of_starting_parcels)
+L683: def calc_total_parcel_volume(width, length, sediment_thickness)
+L692: def calc_d50_discharge(width, slope, discharge, mannings_n, gravity, rho_water, rho_sediment, tau_c_50)
+L744: def calc_d50_depth(slope, flow_depth, tau_c_multiplier, rho_water, rho_sediment, tau_c_50)
+L786: def calc_d50_dArea_scaling(drainage_area, a, n)
