@@ -30,6 +30,7 @@ docs/review-verification.md
 docs/verification-python9-v1.md
 docs/pipeline-one-task-baseline-vs-sv.md
 docs/cross-candidate-verification.md
+docs/experiment-scope-and-reproduction.md
 
 # Publish only the frozen inputs/outputs needed for the main result.
 analysis/*
