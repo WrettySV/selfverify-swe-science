@@ -1,0 +1,23 @@
+{
+  "task_id": "001",
+  "science_knowledge_ablation": false,
+  "title": "Repair an inconsistent transition-state rotor workflow",
+  "domain": "computational-reaction-chemistry",
+  "language": "python",
+  "source_repository": "https://github.com/Auto-Mech/autochem",
+  "source_commit": "cbe1a0c1102b8125608841eb8ac536cfe3b09671",
+  "source_license": "MIT",
+  "license_source": "upstream LICENSE at pinned source commit (author audit verified)",
+  "gpl_family": false,
+  "restricted_license": false,
+  "license_gate": "none",
+  "material_license": "",
+  "material_license_source": "",
+  "material_restricted": false,
+  "materials_gate": false,
+  "materials_manifest_sha256": "",
+  "material_licenses": [],
+  "materials_provenance": "",
+  "restricted_reason": "",
+  "public_payload_sha256": "624261111bb1223ce6af304c999ee84e484496f1c9b2ac90898d2e387d901fcd"
+}

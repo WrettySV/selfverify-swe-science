@@ -1,0 +1,141 @@
+diff --git a/source/desc/stability/terpsichore/assembly.py b/source/desc/stability/terpsichore/assembly.py
+index f75bb99..401435a 100644
+--- a/source/desc/stability/terpsichore/assembly.py
++++ b/source/desc/stability/terpsichore/assembly.py
+@@ -265,7 +265,17 @@ def assemble_potential_blocks_from_coefficients(
+ def _assemble_outer_shell_potential_blocks_from_modal_terms(
+     *, c1, c2, c3, c4, c5, c6, ftp_edge, fpp_edge, radial_grid, mode_table
+ ):
+-    """Assemble reduced outer-shell potential blocks from modal coefficient terms."""
++    """Assemble reduced outer-shell potential blocks from modal coefficient terms.
++
++    This is the reduced vacuum branch of the plasma ``LHSMAT`` potential
++    assembly.  It keeps the plasma path's block structure, mirroring and sign
++    conventions but drops the pressure (``c9``) and current (``ci``/``cj``)
++    terms.  Mode-number factors use the edge field profile and the radial
++    normalization uses the pseudo-vacuum center, so the wall-sensitive modal
++    metric coefficients ``c1``..``c6`` propagate into the outer-shell interval
++    blocks that feed the global energy reduction.  The last (wall) interval keeps
++    the conducting-wall boundary condition on the displacement blocks.
++    """
+ 
+     arrays = {
+         "c1": np.asarray(c1, dtype=float),
+@@ -292,6 +302,7 @@ def _assemble_outer_shell_potential_blocks_from_modal_terms(
+     BU = np.zeros(shape)
+     ms = np.asarray(mode_table.m, dtype=float)
+     ns = np.asarray(mode_table.n, dtype=float)
++    ql = np.asarray(mode_table.ql, dtype=float)
+     ftp_edge = float(ftp_edge)
+     fpp_edge = float(fpp_edge)
+     fppfpp = fpp_edge * fpp_edge
+@@ -309,16 +320,40 @@ def _assemble_outer_shell_potential_blocks_from_modal_terms(
+         ds = radial_grid.ds[global_interval]
+         dsvar = radial_grid.ni * ds
+         tdsvac = 2.0 / ds
+-        tdsvsq = tdsvac * tdsvac
++        si = radial_grid.centers[global_interval]
++        siic = 0.5 * dsvar / si ** ql
++        siis_u = siic[upper_rows] * siic[upper_cols] / dsvar
+         c1_u = arrays["c1"][upper_rows, upper_cols, vac_interval]
+         c2_u = arrays["c2"][upper_rows, upper_cols, vac_interval]
+-        c3_u = arrays["c3"][upper_rows, upper_cols, vac_interval]
+         c4_u = arrays["c4"][upper_rows, upper_cols, vac_interval]
+-        c5_u = arrays["c5"][upper_rows, upper_cols, vac_interval]
+         c6_u = arrays["c6"][upper_rows, upper_cols, vac_interval]
++        c1_t_u = arrays["c1"][upper_cols, upper_rows, vac_interval]
+         c4_t_u = arrays["c4"][upper_cols, upper_rows, vac_interval]
+-        c5_t_u = arrays["c5"][upper_cols, upper_rows, vac_interval]
+-        del dsvar, tdsvac, tdsvsq, c1_u, c2_u, c3_u, c4_u, c5_u, c6_u, c4_t_u, c5_t_u
++        pmn_rm_u = pmn_u * rmn_u
++        a_u = tdsvac * (rmn_u * c1_u + pmn_u * c1_t_u - 2.0 * c2_u)
++        delta_u = rmn_u * c1_u - pmn_u * c1_t_u
++        bu_u = a_u * siis_u
++        bl_u = -a_u * siis_u
++        c_u = tdsvac * siis_u * delta_u
++        d_u = pmn_rm_u * c6_u * dsvar
++        e_u = siic[upper_cols] * pmn_rm_u * c4_t_u
++        g_u = siic[upper_rows] * pmn_rm_u * c4_u
++        BU[upper_rows, upper_cols, vac_interval] = bu_u
++        BL[upper_rows, upper_cols, vac_interval] = bl_u
++        C[upper_rows, upper_cols, vac_interval] = c_u
++        C[upper_cols, upper_rows, vac_interval] = -c_u
++        D[upper_rows, upper_cols, vac_interval] = d_u
++        D[upper_cols, upper_rows, vac_interval] = d_u
++        E[upper_rows, upper_cols, vac_interval] = e_u
++        E[upper_cols, upper_rows, vac_interval] = g_u
++        G[upper_rows, upper_cols, vac_interval] = g_u
++        G[upper_cols, upper_rows, vac_interval] = e_u
++        A[upper_rows, upper_cols, vac_interval] = C[upper_cols, upper_rows, vac_interval]
++        A[upper_cols, upper_rows, vac_interval] = C[upper_rows, upper_cols, vac_interval]
++        F[upper_rows, upper_cols, vac_interval] = E[upper_cols, upper_rows, vac_interval]
++        F[upper_cols, upper_rows, vac_interval] = E[upper_rows, upper_cols, vac_interval]
++        H[upper_rows, upper_cols, vac_interval] = G[upper_cols, upper_rows, vac_interval]
++        H[upper_cols, upper_rows, vac_interval] = G[upper_rows, upper_cols, vac_interval]
+         if vac_interval == ivac - 1:
+             C[:, :, vac_interval] = 0.0
+             G[:, :, vac_interval] = 0.0
+diff --git a/source/desc/stability/terpsichore/coefficients.py b/source/desc/stability/terpsichore/coefficients.py
+index 8ad632c..cfde442 100644
+--- a/source/desc/stability/terpsichore/coefficients.py
++++ b/source/desc/stability/terpsichore/coefficients.py
+@@ -511,7 +511,14 @@ def _compute_outer_shell_integral_arrays_from_metric_data(*, vacuum_grid_data, t
+ def _project_outer_shell_integrals_to_modal_coefficients(
+     *, cna, cnb, mode_table, nper, lsx, dtdp, cospar
+ ):
+-    """Project reduced outer-shell ``cna``/``cnb`` integrals to modal coefficients."""
++    """Project reduced outer-shell ``cna``/``cnb`` integrals to modal coefficients.
++
++    Applies the same ``FOURIN`` sum/difference mode indexing used by the plasma
++    path (see :func:`map_fourin_integrals_to_coefficients`) to the wall-sensitive
++    outer-shell raw integrals, so the vacuum metric content reaches the modal
++    coefficient families ``c0``..``c11`` consumed by the outer-shell assembly.
++    The pressure-derived ``c9`` remains zero in the vacuum region.
++    """
+ 
+     cna = np.asarray(cna, dtype=float)
+     cnb = np.asarray(cnb, dtype=float)
+@@ -522,7 +529,42 @@ def _project_outer_shell_integrals_to_modal_coefficients(
+     shape = (lmns, lmns, intervals)
+     coeffs = {name: np.zeros(shape) for name in ALL_COEFFICIENTS}
+     indices = compute_fourin_mapping_indices(mode_table, nper=nper, lsx=lsx)
+-    del indices, dtdp, cospar
++    ld = indices["ld"]
++    lp = indices["lp"]
++    for interval in range(intervals):
++        coeffs["c2"][:, :, interval] = dtdp * (
++            cna[1, ld, interval] - cospar * cna[1, lp, interval]
++        )
++        coeffs["c6"][:, :, interval] = dtdp * (
++            cna[2, ld, interval] - cospar * cna[2, lp, interval]
++        )
++        coeffs["c7"][:, :, interval] = dtdp * (
++            cna[3, ld, interval] - cospar * cna[3, lp, interval]
++        )
++        coeffs["c5"][:, :, interval] = dtdp * (
++            cna[4, ld, interval] - cospar * cna[4, lp, interval]
++        )
++        coeffs["c0"][:, :, interval] = dtdp * (
++            cna[6, ld, interval] - cospar * cna[6, lp, interval]
++        )
++        coeffs["c1"][:, :, interval] = dtdp * (
++            cnb[1, ld, interval] + cospar * cnb[1, lp, interval]
++        )
++        coeffs["c3"][:, :, interval] = dtdp * (
++            cnb[2, ld, interval] + cospar * cnb[2, lp, interval]
++        )
++        coeffs["c4"][:, :, interval] = dtdp * (
++            cnb[3, ld, interval] + cospar * cnb[3, lp, interval]
++        )
++        coeffs["c8"][:, :, interval] = dtdp * (
++            cna[5, ld, interval] - cospar * cna[5, lp, interval]
++        )
++        coeffs["c10"][:, :, interval] = dtdp * (
++            cnb[4, ld, interval] + cospar * cnb[4, lp, interval]
++        )
++        coeffs["c11"][:, :, interval] = dtdp * (
++            cnb[6, ld, interval] + cospar * cnb[6, lp, interval]
++        )
+     return TerpsichoreCoefficientData(coefficients=coeffs, fixed_boundary=False)
+ 
+ def map_fourin_grid_to_coefficients(

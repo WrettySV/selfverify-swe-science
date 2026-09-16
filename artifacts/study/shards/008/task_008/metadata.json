@@ -1,0 +1,23 @@
+{
+  "task_id": "008",
+  "science_knowledge_ablation": true,
+  "title": "Establish first vacuum-plus-wall external-region capability in the TERPSICHORE-native path",
+  "domain": "plasma-stability",
+  "language": "python",
+  "source_repository": "https://github.com/PlasmaControl/DESC",
+  "source_commit": "ab1c5a33031a2e64581f5e663ef8e2f6203a5220",
+  "source_license": "MIT",
+  "license_source": "github-api:LICENSE@ab1c5a33031a2e64581f5e663ef8e2f6203a5220",
+  "gpl_family": false,
+  "restricted_license": false,
+  "license_gate": "none",
+  "material_license": "",
+  "material_license_source": "",
+  "material_restricted": false,
+  "materials_gate": false,
+  "materials_manifest_sha256": "",
+  "material_licenses": [],
+  "materials_provenance": "",
+  "restricted_reason": "",
+  "public_payload_sha256": "5863511b16e2bc29b11d73a3a9672f7d7ef1ff621d544f44a273642013eaad48"
+}

@@ -1,0 +1,309 @@
+diff --git a/source/suspect/processing/frequency_correction.py b/source/suspect/processing/frequency_correction.py
+index 464033d..dced878 100644
+--- a/source/suspect/processing/frequency_correction.py
++++ b/source/suspect/processing/frequency_correction.py
+@@ -1,3 +1,5 @@
++import warnings
++
+ import numpy
+ import scipy.optimize
+ 
+@@ -49,26 +51,54 @@ def spectral_registration(data, target, initial_guess=(0.0, 0.0), frequency_rang
+     # be a numpy.array of the same size as the data in which case we simply use
+     # that array as the weightings for the comparison
+     if type(frequency_range) is tuple:
+-        spectral_weights = frequency_range[0] < data.frequency_axis() & data.frequency_axis() < frequency_range[1]
++        axis = data.frequency_axis()
++        spectral_weights = numpy.logical_and(axis > frequency_range[0], axis < frequency_range[1])
+     else:
+         spectral_weights = frequency_range
+ 
+-    # define a residual function for the optimizer to use
++    # define a residual function and its analytic Jacobian for the optimizer
++    # to use. The residual is the (optionally windowed) time-domain mismatch
++    # between the transformed data and the target, expressed as concatenated
++    # real and imaginary parts. The windowed time-domain residual is a linear
++    # (FFT-based) operator of the unwindowed one, so the same operator maps
++    # the analytic derivatives into the windowed time domain.
++    windowed = frequency_range is not None
++    time_axis = data.time_axis()
++
++    def window_to_time(signal):
++        if not windowed:
++            return signal
++        return numpy.fft.ifft(numpy.fft.ifftshift(signal.spectrum() * spectral_weights))
++
++    def transform_derivative(input_vector, factor):
++        correction = numpy.exp(2j * numpy.pi * (input_vector[0] * time_axis + input_vector[1]))
++        transformed = numpy.multiply(data * factor, correction)
++        return window_to_time(transformed)
++
++    def pack_time_domain(signal):
++        packed = numpy.empty(len(signal) * 2)
++        packed[:len(signal)] = signal.real
++        packed[len(signal):] = signal.imag
++        return packed
++
+     def residual(input_vector):
+-        transformed_data = transform_fid(data, input_vector[0], input_vector[1])
+-        residual_data = transformed_data - target
+-        if frequency_range is not None:
+-            spectrum = residual_data.spectrum()
+-            weighted_spectrum = residual_data * spectral_weights
+-            # remove zero-elements
+-            weighted_spectrum = weighted_spectrum[weighted_spectrum != 0]
+-            residual_data = numpy.fft.ifft(numpy.fft.ifftshift(weighted_spectrum))
+-        return_vector = numpy.zeros(len(residual_data) * 2)
+-        return_vector[:len(residual_data)] = residual_data.real
+-        return_vector[len(residual_data):] = residual_data.imag
+-        return return_vector
+-
+-    out = scipy.optimize.leastsq(residual, initial_guess)
++        transformed_data = transform_derivative(input_vector, 1.0)
++        return pack_time_domain(transformed_data - target)
++
++    def jacobian(input_vector):
++        packed = numpy.empty((len(data) * 2, 2))
++        for column, factor in enumerate((2j * numpy.pi * time_axis, 2j * numpy.pi)):
++            derivative = pack_time_domain(transform_derivative(input_vector, factor))
++            packed[:, column] = derivative
++        return packed
++
++    # a poor start can make the local iteration stall before it satisfies the
++    # tight tolerances; the point reached so far is still the best available
++    # estimate, so the iteration limit is treated as a soft stop
++    with numpy.errstate(all="ignore"):
++        with warnings.catch_warnings():
++            warnings.simplefilter("ignore", RuntimeWarning)
++            out = scipy.optimize.leastsq(residual, initial_guess, Dfun=jacobian, maxfev=2000)
+     return -out[0][0], -out[0][1]
+ 
+ 
+@@ -110,10 +140,164 @@ def linewidth_hz(series, dt):
+ 
+ def _frequency_weights(data, frequency_range):
+     if type(frequency_range) is tuple:
+-        return frequency_range[0] < data.frequency_axis() & data.frequency_axis() < frequency_range[1]
++        axis = data.frequency_axis()
++        return numpy.logical_and(axis > frequency_range[0], axis < frequency_range[1])
+     return frequency_range
+ 
+ 
++def _registration_weights(reference, frequency_range):
++    """
++    Resolve a frequency_range specification into an explicit registration
++    window: the indices of the spectral points to use and their (positive)
++    weightings.
++
++    Returns None when the whole spectrum should be used, which also covers the
++    degenerate case of a window that contains no spectral points.
++    """
++    if frequency_range is None:
++        return None
++    if type(frequency_range) is tuple:
++        axis = reference.frequency_axis()
++        support = numpy.logical_and(axis > frequency_range[0], axis < frequency_range[1])
++        values = None
++    else:
++        values = numpy.asarray(frequency_range, dtype=float)
++        if values.shape != reference.shape:
++            raise ValueError("frequency_range array must have the same shape as the data")
++        support = values != 0
++    index = numpy.flatnonzero(support)
++    if index.size == 0:
++        return None
++    if values is None:
++        values = numpy.ones(index.size)
++    else:
++        values = values[index]
++    return index, values
++
++
++def _window_mismatch(aligned_spectrum, index, weights, weighted_reference, reference_energy):
++    """
++    Phase-optimised, window-weighted least-squares mismatch between an aligned
++    spectrum and the reference, plus the optimal phase (in cycles).
++
++    Minimising |exp(2j*pi*p) * A - B|^2 over p in the window gives the closed
++    form |A|^2 + |B|^2 - 2|<A, B>| with p = angle(<A, B>) / (2*pi).
++    """
++    window = aligned_spectrum[index]
++    inner = numpy.sum(numpy.conj(window) * weighted_reference)
++    energy = float(numpy.sum(weights * numpy.abs(window) ** 2))
++    cost = energy + reference_energy - 2.0 * abs(inner)
++    phase = float(numpy.angle(inner) / (2.0 * numpy.pi))
++    return cost, phase
++
++
++def _alias_distance(frequency, other, sw):
++    return abs(((frequency - other + sw / 2.0) % sw) - sw / 2.0)
++
++
++def _coarse_alignment(data, reference, window_weights, initial_guess, frequency_range=None):
++    """
++    Robust global search for the frequency and phase drift between data and
++    reference within the registration window.
++
++    Circular cross-correlation on the native frequency grid evaluates the
++    phase-optimised least-squares mismatch for every integer frequency-bin
++    shift of the full spectral width in a single pair of FFTs, so positive and
++    negative drifts of any magnitude within the spectral width are covered. The most significant distinct
++    basins are then scanned with a sub-bin grid and polished with a local
++    least-squares refinement restricted to the same window, so the result does
++    not depend on the quality of the supplied drift guess.
++
++    Returns (aligned, drift_frequency, drift_phase) where drift is the shift
++    of data relative to reference and aligned is the full transient corrected
++    so that it matches the reference.
++    """
++    n = data.np
++    df = data.df
++    sw = data.sw
++    spec = numpy.fft.fftshift(numpy.fft.fft(data))
++    refspec = numpy.fft.fftshift(numpy.fft.fft(reference))
++    if window_weights is None:
++        window_full = numpy.ones(n)
++    else:
++        window_full = window_weights
++    index = numpy.flatnonzero(window_full)
++    w = window_full[index]
++    weighted_ref = w * refspec[index]
++    ref_energy = float(numpy.sum(w * numpy.abs(refspec[index]) ** 2))
++
++    # circular cross-correlations on the native frequency grid give the
++    # phase-optimised mismatch for every integer-bin shift, including negative
++    # shifts: cost(s) = <w|A_s|^2> + <w|B|^2> - 2|<A_s, B>_w| with A_s the
++    # spectrum circularly shifted by s bins (s * df Hz)
++    inner = numpy.fft.ifft(numpy.conj(numpy.fft.fft(spec)) * numpy.fft.fft(window_full * refspec))
++    energy = numpy.fft.ifft(
++        numpy.fft.fft(numpy.abs(spec) ** 2) * numpy.conj(numpy.fft.fft(window_full))
++    )
++    n_shifts = n
++    shift_costs = energy.real[(-numpy.arange(n_shifts)) % n] + ref_energy - 2.0 * numpy.abs(inner[:n_shifts])
++
++    def shift_frequency(s):
++        frequency = s * df
++        if frequency > sw / 2.0:
++            frequency -= sw
++        return frequency
++
++    # distinct local minima of the scan: candidate alignment basins
++    minima = []
++    for s in range(n_shifts):
++        left = shift_costs[(s - 1) % n_shifts]
++        right = shift_costs[(s + 1) % n_shifts]
++        if shift_costs[s] < left and shift_costs[s] <= right:
++            frequency = shift_frequency(s)
++            phase = float(numpy.angle(inner[s]) / (2.0 * numpy.pi))
++            minima.append((float(shift_costs[s]), frequency, phase))
++    minima.sort(key=lambda candidate: candidate[0])
++    basins = minima[:20]
++
++    # sub-bin scan around each significant basin so the basin floor is never
++    # missed between integer bins, plus the supplied drift guess (in both sign
++    # conventions) and no frequency shift at all
++    time_axis = numpy.arange(n) * data.dt
++    starts = []
++    for cost, frequency, phase in basins:
++        fine = []
++        for offset in numpy.arange(-1.25, 1.26, 0.125):
++            candidate = ((frequency + offset * df + sw / 2.0) % sw) - sw / 2.0
++            aligned_spec = numpy.fft.fftshift(numpy.fft.fft(data * numpy.exp(2j * numpy.pi * candidate * time_axis)))
++            fine_cost, fine_phase = _window_mismatch(aligned_spec, index, w, weighted_ref, ref_energy)
++            fine.append((fine_cost, candidate, fine_phase))
++        fine.sort(key=lambda candidate: candidate[0])
++        starts.append(fine[0])
++    for guess in (0.0, -initial_guess[0], initial_guess[0]):
++        guess = ((guess + sw / 2.0) % sw) - sw / 2.0
++        aligned_spec = numpy.fft.fftshift(numpy.fft.fft(data * numpy.exp(2j * numpy.pi * guess * time_axis)))
++        cost, phase = _window_mismatch(aligned_spec, index, w, weighted_ref, ref_energy)
++        starts.append((cost, guess, phase))
++    starts.sort(key=lambda candidate: candidate[0])
++
++    # polish the best, well-separated candidates locally and keep the overall
++    # best result
++    best = None
++    seen = []
++    for cost, frequency, phase in starts:
++        if any(_alias_distance(frequency, other, sw) < df / 2.0 for other in seen):
++            continue
++        seen.append(frequency)
++        drift = spectral_registration(
++            data,
++            reference,
++            initial_guess=(frequency, phase),
++            frequency_range=frequency_range,
++        )
++        aligned = transform_fid(data, -drift[0], -drift[1])
++        aligned_spec = numpy.fft.fftshift(numpy.fft.fft(aligned))
++        refined_cost, _ = _window_mismatch(aligned_spec, index, w, weighted_ref, ref_energy)
++        if best is None or refined_cost < best[0]:
++            best = (refined_cost, aligned, drift[0], drift[1])
++    return best[1], best[2], best[3]
++
++
+ def dynamic_reference(series):
+     series = [item.squeeze() for item in series]
+     if len(series) == 0:
+@@ -131,6 +315,16 @@ def register_dynamic_series(
+     """
+     Register a dynamic MRS series to a common reference.
+ 
++    The frequency and phase drift of every transient is estimated in the
++    registration window (frequency_range, defaulting to the full spectrum) and
++    compensated by a time-domain transformation of the full transient, so the
++    correction is applied everywhere while being driven only by the stable
++    spectral region. A coarse global scan initialises the local optimisation,
++    so the result does not depend on the quality of initial_guesses (which is
++    treated as an optional drift hint). Transients whose best achievable
++    windowed residual ratio exceeds reject_threshold are flagged as rejected so
++    that they can be kept out of downstream averages.
++
+     The returned dictionary is intentionally simple so that downstream quality
+     control can inspect the corrected transients, per-transient drift estimates,
+     residuals, and accepted mask.
+@@ -148,6 +342,14 @@ def register_dynamic_series(
+     if len(initial_guesses) != len(transients):
+         raise ValueError("initial_guesses must match the number of transients")
+ 
++    window_spec = _registration_weights(reference, frequency_range)
++    if window_spec is None:
++        window_weights = None
++    else:
++        window_index, window_values = window_spec
++        window_weights = numpy.zeros(reference.np)
++        window_weights[window_index] = window_values
++
+     corrected = []
+     estimates = []
+     before = []
+@@ -155,19 +357,22 @@ def register_dynamic_series(
+     accepted = []
+ 
+     for transient, initial_guess in zip(transients, initial_guesses):
+-        before.append(residual_ratio(transient, reference, frequency_range=None))
+-        freq, phase = spectral_registration(
++        before.append(residual_ratio(transient, reference, frequency_range))
++        aligned, freq, phase = _coarse_alignment(
+             transient,
+             reference,
+-            initial_guess=initial_guess,
+-            frequency_range=None,
++            window_weights,
++            (float(initial_guess[0]), float(initial_guess[1])),
++            frequency_range=frequency_range,
+         )
+-        aligned = transform_fid(transient, -freq, -phase)
+         corrected.append(aligned)
+         estimates.append((freq, phase))
+-        after_value = residual_ratio(aligned, reference, frequency_range=None)
++        after_value = residual_ratio(aligned, reference, frequency_range)
+         after.append(after_value)
+-        accepted.append(True)
++        if reject_threshold is None:
++            accepted.append(True)
++        else:
++            accepted.append(bool(after_value <= reject_threshold))
+ 
+     return {
+         "reference": reference,

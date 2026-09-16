@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "task": "001",
+      "candidate_index": 0,
+      "trial": "task_001__ybmtZEe",
+      "input_patch": "study/inputs/001/p0/task_001.patch",
+      "final_patch": "grading/001/p0/model.patch",
+      "reward_file": "grading/001/p0/reward.json",
+      "final_patch_sha256": "d064a13f914540cf4165b9c213930f6ecf0638e543d33997fc270992792766b6",
+      "reward": 0
+    },
+    {
+      "task": "001",
+      "candidate_index": 1,
+      "trial": "task_001__6h6Bm7k",
+      "input_patch": "study/inputs/001/p1/task_001.patch",
+      "final_patch": "grading/001/p1/model.patch",
+      "reward_file": "grading/001/p1/reward.json",
+      "final_patch_sha256": "14316f3685d4142291eedff917c42c7958fc91f1afe01a504f3562f21dcfe688",
+      "reward": 0
+    },
+    {
+      "task": "001",
+      "candidate_index": 2,
+      "trial": "task_001__uuZf4Mx",
+      "input_patch": "study/inputs/001/p2/task_001.patch",
+      "final_patch": "grading/001/p2/model.patch",
+      "reward_file": "grading/001/p2/reward.json",
+      "final_patch_sha256": "14d2d1907c471b829a332e8f72cae4babe2301f651c7baa9a88dbb98461416f5",
+      "reward": 0
+    },
+    {
+      "task": "007",
+      "candidate_index": 0,
+      "trial": "task_007__Q3qTqRL",
+      "input_patch": "study/inputs/007/p0/task_007.patch",
+      "final_patch": "grading/007/p0/model.patch",
+      "reward_file": "grading/007/p0/reward.json",
+      "final_patch_sha256": "5fa02e7e3534108ac391de9921cf3e86aff1e71b430931ae7f6138737cb5d5b2",
+      "reward": 0
+    },
+    {
+      "task": "007",
+      "candidate_index": 1,
+      "trial": "task_007__MYmmx4H",
+      "input_patch": "study/inputs/007/p1/task_007.patch",
+      "final_patch": "grading/007/p1/model.patch",
+      "reward_file": "grading/007/p1/reward.json",
+      "final_patch_sha256": "9a6f239293a8c71e653950768b9a3eee6215cbb972777ea8b21039d3b04a3218",
+      "reward": 1
+    },
+    {
+      "task": "007",
+      "candidate_index": 2,
+      "trial": "task_007__2dNpUBF",
+      "input_patch": "study/inputs/007/p2/task_007.patch",
+      "final_patch": "grading/007/p2/model.patch",
+      "reward_file": "grading/007/p2/reward.json",
+      "final_patch_sha256": "58101c4e607812c89b752436497403e33c41297ffa4ce72a56ba8cea197ec869",
+      "reward": 0
+    },
+    {
+      "task": "008",
+      "candidate_index": 0,
+      "trial": "task_008__9rynecN",
+      "input_patch": "study/inputs/008/p0/task_008.patch",
+      "final_patch": "grading/008/p0/model.patch",
+      "reward_file": "grading/008/p0/reward.json",
+      "final_patch_sha256": "a4b959a51d75138afcdb00d214860c8434f43edb0e04480215621137ca085761",
+      "reward": 0
+    },
+    {
+      "task": "008",
+      "candidate_index": 1,
+      "trial": "task_008__izZtkZB",
+      "input_patch": "study/inputs/008/p1/task_008.patch",
+      "final_patch": "grading/008/p1/model.patch",
+      "reward_file": "grading/008/p1/reward.json",
+      "final_patch_sha256": "d6951cb733700c082c3eb38778ea8210fbdd9a31b12fb1d255d5ed2ea92c3bb1",
+      "reward": 0
+    },
+    {
+      "task": "008",
+      "candidate_index": 2,
+      "trial": "task_008__tmqAFHm",
+      "input_patch": "study/inputs/008/p2/task_008.patch",
+      "final_patch": "grading/008/p2/model.patch",
+      "reward_file": "grading/008/p2/reward.json",
+      "final_patch_sha256": "92b9610e29a64d9e66b243f7a52d7749a37caf78e21869396289c9a9af8e3d3c",
+      "reward": 0
+    },
+    {
+      "task": "017",
+      "candidate_index": 0,
+      "trial": "task_017__ca3CgS3",
+      "input_patch": "study/inputs/017/p0/task_017.patch",
+      "final_patch": "grading/017/p0/model.patch",
+      "reward_file": "grading/017/p0/reward.json",
+      "final_patch_sha256": "6dcbfed3f6ad644702cb273205af1375099ecfd4c22a16735995a0e7273f56b7",
+      "reward": 1
+    },
+    {
+      "task": "017",
+      "candidate_index": 1,
+      "trial": "task_017__ZsB3svm",
+      "input_patch": "study/inputs/017/p1/task_017.patch",
+      "final_patch": "grading/017/p1/model.patch",
+      "reward_file": "grading/017/p1/reward.json",
+      "final_patch_sha256": "a8175286bee9a2ed895cff681f3ae26201aa5eee6d560bde638a34571d1761c1",
+      "reward": 1
+    },
+    {
+      "task": "017",
+      "candidate_index": 2,
+      "trial": "task_017__JXqfqMY",
+      "input_patch": "study/inputs/017/p2/task_017.patch",
+      "final_patch": "grading/017/p2/model.patch",
+      "reward_file": "grading/017/p2/reward.json",
+      "final_patch_sha256": "d4300734eda2e4f3165bce98c9cd60cbdee6d39ffea1aaffce90f1c6cbede0bd",
+      "reward": 1
+    },
+    {
+      "task": "024",
+      "candidate_index": 0,
+      "trial": "task_024__TVgCJhQ",
+      "input_patch": "study/inputs/024/p0/task_024.patch",
+      "final_patch": "grading/024/p0/model.patch",
+      "reward_file": "grading/024/p0/reward.json",
+      "final_patch_sha256": "d5884874b0df41d4aca9389614d7641a237f5b2942b0e50b84a5937c2964e99a",
+      "reward": 1
+    },
+    {
+      "task": "024",
+      "candidate_index": 1,
+      "trial": "task_024__UWEJwuf",
+      "input_patch": "study/inputs/024/p1/task_024.patch",
+      "final_patch": "grading/024/p1/model.patch",
+      "reward_file": "grading/024/p1/reward.json",
+      "final_patch_sha256": "ec5fcbc856fcede95fcca2059773f1d5a4f778db15a3467221242755c72515a7",
+      "reward": 1
+    },
+    {
+      "task": "024",
+      "candidate_index": 2,
+      "trial": "task_024__mb5o8op",
+      "input_patch": "study/inputs/024/p2/task_024.patch",
+      "final_patch": "grading/024/p2/model.patch",
+      "reward_file": "grading/024/p2/reward.json",
+      "final_patch_sha256": "8f21e1c792747713194fc77f1d27ee57df72fea2af16ac2139fbea3cc2c9020f",
+      "reward": 1
+    },
+    {
+      "task": "039",
+      "candidate_index": 0,
+      "trial": "task_039__5QrWXX3",
+      "input_patch": "study/inputs/039/p0/task_039.patch",
+      "final_patch": "grading/039/p0/model.patch",
+      "reward_file": "grading/039/p0/reward.json",
+      "final_patch_sha256": "24e7bbea0a05acf606e5e57011ba757d1342e0930190f4cd2239c54f666d22b1",
+      "reward": 0
+    },
+    {
+      "task": "039",
+      "candidate_index": 1,
+      "trial": "task_039__9Kbbo3M",
+      "input_patch": "study/inputs/039/p1/task_039.patch",
+      "final_patch": "grading/039/p1/model.patch",
+      "reward_file": "grading/039/p1/reward.json",
+      "final_patch_sha256": "70a1f907bf2d92d7c08d4e95e43b94bf7c4aaa1e66b8b85158f3e2e76bcb9e5e",
+      "reward": 0
+    },
+    {
+      "task": "039",
+      "candidate_index": 2,
+      "trial": "task_039__yhCKWG9",
+      "input_patch": "study/inputs/039/p2/task_039.patch",
+      "final_patch": "grading/039/p2/model.patch",
+      "reward_file": "grading/039/p2/reward.json",
+      "final_patch_sha256": "0f8ba0310359a34b81bffbc9190a034d77e60dfcc2ec264f27bfb774df46138e",
+      "reward": 0
+    },
+    {
+      "task": "053",
+      "candidate_index": 0,
+      "trial": "task_053__5rNUC5N",
+      "input_patch": "study/inputs/053/p0/task_053.patch",
+      "final_patch": "grading/053/p0/model.patch",
+      "reward_file": "grading/053/p0/reward.json",
+      "final_patch_sha256": "2082e9f7e1e18ddee01bde293a56c1dd482a2b6ef1ff2e7ca6ed5df21cd4c12c",
+      "reward": 1
+    },
+    {
+      "task": "053",
+      "candidate_index": 1,
+      "trial": "task_053__bLen8p4",
+      "input_patch": "study/inputs/053/p1/task_053.patch",
+      "final_patch": "grading/053/p1/model.patch",
+      "reward_file": "grading/053/p1/reward.json",
+      "final_patch_sha256": "ea3a89c1cc6143d4d24aab716c988f56eba7c88efe8e4277b757669ff98989d0",
+      "reward": 1
+    },
+    {
+      "task": "053",
+      "candidate_index": 2,
+      "trial": "task_053__EkKa3wH",
+      "input_patch": "study/inputs/053/p2/task_053.patch",
+      "final_patch": "grading/053/p2/model.patch",
+      "reward_file": "grading/053/p2/reward.json",
+      "final_patch_sha256": "f64e76e6b5c1ef12a82cc1b3f1c01e7cf7abd1c2c2d0b6d245d63ebcc48ddd4e",
+      "reward": 0
+    },
+    {
+      "task": "094",
+      "candidate_index": 0,
+      "trial": "task_094__L5wSkWw",
+      "input_patch": "study/inputs/094/p0/task_094.patch",
+      "final_patch": "grading/094/p0/model.patch",
+      "reward_file": "grading/094/p0/reward.json",
+      "final_patch_sha256": "74fdd87eff10d1abe4d1803820c715d0ca38a597665aac8ebd7e22feec08c594",
+      "reward": 0
+    },
+    {
+      "task": "094",
+      "candidate_index": 1,
+      "trial": "task_094__rraq6GD",
+      "input_patch": "study/inputs/094/p1/task_094.patch",
+      "final_patch": "grading/094/p1/model.patch",
+      "reward_file": "grading/094/p1/reward.json",
+      "final_patch_sha256": "e8c4ecabb5eb84ce1564b40c7455264c7cfc635d95134f2549ffd0a5ed2c6b92",
+      "reward": 0
+    },
+    {
+      "task": "094",
+      "candidate_index": 2,
+      "trial": "task_094__4ye6fMJ",
+      "input_patch": "study/inputs/094/p2/task_094.patch",
+      "final_patch": "grading/094/p2/model.patch",
+      "reward_file": "grading/094/p2/reward.json",
+      "final_patch_sha256": "0594287de89f408d7d8bd1160427675801889ee530efe16b7ab395ef32cad947",
+      "reward": 0
+    },
+    {
+      "task": "107",
+      "candidate_index": 0,
+      "trial": "task_107__vHqZAK6",
+      "input_patch": "study/inputs/107/p0/task_107.patch",
+      "final_patch": "grading/107/p0/model.patch",
+      "reward_file": "grading/107/p0/reward.json",
+      "final_patch_sha256": "32089ccd6e4a221b3d720c8951143fa16b4f3ac0606a7974bb654b256b66b2f3",
+      "reward": 1
+    },
+    {
+      "task": "107",
+      "candidate_index": 1,
+      "trial": "task_107__wop5rLP",
+      "input_patch": "study/inputs/107/p1/task_107.patch",
+      "final_patch": "grading/107/p1/model.patch",
+      "reward_file": "grading/107/p1/reward.json",
+      "final_patch_sha256": "e8f04512e660e89b072ae7657137dfed5c3e6956f56b30c9eb1c18b577c8d737",
+      "reward": 1
+    },
+    {
+      "task": "107",
+      "candidate_index": 2,
+      "trial": "task_107__gx6YMzy",
+      "input_patch": "study/inputs/107/p2/task_107.patch",
+      "final_patch": "grading/107/p2/model.patch",
+      "reward_file": "grading/107/p2/reward.json",
+      "final_patch_sha256": "07a865576f6e7c85fe42840408fc98bdb0d8eb0e16c3fce7ae2fd33a5a8077a8",
+      "reward": 1
+    }
+  ]
+}

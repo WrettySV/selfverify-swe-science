@@ -1,0 +1,15 @@
+{
+  "reward": 0,
+  "task_id": "task_039",
+  "public": {
+    "passed": 1,
+    "collected": 1,
+    "return_code": 0
+  },
+  "private": {
+    "passed": 4,
+    "collected": 11,
+    "failed": 7,
+    "return_code": 1
+  }
+}

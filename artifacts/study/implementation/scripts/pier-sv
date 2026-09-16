@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Prefer agent import_path over builtin --agent name (Pier factory quirk).
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PIER_PY="${PIER_PY:-${HOME}/.local/share/uv/tools/datacurve-pier/bin/python}"
+exec "$PIER_PY" "$ROOT/scripts/pier_prefer_import_path.py" "$@"

@@ -1,0 +1,40 @@
+schema_version = "1.3"
+artifacts = ["/logs/artifacts/model.patch"]
+
+[task]
+name = "openmoss/swe-bench-science-017"
+description = "Repair dark-matter line-of-sight maps in Gammapy"
+authors = []
+keywords = ["scientific-computing", "software-engineering"]
+
+[metadata]
+task_id = "017"
+language = "python"
+base_commit_hash = ""
+
+[agent]
+network_mode = "no-network"
+timeout_sec = 5400.0
+
+[environment]
+docker_image = "docker.io/kevinxulearning/swe-bench-science-environment-python-task-017:v0.1.2@sha256:95f109be6784572b7903f03e0f6617498b3b14f9578c7c2f703313ce90d9451d"
+os = "linux"
+allow_internet = false
+cpus = 2
+memory_mb = 8192
+storage_mb = 20480
+workdir = "/app/task_017"
+
+[verifier]
+network_mode = "no-network"
+environment_mode = "separate"
+timeout_sec = 1800.0
+
+[verifier.environment]
+docker_image = "docker.io/kevinxulearning/swe-bench-science-verifier-python-task-017:v0.1.2@sha256:082a831bd6af86c7a13fd06feddd97a9886990571583a42a9f9ec829c2f05873"
+os = "linux"
+allow_internet = false
+cpus = 2
+memory_mb = 8192
+storage_mb = 20480
+workdir = "/app/task_017"

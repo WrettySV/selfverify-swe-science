@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "los_equivalence_annihilation",
+      "invariant": "representation equivalence: the map-based dJ/dOmega must equal an independent direct line-of-sight quadrature integral rho(r(l))^2 dl (r(l)=sqrt(l^2+D^2-2lD cos(theta)), truncated at r=4D) for every pixel",
+      "rationale": "pre-fix the radial integral uses rmin=tan(theta)*D as lower bound and the wrong impact parameter, so it deviates from the true LoS integral (and the whole computation raises once tan(theta)*D > D); a correct fix uses b=D sin(theta) with the near branch [b,D] counted twice plus far branch [D,4D] and matches the reference to ~1e-6 (tolerance 5%)",
+      "path": "selfverify/invariants/invariant_1_los_equivalence_annihilation.py"
+    },
+    {
+      "name": "los_equivalence_decay",
+      "invariant": "representation equivalence for decay mode: dOmega/dOmega = integral rho(r(l)) dl must match the independent direct LoS quadrature for a cored (Burkert) profile at a non-default distance",
+      "rationale": "pre-fix fails in two independent ways here: the Jacobian hard-codes DISTANCE_GC=8.33 kpc instead of the requested 6 kpc distance, making rmin < b and producing an all-NaN map (non-finite result); a correct fix computes b=D sin(theta) from the actual distance and matches the reference to ~1e-7 (tolerance 5%)",
+      "path": "selfverify/invariants/invariant_2_los_equivalence_decay.py"
+    },
+    {
+      "name": "unit_consistency",
+      "invariant": "unit consistency: the physical dJ/dOmega must be independent of whether the halo distance is expressed in kpc or pc (10.0 kpc == 10000 pc)",
+      "rationale": "pre-fix multiplies the distance value by a hard-coded kpc unit (rmin = _.value * u.kpc) while the distance itself is in pc, so the quadrature grid is off by 1000x and the computation raises; a correct fix is unit-agnostic and the two results agree to ~1e-14 (tolerance 1e-9)",
+      "path": "selfverify/invariants/invariant_3_unit_consistency.py"
+    },
+    {
+      "name": "wide_field_beyond_ninety",
+      "invariant": "boundary behavior / branch bookkeeping: for sightlines with angular separation theta > 90 deg the observer is already the closest point, so only the far branch [D, 4D] with impact parameter b=D sin(theta) contributes; the map must be finite and equal to the direct LoS integral there",
+      "rationale": "pre-fix computes rmin = tan(theta)*D which is negative for theta > 90 deg, so the quadrature crashes (negative/invalid sample count) on any field wider than ~90 deg; a correct fix sets the near-branch contribution to zero for theta > 90 deg and matches the reference on all 96 pixels including the 24 pixels beyond 90 deg to ~1e-6 (tolerance 5%)",
+      "path": "selfverify/invariants/invariant_4_wide_field_beyond_ninety.py"
+    },
+    {
+      "name": "b_zero_center_limit",
+      "invariant": "boundary behavior at vanishing impact parameter: for the sightline through the halo center (b=0) the Jacobian is unity and the integral must be computed directly over the original radial bounds, giving 2*int[0,D] rho^2 dr + int[D,4D] rho^2 dr, finite for a cored profile",
+      "rationale": "pre-fix passes rmin = tan(0)*D = 0 into a log-spaced quadrature (log10(0) = -inf, overflow of the sample count) and crashes; a correct fix takes the direct radial-integration limit with the requested lower bound 0 and matches the independent radial reference to ~1e-5 (tolerance 3%)",
+      "path": "selfverify/invariants/invariant_5_b_zero_center_limit.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "All five tests were verified to FAIL on the pre-fix tree (baseline commit d202b60: 4 raise ValueError inside the quadrature, 1 returns an all-NaN map) and to PASS on the patched tree (max deviations ~1e-6..1e-14 against tolerances of 1e-9..5%). References are independent scipy quad / trapezoid line-of-sight and radial quadratures computed inside each test, with new distances (6, 9, 10, 12 kpc, 10000 pc), new field sizes/meshes, and a second profile (Burkert) so no public fixture is reused. Known limitation: for an NFW profile the exact center sightline (theta=0) is mathematically divergent (rho ~ 1/r), so tests avoid NFW pixels at exactly theta=0; test 5 uses the cored Burkert profile for the b=0 limit. I did not test convergence against ndecade directly since the model's quadrature order is an implementation detail, and I did not modify any production source."
+}

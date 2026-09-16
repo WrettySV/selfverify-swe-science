@@ -1,0 +1,42 @@
+diff --git a/source/pymc/distributions/multivariate.py b/source/pymc/distributions/multivariate.py
+index df175af..b9084ca 100644
+--- a/source/pymc/distributions/multivariate.py
++++ b/source/pymc/distributions/multivariate.py
+@@ -2782,8 +2782,11 @@ def zerosumnormal_logp(op, values, normal_dist, sigma, support_shape, **kwargs):
+     shape = value.shape
+     n_zerosum_axes = op.ndim_supp
+ 
+-    _deg_free_support_shape = pt.inc_subtensor(shape[-n_zerosum_axes:], -1)
+-    _full_size = pt.prod(shape)
++    # ``shape[-n_zerosum_axes:]`` is the (batch-independent) vector of support
++    # axis lengths; each constrained axis of length ``k`` contributes ``k - 1``
++    # free coordinates to the density.
++    _deg_free_support_shape = shape[-n_zerosum_axes:] - 1
++    _support_size = pt.prod(shape[-n_zerosum_axes:])
+     _degrees_of_freedom = pt.prod(_deg_free_support_shape)
+ 
+     zerosums = [
+@@ -2791,9 +2794,19 @@ def zerosumnormal_logp(op, values, normal_dist, sigma, support_shape, **kwargs):
+         for axis in range(n_zerosum_axes)
+     ]
+ 
+-    out = pt.sum(
+-        pm.logp(normal_dist, value) * _degrees_of_freedom / _full_size,
+-        axis=tuple(np.arange(-n_zerosum_axes, 0)),
+-    )
++    # The support is the subspace of tensors whose last ``n_zerosum_axes`` axes
++    # all sum to zero; it has ``_degrees_of_freedom`` dimensions. With columns
++    # of an orthonormal basis ``B`` of that subspace and ``z ~ N(0, sigma^2 I)``,
++    # ``x = B z`` has the density
++    #     (2 pi sigma^2)^(-D / 2) * exp(-||x||^2 / (2 sigma^2))
++    # on the support, where ``D = _degrees_of_freedom``. Because the basis is
++    # orthonormal, ``||x||^2 == ||z||^2`` and ``z`` contributes one degree of
++    # freedom per basis vector, so the quadratic form is the full sum of
++    # squares over the support while the normalizing constant only counts the
++    # ``D`` free coordinates (not all ``_support_size`` entries).
++    element_logp = pm.logp(normal_dist, value)
++    out = pt.sum(element_logp, axis=tuple(np.arange(-n_zerosum_axes, 0))) + (
++        _support_size - _degrees_of_freedom
++    ) * (pt.log(2.0 * pt.pi) / 2.0 + pt.log(sigma))
+ 
+     return check_parameters(out, *zerosums, msg="mean(value, axis=n_zerosum_axes) = 0")

@@ -1,0 +1,261 @@
+diff --git a/source/monai/metrics/surface_dice.py b/source/monai/metrics/surface_dice.py
+index 64ea9e4..bf1c46c 100644
+--- a/source/monai/metrics/surface_dice.py
++++ b/source/monai/metrics/surface_dice.py
+@@ -13,6 +13,7 @@ from __future__ import annotations
+ 
+ import warnings
+ from collections.abc import Sequence
++from itertools import product
+ from typing import Any
+ 
+ import numpy as np
+@@ -38,6 +39,18 @@ class SurfaceDiceMetric(CumulativeIterationMetric):
+     The boundary convention is part of the scientific meaning of this metric and should be kept
+     consistent with the spacing and tolerance supplied by the caller.
+ 
++    When a physical ``spacing`` is supplied with the euclidean distance metric, the metric is
++    evaluated in physical units: each surface element (the face/edge a boundary voxel exposes to
++    background) carries the physical measure of that face (length in 2D, area in 3D, from the
++    supplied spacing), and a surface element is counted as correctly predicted when the physical
++    distance from its centre to the nearest surface element of the opposite boundary is at most
++    the class threshold. The same convention is used for the total boundary and for the
++    within-tolerance portion, so the score has a physically meaningful interpretation and stays
++    consistent when the same physical study is represented on different voxel grids.
++    When no spacing is supplied (or a non-euclidean distance metric is used), the legacy
++    unit-grid behavior is kept: boundary samples are counted per voxel and distances are
++    computed in voxel units.
++
+     The class- and batch sample-wise NSD values can be aggregated with the function `aggregate`.
+ 
+     Example of the typical execution steps of this metric class follows :py:class:`monai.metrics.metric.Cumulative`.
+@@ -131,6 +144,145 @@ class SurfaceDiceMetric(CumulativeIterationMetric):
+         return (f, not_nans) if self.get_not_nans else f
+ 
+ 
++def _physical_spacing_vector(
++    spacing: int | float | np.ndarray | Sequence[int | float | np.ndarray | Sequence[int | float]] | None,
++    img_dim: int,
++) -> np.ndarray:
++    """
++    Normalize the per-image spacing supplied to a vector of physical spacings with one entry
++    per image axis. A scalar denotes isotropic spacing; a sequence provides the spacing of each
++    axis in the same order as the spatial dimensions of the input tensor.
++    """
++    if spacing is None:
++        return np.ones(img_dim, dtype=np.float64)
++    if isinstance(spacing, (int, float, np.integer, np.floating)):
++        return np.full(img_dim, float(spacing), dtype=np.float64)
++    arr = np.asarray(spacing, dtype=np.float64).reshape(-1)
++    if arr.size == 1:
++        arr = np.full(img_dim, float(arr[0]), dtype=np.float64)
++    if arr.size != img_dim:
++        raise ValueError(f"spacing must contain {img_dim} values (one per image axis), got {arr.size}.")
++    return arr
++
++
++def _surface_face_elements(
++    fg: np.ndarray, edges: np.ndarray, spacing: np.ndarray
++) -> tuple[np.ndarray, np.ndarray]:
++    """
++    Surface elements of the sampled boundary of a binary mask.
++
++    Each face (in 2D: each edge) shared between a foreground boundary voxel and a background
++    face-neighbour is one surface element of the sampled boundary. For every element this
++    function returns its representative point (the physical centre of the face, in physical
++    coordinates derived from the supplied spacing) and its physical measure (the length of the
++    edge in 2D, the area of the face in 3D). Summing the measures over all elements yields the
++    physical length/area of the sampled (staircase) surface, and every surface element is
++    counted exactly once, so the same convention can be used for the total boundary and for the
++    portion of it that lies within tolerance.
++
++    Args:
++        fg: binary foreground mask of the image (spatial shape only).
++        edges: boolean mask of boundary voxels (e.g. from :func:`monai.metrics.utils.get_mask_edges`).
++        spacing: physical spacing of the image, one value per spatial axis.
++
++    Returns:
++        A pair ``(centers, measures)`` where ``centers`` has shape ``(N, d)`` with the physical
++        coordinates of the element centres and ``measures`` has shape ``(N,)`` with the physical
++        measure of each element.
++    """
++    fg = np.asarray(fg).astype(bool)
++    edges = np.asarray(edges).astype(bool)
++    spacing = np.asarray(spacing, dtype=np.float64)
++    dim = fg.ndim
++    centers: list[np.ndarray] = []
++    measures: list[np.ndarray] = []
++    for ax in range(dim):
++        face_measure = float(np.prod([spacing[k] for k in range(dim) if k != ax]))
++        pad_width = [(0, 0)] * dim
++        pad_width[ax] = (1, 1)
++        padded = np.pad(fg, pad_width, mode="constant", constant_values=False)
++        for face_offset in (0, 1):
++            neighbour = [slice(None)] * dim
++            neighbour[ax] = slice(2, None) if face_offset == 1 else slice(None, -2)
++            face = edges & ~padded[tuple(neighbour)]
++            if not face.any():
++                continue
++            idx = np.argwhere(face)
++            centre = (idx.astype(np.float64) + 0.5) * spacing
++            centre[:, ax] = (idx[:, ax] + face_offset) * spacing[ax]
++            centers.append(centre)
++            measures.append(np.full(len(idx), face_measure, dtype=np.float64))
++    if not centers:
++        return np.empty((0, dim), dtype=np.float64), np.empty(0, dtype=np.float64)
++    return np.vstack(centers), np.concatenate(measures)
++
++
++def _surface_elements_within_tolerance(src: np.ndarray, dst: np.ndarray, tolerance: float) -> np.ndarray:
++    """
++    Exact directed tolerance test between two sets of surface elements.
++
++    Args:
++        src: ``(N, d)`` array of physical coordinates of the source surface elements.
++        dst: ``(M, d)`` array of physical coordinates of the target surface elements.
++        tolerance: physical distance threshold.
++
++    Returns:
++        A boolean array of shape ``(N,)``: entry ``i`` is True when the Euclidean distance in
++        physical space from ``src[i]`` to the nearest target element is at most ``tolerance``.
++        If the target set is empty, all entries are False.
++    """
++    src = np.asarray(src, dtype=np.float64)
++    dst = np.asarray(dst, dtype=np.float64)
++    n_src = len(src)
++    if n_src == 0:
++        return np.empty(0, dtype=bool)
++    if len(dst) == 0:
++        return np.zeros(n_src, dtype=bool)
++    tol2 = float(tolerance) * float(tolerance)
++    eps = 1e-9 * max(1.0, tol2)
++    # reject sources that are farther than `tolerance` from the target bounding box
++    lo = dst.min(axis=0)
++    hi = dst.max(axis=0)
++    gap = np.maximum(np.maximum(lo - src, src - hi), 0.0)
++    active = np.flatnonzero((gap * gap).sum(axis=1) <= tol2 + eps)
++    out = np.zeros(n_src, dtype=bool)
++    if len(active) == 0:
++        return out
++    dim = src.shape[1]
++    span = float(np.max(hi - lo))
++    cell = max(span / 16.0, 1e-9)
++    window = int(np.ceil(float(tolerance) / cell)) + 1
++    # fall back to a direct (chunked) comparison when the search window would be large
++    if (2 * window + 1) ** dim > max(4096, 4 * len(dst)):
++        chunk = max(8, int(1.6e7 // max(1, len(dst) * dim)))
++        for i0 in range(0, len(active), chunk):
++            sel = active[i0 : i0 + chunk]
++            d2 = ((src[sel][:, None, :] - dst[None, :, :]) ** 2).sum(axis=2)
++            out[sel] = d2.min(axis=1) <= tol2 + eps
++        return out
++    # spatial hash of the target elements for local lookups; the window is scanned
++    # from the centre outwards so that dense target sets are resolved after few cells
++    buckets: dict[tuple, list] = {}
++    dst_cell = (dst / cell).astype(np.int64)
++    for i in range(len(dst)):
++        buckets.setdefault(tuple(int(v) for v in dst_cell[i]), []).append(i)
++    offsets = sorted(
++        product(*[range(-window, window + 1)] * dim),
++        key=lambda off: (max(abs(v) for v in off), sum(v * v for v in off)),
++    )
++    for i in active:
++        base = (src[i] / cell).astype(np.int64)
++        for off in offsets:
++            idx = buckets.get(tuple(int(base[k] + off[k]) for k in range(dim)))
++            if idx is None:
++                continue
++            d2 = (dst[idx] - src[i]) ** 2
++            if d2.sum(axis=1).min() <= tol2 + eps:
++                out[i] = True
++                break
++    return out
++
++
+ def compute_surface_dice(
+     y_pred: torch.Tensor,
+     y: torch.Tensor,
+@@ -173,6 +325,21 @@ def compute_surface_dice(
+     The boundary convention is part of the scientific meaning of this metric and should be kept
+     consistent with the spacing and tolerance supplied by the caller.
+ 
++    Spacing and tolerance semantics: when ``distance_metric`` is ``"euclidean"`` and a
++    ``spacing`` is provided, the metric operates in physical units. The sampled boundary of
++    each class is decomposed into its surface elements: every face (in 2D: every edge) that a
++    boundary voxel exposes to background. The measure of a surface element is the physical
++    length (2D) or area (3D) of that face, computed from the supplied spacing, and the directed
++    distance of a surface element is the physical Euclidean distance from its centre to the
++    nearest surface element of the opposite boundary. A surface element is counted as correctly
++    predicted when that distance is at most the class threshold, which is therefore interpreted
++    as a physical distance (e.g. millimetres). The numerator and the denominator of the NSD are
++    both physical measures of the boundary, computed with the same convention, so that the
++    score stays consistent when the same physical study is represented on different voxel
++    grids. When ``spacing`` is ``None``, or a non-euclidean distance metric is used, the legacy
++    unit-grid behavior is preserved: boundary samples are counted per voxel and the
++    (unit) point-to-point distance is used, so the class threshold is interpreted in voxels.
++
+     Args:
+         y_pred: Predicted segmentation, typically segmentation model output.
+             It must be a one-hot encoded, batch-first tensor [B,C,H,W] or [B,C,H,W,D].
+@@ -186,7 +353,11 @@ def compute_surface_dice(
+         distance_metric: The metric used to compute surface distances.
+             One of [``"euclidean"``, ``"chessboard"``, ``"taxicab"``].
+             Defaults to ``"euclidean"``.
+-        spacing: spacing of pixel (or voxel). This parameter is relevant only if ``distance_metric`` is set to ``"euclidean"``.
++        spacing: spacing of pixel (or voxel) along each spatial axis, in the same order as the
++            spatial dimensions of the input tensor. This parameter is relevant only if
++            ``distance_metric`` is set to ``"euclidean"``. Providing it switches the metric to
++            physical units (see "Spacing and tolerance semantics" above); if ``None``, the
++            legacy unit-grid behavior is kept.
+             If a single number, isotropic spacing with that value is used for all images in the batch. If a sequence of numbers,
+             the length of the sequence must be equal to the image dimensions. This spacing will be used for all images in the batch.
+             If a sequence of sequences, the length of the outer sequence must be equal to the batch size.
+@@ -247,6 +418,7 @@ def compute_surface_dice(
+ 
+     img_dim = y_pred.ndim - 2
+     spacing_list = prepare_spacing(spacing=spacing, batch_size=batch_size, img_dim=img_dim)
++    physical_spacing = distance_metric == "euclidean" and spacing is not None
+ 
+     for b, c in np.ndindex(batch_size, n_class):
+         (edges_pred, edges_gt) = get_mask_edges(y_pred[b, c], y[b, c], crop=False)
+@@ -255,17 +427,29 @@ def compute_surface_dice(
+         if not np.any(edges_pred):
+             warnings.warn(f"the prediction of class {c} is all 0, this may result in nan/inf distance.")
+ 
+-        distances_pred_gt = get_surface_distance(
+-            edges_pred, edges_gt, distance_metric=distance_metric, spacing=spacing_list[b]
+-        )
+-        distances_gt_pred = get_surface_distance(
+-            edges_gt, edges_pred, distance_metric=distance_metric, spacing=spacing_list[b]
+-        )
+-
+-        boundary_complete = len(distances_pred_gt) + len(distances_gt_pred)
+-        boundary_correct = np.sum(distances_pred_gt <= class_thresholds[c]) + np.sum(
+-            distances_gt_pred <= class_thresholds[c]
+-        )
++        if physical_spacing:
++            # Physical-spacing mode: the boundary is measured in physical units (length for
++            # 2D inputs, area for 3D inputs) and the class threshold is a physical distance.
++            phys = _physical_spacing_vector(spacing_list[b], img_dim)
++            fg_pred = y_pred[b, c].detach().cpu().numpy() == 1.0
++            fg_gt = y[b, c].detach().cpu().numpy() == 1.0
++            centers_pred, areas_pred = _surface_face_elements(fg_pred, edges_pred, phys)
++            centers_gt, areas_gt = _surface_face_elements(fg_gt, edges_gt, phys)
++            boundary_complete = float(areas_pred.sum()) + float(areas_gt.sum())
++            within_pred = _surface_elements_within_tolerance(centers_pred, centers_gt, class_thresholds[c])
++            within_gt = _surface_elements_within_tolerance(centers_gt, centers_pred, class_thresholds[c])
++            boundary_correct = float(areas_pred[within_pred].sum()) + float(areas_gt[within_gt].sum())
++        else:
++            distances_pred_gt = get_surface_distance(
++                edges_pred, edges_gt, distance_metric=distance_metric, spacing=spacing_list[b]
++            )
++            distances_gt_pred = get_surface_distance(
++                edges_gt, edges_pred, distance_metric=distance_metric, spacing=spacing_list[b]
++            )
++            boundary_complete = len(distances_pred_gt) + len(distances_gt_pred)
++            boundary_correct = np.sum(distances_pred_gt <= class_thresholds[c]) + np.sum(
++                distances_gt_pred <= class_thresholds[c]
++            )
+ 
+         if boundary_complete == 0:
+             # the class is neither present in the prediction, nor in the reference segmentation

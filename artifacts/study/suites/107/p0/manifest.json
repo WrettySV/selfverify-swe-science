@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "parameter_generalization",
+      "invariant": "antiderivative consistency (F'(t) = f(t), fundamental theorem of calculus) for rational functions t^2*w^3/(w^2+k)^2 with a NEW parameter combination w = 3r - 2s - 5t and new constant k = 7",
+      "rationale": "the pre-fix _get_real_roots trusts the heuristic roots() output when count_roots() raises DomainError on the non-field domain QQ[r, s], so log_to_real silently drops the log part of the antiderivative; the pre-fix F is a pure rational function whose numerical derivative mismatches f at every sample point, while the post-fix code returns None and falls back to the exact RootSum, giving F' = f",
+      "path": "selfverify/invariants/invariant_0_parameter_generalization.py"
+    },
+    {
+      "name": "power_generalization",
+      "invariant": "antiderivative consistency (F'(t) = f(t)) when numerator power, w-exponent and quadratic constant all change: t^3*w^4/(w^2+11)^2 with w = 2r + s - 7t",
+      "rationale": "same root-cause (partial/heuristic real-root data accepted on DomainError) but a different integrand shape; pre-fix returns the rational part only (derivative mismatch, e.g. -0.971 vs 0.006 at (2,1,0.4)), post-fix returns the exact antiderivative via the RootSum fallback",
+      "path": "selfverify/invariants/invariant_1_power_generalization.py"
+    },
+    {
+      "name": "sign_symmetry",
+      "invariant": "symmetry: the sign-flipped representation f- = t^2*(-w)^3/((-w)^2+9)^2 equals -f+; a correct workflow must satisfy F-' = -F+' (so F+ + F- is constant) in addition to F+' = f+, F-' = f- with w = r + 4s - 9t",
+      "rationale": "pre-fix, both antiderivatives lose their log part, so the FTC checks F+' = f+ and F-' = f- fail at all sample points (the symmetry check passes on both trees, but the test as a whole fails pre-fix because of the FTC assertions); post-fix all three relations hold",
+      "path": "selfverify/invariants/invariant_2_sign_symmetry.py"
+    },
+    {
+      "name": "shift_generalization",
+      "invariant": "antiderivative consistency (F'(t) = f(t)) under an affine shift of the integration variable: (t+2)^2*w^3/(w^2+5)^2 with w = r + 3s - 2t, where the variable enters both the outer factor and w",
+      "rationale": "probes the same non-field-domain (ZZ[r,s]) log-part path with a shifted variable and new parameters; pre-fix F is the rational part only (e.g. derivative -4.380 vs 0.900 at (1,1,0.6)), post-fix F' = f at all samples",
+      "path": "selfverify/invariants/invariant_3_shift_generalization.py"
+    },
+    {
+      "name": "expanded_representation",
+      "invariant": "representation equivalence: integrating the same rational function t^2*w^3/(w^2+7)^2 (w = 3r - 2s - 5t) in factored vs fully expanded polynomial form must give antiderivatives agreeing up to an additive constant, with F' = f in both representations",
+      "rationale": "the expanded form is a syntactically different but mathematically identical input that still lands on the ratint path with a ZZ[r,s] domain; pre-fix the expanded-form antiderivative is the wrong rational part (F' != f, e.g. 0.00814 vs -0.02998 at (1,3,0.5)), post-fix both representations yield valid antiderivatives that agree in increments",
+      "path": "selfverify/invariants/invariant_4_expanded_representation.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "All 5 tests were empirically verified to FAIL on the exact pre-fix tree (git baseline) and PASS on the patched tree, using central-difference checks of F'(t) vs f(t) at 60-digit precision (tol 1e-5). I could not include a pure algebraic-coefficient (EX-domain, e.g. 1/(x^5+sqrt(2)*x+1)) discriminator because that input raises a separate upstream KeyError inside roots()/factor even on the post-fix tree. I also tried a denominator-power-3 variant t^2*(3r+s-2t)^3/((3r+s-2t)^2+13)^3, but the heuristic roots() happened to succeed there on both trees, so it does not discriminate and was excluded. All new inputs use parameter combinations, powers and constants different from the public fixture."
+}

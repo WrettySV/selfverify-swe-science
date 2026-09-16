@@ -1,0 +1,129 @@
+diff --git a/source/sympy/integrals/rationaltools.py b/source/sympy/integrals/rationaltools.py
+index e95ff5d..e9751cc 100644
+--- a/source/sympy/integrals/rationaltools.py
++++ b/source/sympy/integrals/rationaltools.py
+@@ -6,7 +6,7 @@ from sympy.core.singleton import S
+ from sympy.core.symbol import (Dummy, Symbol, symbols)
+ from sympy.functions.elementary.exponential import log
+ from sympy.functions.elementary.trigonometric import atan
+-from sympy.polys.polyerrors import DomainError
++from sympy.polys.polyerrors import CoercionFailed, DomainError, PolynomialError
+ from sympy.polys.polyroots import roots
+ from sympy.polys.polytools import cancel
+ from sympy.polys.rootoftools import RootSum
+@@ -326,13 +326,27 @@ def log_to_atan(f, g):
+ 
+ 
+ def _get_real_roots(f, x):
+-    """get real roots of f if possible"""
++    """get real roots of f if possible
++
++    Returns a dictionary mapping real roots to their multiplicities.
++    Returns None if the set of real roots of f cannot be fully
++    determined (which happens for polynomials with free symbols whose
++    roots cannot be expressed and tested for reality), so that callers
++    fall back to a form that stays correct instead of silently
++    dropping terms.
++    """
+     rs = roots(f, filter='R')
+ 
+     try:
+         num_roots = f.count_roots()
+     except DomainError:
+-        return rs
++        # f has free symbols, so sign variation counting is not
++        # available.  Check that every root of f that roots() did not
++        # return is provably non-real; otherwise the set of real roots
++        # cannot be fully determined.
++        if _unfound_roots_are_nonreal(f, x, rs):
++            return rs
++        return None
+     else:
+         if len(rs) == num_roots:
+             return rs
+@@ -340,6 +354,76 @@ def _get_real_roots(f, x):
+             return None
+ 
+ 
++def _unfound_roots_are_nonreal(f, x, rs):
++    """Return True if all roots of f not in rs are provably non-real.
++
++    The roots in rs are removed from f (with multiplicity).  Every
++    remaining factor of degree one or more may have real roots,
++    except a quadratic factor whose discriminant is provably
++    non-positive, which has real roots only for degenerate
++    (lower-dimensional) parameter values.
++    """
++    remaining = f.as_expr()
++
++    for root, multiplicity in rs.items():
++        for _ in range(multiplicity):
++            remaining = cancel(remaining / (x - root))
++
++    try:
++        remaining = Poly(remaining, x)
++    except (PolynomialError, CoercionFailed, TypeError,
++            ZeroDivisionError, ValueError):
++        return False
++
++    if remaining.degree() == 0:
++        return True
++
++    try:
++        _, factors = remaining.factor_list()
++    except (PolynomialError, CoercionFailed, TypeError,
++            ZeroDivisionError, ValueError, NotImplementedError):
++        return False
++
++    for factor, _ in factors:
++        if factor.degree() > 2:
++            # an unfound factor of degree three or more may have
++            # real roots
++            return False
++        if factor.degree() == 1:
++            # an unfound linear factor has a real root
++            return False
++        coeffs = factor.all_coeffs()
++        discriminant = coeffs[1]**2 - 4*coeffs[0]*coeffs[2]
++        if discriminant.is_negative:
++            continue
++        if discriminant.is_nonpositive and discriminant != 0:
++            # the factor has real roots only for degenerate
++            # (lower-dimensional) parameter values
++            continue
++        return False
++
++    return True
++
++
++def _is_zero(expr):
++    """Test whether ``expr`` is zero.
++
++    A purely numerical expression is checked with ``evalf`` so that
++    floating point noise is tolerated.  An expression with free symbols
++    must be tested exactly: ``evalf`` only evaluates the numerical
++    coefficients and cannot prove that such an expression vanishes
++    identically.
++    """
++    if expr == 0:
++        return True
++    if not expr.free_symbols:
++        return expr.evalf(chop=True) == 0
++    try:
++        return cancel(expr) == 0
++    except (PolynomialError, CoercionFailed, TypeError, NotImplementedError):
++        return expr.simplify() == 0
++
++
+ def log_to_real(h, q, x, t):
+     r"""
+     Convert complex logarithms to real functions.
+@@ -424,7 +508,7 @@ def log_to_real(h, q, x, t):
+ 
+             D = d.xreplace({u: r_u, v: r_v})
+ 
+-            if D.evalf(chop=True) != 0:
++            if not _is_zero(D):
+                 continue
+ 
+             A = Poly(a.xreplace({u: r_u, v: r_v}), x)

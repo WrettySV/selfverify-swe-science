@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "orbit_equivalence_origin_shift",
+      "invariant": "representation equivalence: the symmetry orbit of a site is a physical observable independent of the coordinate convention (pure origin-shift convention, BNS 4.9)",
+      "rationale": "pre-fix get_magsymops ignores transform_BNS_Pp_abc and returns raw BNS-setting ops, so applying them to an archive-frame probe and mapping back to the catalogue frame yields a different point set than the BNS orbit of the mapped probe (assertion fails on the 2z image). The correct fix conjugates ops into the producer basis (W'=P^-1WP, w'=P^-1(w+(W-I)p)), making the two orbits coincide exactly.",
+      "path": "selfverify/invariants/invariant_1_orbit_equivalence_origin_shift.py"
+    },
+    {
+      "name": "orbit_equivalence_basis_change",
+      "invariant": "representation equivalence: same orbit invariance under a non-identity basis change (axis swap plus origin shift) for a different group and probe (BNS 4.11)",
+      "rationale": "pre-fix the basis-change part P is entirely discarded, so the catalogue-frame orbit of the archive probe does not match the BNS orbit of the mapped probe (second orbit point differs in the y component). Post-fix the conjugation by P maps the orbit correctly, so the two multisets are equal.",
+      "path": "selfverify/invariants/invariant_2_orbit_equivalence_basis_change.py"
+    },
+    {
+      "name": "catalogue_orbit_group_closure",
+      "invariant": "group property: symmetry-equivalent sites of a crystal form a complete orbit, i.e. the catalogue-frame orbit of an archived site is closed under every BNS operation",
+      "rationale": "pre-fix the archive-frame points are images under ops acting in the wrong frame; mapping them to the catalogue frame gives a set that is not closed under the BNS group (applying the 2z|1/2,0,0 op to the identity image leaves the set). Post-fix the catalogue orbit is exactly the BNS orbit of the mapped probe, which is closed under the group (BNS 4.11 is the Z2 group in the snapshot catalogue).",
+      "path": "selfverify/invariants/invariant_3_catalogue_orbit_group_closure.py"
+    },
+    {
+      "name": "conjugation_roundtrip_identity",
+      "invariant": "setting consistency: re-expressing the operation family through the inverse transformation (archive basis back to BNS setting) must reproduce the raw BNS family exactly (change of setting twice is the identity)",
+      "rationale": "pre-fix the parser returns the raw BNS family regardless of the transform string, so conjugating its output by the inverse transformation yields a family with a shifted translation ((2z|1/3,1/3,0) instead of (2z|0,1/3,0)) that does not match the BNS family. Post-fix the two conjugations compose to the identity, so the round-trip family equals the BNS family exactly.",
+      "path": "selfverify/invariants/invariant_4_conjugation_roundtrip_identity.py"
+    },
+    {
+      "name": "point_operator_conjugacy",
+      "invariant": "representation law of point operators: under a basis change the rotation parts transform by conjugation W -> P^-1 W P, so the archive family's rotation multiset must be the conjugate of the BNS multiset",
+      "rationale": "pre-fix the returned rotations are the raw BNS matrices (2z), which are not the conjugated matrices (2x-like diag(-1,1,-1)) required in the permuted archive basis, so the multisets differ. Post-fix transform_symmop produces exactly QWP rotations, so the multisets match.",
+      "path": "selfverify/invariants/invariant_5_point_operator_conjugacy.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All 5 tests verified: exit 1 on the pre-fix tree (cif.py restored to HEAD) and exit 0 with PASS on the patched tree. The snapshot catalogue contains only two benchmark magnetic groups (BNS 4.11 and 4.9, both without time-reversal ops), so group diversity is limited; every test therefore uses a new transform string and a new generic probe site, distinct from the public fixture record (4.11 + 'a,2b,c;0,0,0' + [0.125,0.1,0.375]). BNS 4.9's two-op family is not closed under composition (g^2 = (1|0,2/3,0) is not in the family), so the group-closure test uses 4.11, the proper Z2 group. Time-reversal (spin) discrimination could not be probed because no benchmark group contains t=-1 operations."
+}

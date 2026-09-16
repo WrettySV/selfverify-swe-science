@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "relabel_invariance",
+      "invariant": "representation equivalence: the volume delivered to the network outlet must be independent of how node ids are assigned to the same physical network",
+      "rationale": "The pre-fix grid runs an internal (y,x) node re-indexing plus link reordering, so per-node/per-link data arrays and parcel start links attach to the wrong elements; results then depend on the arbitrary id labeling. Pre-fix, the same physical experiment with two node labelings delivers 0.0 vs 1.0 m3 to the boundary (assertion fails). Post-fix, ids are preserved, both labelings give identical results (assertion passes).",
+      "path": "selfverify/invariants/invariant_1_relabel_invariance.py"
+    },
+    {
+      "name": "outlet_exit_sustained_flow",
+      "invariant": "boundary delivery / advection completeness: a bed-material pulse released on a strictly descending channel under sustained flow must reach the network outlet, not remain trapped mid-network",
+      "rationale": "Pre-fix, the pulse released on the tributary reach is trapped on a scrambled internal link whose scrambled hydraulics yield zero transport, so it never exits in 10 steps (final element_id=2, assertion fails). Post-fix, the release id maps to the intended reach and the pulse exits at step 2 (assertion passes).",
+      "path": "selfverify/invariants/invariant_2_outlet_exit_sustained_flow.py"
+    },
+    {
+      "name": "no_upstream_motion",
+      "invariant": "downstream consistency: sediment cannot move upstream against the supplied topography; each parcel's distance-to-outlet along the physical network must be non-increasing in time",
+      "rationale": "Parcel states are mapped back to physical space by matching grid node coordinates to the user-supplied nodes, removing reliance on the grid's internal ids. Pre-fix, one parcel's physical link sequence is [2,2,2,1,1] (descend then jump upstream 125->250 m toward the headwater) so the monotonicity assertion fails; post-fix every parcel descends monotonically and the near-outlet release also exits before the far release (causality), both passing.",
+      "path": "selfverify/invariants/invariant_3_no_upstream_motion.py"
+    },
+    {
+      "name": "release_link_fidelity",
+      "invariant": "initial-state consistency: at t=0 each parcel must sit on the exact physical reach the user specified (data assigned by link id must refer to the intended element)",
+      "rationale": "Pre-fix, the parcel ids the user supplied are reinterpreted against the reordered internal link table, so parcels released on physical links [0, 2] physically start on links [2, 0] (assertion fails). Post-fix the supplied release links are honored exactly (assertion passes).",
+      "path": "selfverify/invariants/invariant_4_release_link_fidelity.py"
+    },
+    {
+      "name": "confluence_mass_delivery",
+      "invariant": "mass conservation into boundary delivery: two unit pulses released on the two tributaries of a descending network must both be routed to the outlet (total delivered volume equals total pulse volume, nothing stored mid-network)",
+      "rationale": "Pre-fix, the tributary-A pulse is trapped mid-network by the scrambled link assignment, so only 1.0 of 2 m3 reaches the boundary (assertion fails). Post-fix both pulses are routed through the confluence to the outlet, 2.0 m3 delivered with 0 stored (assertion passes).",
+      "path": "selfverify/invariants/invariant_5_confluence_mass_delivery.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "The public reproduction (reproduce.py) does NOT discriminate: it passes on both pre-fix and post-fix trees (weak structural checks only), which is why these stronger invariants were needed. All tests were executed on a pre-fix tree (baseline source) and on the patched tree: all 5 fail pre-fix with the asserted AssertionError and all 5 pass post-fix. Each test uses a NEW network (5-node Y confluence or 4-node straight channel) not derived from the public fixture, builds the candidate Landlab through the repo's own workflow.load_candidate machinery (same as reproduce.py), and maps parcel states to physical space by coordinate-matching grid nodes against the user-supplied nodes so the assertions hold in physical, not internal, coordinates. Unit-scaling metamorphic tests (m <-> km) were deliberately not used because NetworkSedimentTransporter's Wilcock-Crowe law is unit-sensitive (it assumes SI inputs), so a unit-scaled run is a different physical problem; geometric/representation invariances (relabeling, coordinate matching) are the sound alternatives here."
+}

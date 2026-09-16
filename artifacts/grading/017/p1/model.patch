@@ -1,0 +1,244 @@
+diff --git a/source/gammapy/astro/darkmatter/profiles.py b/source/gammapy/astro/darkmatter/profiles.py
+index 85cd4f5..e459438 100644
+--- a/source/gammapy/astro/darkmatter/profiles.py
++++ b/source/gammapy/astro/darkmatter/profiles.py
+@@ -52,18 +52,73 @@ class DMProfile(abc.ABC):
+             / np.sqrt(radius**2 - (self.DISTANCE_GC * np.sin(separation)) ** 2)
+         )
+ 
+-    def integral(self, rmin, rmax, separation, ndecade, squared=True):
+-        r"""Integrate dark matter profile numerically.
++    def _integrate_los_branch(self, rmin, rmax, impact, ndecade, squared, unit):
++        r"""Numerically integrate one branch of the line-of-sight integral.
++
++        Computes
+ 
+         .. math::
+-            F(r_{\min}, r_{\max}) = \int_{r_{\min}}^{r_{\max}}\rho(r)^\gamma dr \\
++            \int_{r_{\min}}^{r_{\max}} \rho(r)^\gamma
++            \frac{r}{\sqrt{r^2 - b^2}} \, \mathrm dr
++
++        with :math:`\gamma = 2` (squared, annihilation) or :math:`1` (decay)
++        and impact parameter :math:`b`, the closest distance of the line of
++        sight from the halo centre. All parameters are bare numbers expressed
++        in the distance unit `unit`.
++
++        For :math:`b > 0` the substitution :math:`r = b \cosh(t)` is used,
++        which maps the closest approach to :math:`t = 0` and removes the
++        square-root endpoint singularity at :math:`r = b`. For :math:`b = 0`
++        the radial interval is integrated directly, keeping the requested
++        lower and upper bounds.
++        """
++        exponent = 2 if squared else 1
++        zero = u.Quantity(0.0, unit) * (u.GeV / u.cm**3) ** exponent
++        if rmax <= rmin:
++            return zero
++        if impact > 0:
++            t_min = np.arccosh(max(rmin / impact, 1.0))
++            t_max = np.arccosh(rmax / impact)
++            if t_max <= t_min:
++                return zero
++            n = max(2, int(np.ceil((t_max - t_min) / np.log(10.0) * ndecade)))
++            t = np.linspace(t_min, t_max, n)
++            radius = impact * np.cosh(t) * unit
++            with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
++                values = radius * self(radius) ** exponent
++            return np.trapezoid(values, t)
++        if rmin > 0:
++            n = max(2, int(np.ceil((np.log10(rmax) - np.log10(rmin)) * ndecade)))
++            radius = np.logspace(np.log10(rmin), np.log10(rmax), n) * unit
++            with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
++                values = self(radius) ** exponent
++            return trapz_loglog(values, radius).sum()
++        n = max(2, int(np.ceil(ndecade)))
++        radius = np.linspace(0.0, rmax, n) * unit
++        with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
++            values = self(radius) ** exponent
++        return np.trapezoid(values, radius)
++
++    def integral(self, rmin, rmax, separation, ndecade, squared=True, distance=None):
++        r"""Integrate one line-of-sight branch of the dark matter profile.
++
++        .. math::
++            F(r_{\min}, r_{\max}) = \int_{r_{\min}}^{r_{\max}}
++            \rho(r)^\gamma \frac{r}{\sqrt{r^2 - b^2}} \, \mathrm dr \\
+             \gamma = 2 \text{ for annihilation} \\
+             \gamma = 1 \text{ for decay}
+ 
++        where :math:`b = d \sin(\theta)` is the impact parameter of the line
++        of sight, i.e. the closest distance of the ray from the halo centre
++        for angular separation :math:`\theta` and observer-to-halo-centre
++        distance :math:`d`. The factor
++        :math:`r / \sqrt{r^2 - b^2}` is the Jacobian converting the
++        line-of-sight integral into a radial integral.
++
+         Parameters
+         ----------
+         rmin, rmax : `~astropy.units.Quantity`
+-            Lower and upper bound of integration range.
++            Lower and upper bound of the radial integration range.
+         separation : `~numpy.ndarray`
+             Separation angle in radians.
+         ndecade : int, optional
+@@ -72,12 +127,24 @@ class DMProfile(abc.ABC):
+         squared : bool, optional
+             Square the profile before integration.
+             Default is True.
++        distance : `~astropy.units.Quantity`, optional
++            Observer-to-halo-centre distance used for the impact parameter.
++            Default is `DMProfile.DISTANCE_GC`.
+         """
+-        integral = self.integrate_spectrum_separation(
+-            self._eval_substitution, rmin, rmax, separation, ndecade, squared
++        if distance is None:
++            distance = self.DISTANCE_GC
++        impact = distance * np.sin(separation)
++        unit = rmax.unit
++        integral = self._integrate_los_branch(
++            rmin.to_value(unit),
++            rmax.to_value(unit),
++            impact.to_value(unit),
++            ndecade,
++            squared,
++            unit,
+         )
+-        inegral_unit = u.Unit("GeV2 cm-5") if squared else u.Unit("GeV cm-2")
+-        return integral.to(inegral_unit)
++        integral_unit = u.Unit("GeV2 cm-5") if squared else u.Unit("GeV cm-2")
++        return integral.to(integral_unit)
+ 
+     def integrate_spectrum_separation(
+         self, func, xmin, xmax, separation, ndecade, squared=True
+diff --git a/source/gammapy/astro/darkmatter/utils.py b/source/gammapy/astro/darkmatter/utils.py
+index 3a87ef0..8917bdb 100644
+--- a/source/gammapy/astro/darkmatter/utils.py
++++ b/source/gammapy/astro/darkmatter/utils.py
+@@ -44,11 +44,11 @@ class JFactory:
+ 
+         .. math::
+             \frac{\mathrm d J_\text{ann}}{\mathrm d \Omega} =
+-            \int_{\mathrm{LoS}} \mathrm d l \rho(l)^2
++            \int_{\mathrm{LoS}} \mathrm d l \, \rho(l)^2
+ 
+         .. math::
+             \frac{\mathrm d J_\text{decay}}{\mathrm d \Omega} =
+-            \int_{\mathrm{LoS}} \mathrm d l \rho(l)
++            \int_{\mathrm{LoS}} \mathrm d l \, \rho(l)
+ 
+         Parameters
+         ----------
+@@ -63,66 +63,71 @@ class JFactory:
+ 
+         Notes
+         -----
+-        The line-of-sight (LoS) integral should include both the near and far
+-        sides of the halo. To account for this, the integration is split into
+-        two regions:
++        The line-of-sight (LoS) integral runs from the observer to the
++        truncation radius of the halo and includes both the near and far
++        sides of the halo. Let :math:`d` be the observer-to-halo-centre
++        distance and :math:`\theta` the angular separation of a pixel from
++        the halo centre. The closest distance of the ray from the halo centre
++        is the impact parameter
+ 
+-        1. :math:`[r_{\min}, r_{\max}]` - from the observer to the source,
+-           counted twice to include contributions from both near and far sides.
+-        2. :math:`[r_{\max}, 4 r_{\max}]` - from the source to infinity.
+-           The upper limit is truncated at :math:`4 r_{\max}` because
+-           contributions beyond this are negligible.
++        .. math::
++            b = d \sin \theta.
+ 
+-        Hence, the effective integration domain is:
++        The LoS integral is converted into a radial integral over the
++        profile through
+ 
+         .. math::
+-            2 \times [r_{\min}, r_{\max}] \;+\; [r_{\max}, 4 r_{\max}].
++            r^2 = l^2 + d^2 - 2 d l \cos \theta
+ 
+-        The LoS integral is converted into a radial integral over the profile through:
++        with the Jacobian
+ 
+         .. math::
+-            r^2 = l^2 + r_{\max}^2 - 2 dl \cos \theta
+-
+-        Rearranging for the differential gives:
++            \mathrm dl = \frac{r}{\sqrt{r^2 - b^2}} \, \mathrm dr.
++
++        For :math:`\theta \le 90^\circ` the ray passes the closest
++        approach before continuing outward, so the :math:`[b, d]`
++        contribution is counted twice and the :math:`[d, 4d]` contribution
++        once. For :math:`\theta > 90^\circ` the observer itself is the
++        closest point of the forward ray, so the :math:`[b, d]`
++        contribution is absent and only the :math:`[d, 4d]` contribution is
++        counted, using the same impact parameter. The upper limit is
++        truncated at :math:`4d` because contributions beyond this are
++        negligible. Hence
+ 
+         .. math::
+-            \mathrm dl = \frac{2 r}{\sqrt{r^2 - r_{\min}^2}} \, \mathrm dr.
++            \int_0^{l_\mathrm{max}} \rho^2(r(l, \theta)) \, \mathrm dl
++            \approx 2 \int_{b}^{d} \frac{r \, \rho^2(r)}{\sqrt{r^2 - b^2}} \, \mathrm dr
++              + \int_{d}^{4 d} \frac{r \, \rho^2(r)}{\sqrt{r^2 - b^2}} \, \mathrm dr
++              \quad (\theta \le 90^\circ)
+ 
+-        This substitution allows the integral to be evaluated directly as
+-        radial integrals using ``profile.integral``, giving
++        and
+ 
+         .. math::
+             \int_0^{l_\mathrm{max}} \rho^2(r(l, \theta)) \, \mathrm dl
+-            = 2 \int_{r_{\min}}^{r_{\max}} \frac{r \, \rho^2(r)}{\sqrt{r^2 - r_{\min}^2}} \, \mathrm dr
+-              + \int_{r_{\max}}^{4 r_{\max}} \frac{r \, \rho^2(r)}{\sqrt{r^2 - r_{\min}^2}} \, \mathrm dr.
++            \approx \int_{d}^{4 d} \frac{r \, \rho^2(r)}{\sqrt{r^2 - b^2}} \, \mathrm dr
++              \quad (\theta > 90^\circ)
++
++        with the same integrand form for decay, using :math:`\rho(r)`
++        instead of :math:`\rho^2(r)`.
+         """
+         separation = self.geom.separation(self.geom.center_skydir).rad
+-        rmin = u.Quantity(
+-            value=np.tan(separation) * self.distance, unit=self.distance.unit
+-        )
+-        rmax = self.distance
+-        val = [
+-            (
+-                2
+-                * self.profile.integral(
+-                    _.value * u.kpc,
+-                    rmax,
+-                    np.arctan(_.value / self.distance.value),
+-                    ndecade,
+-                    self.annihilation,
+-                )
+-                + self.profile.integral(
+-                    self.distance,
+-                    4 * rmax,
+-                    np.arctan(_.value / self.distance.value),
+-                    ndecade,
+-                    self.annihilation,
+-                )
++        distance = self.distance
++        rmax = distance
++        impact = np.sin(separation) * distance
++        val = []
++        for b, sep in zip(impact.ravel(), separation.ravel()):
++            far = self.profile.integral(
++                rmax, 4 * rmax, sep, ndecade, self.annihilation, distance=distance
+             )
+-            for _ in rmin.ravel()
+-        ]
++            if sep <= np.pi / 2:
++                near = self.profile.integral(
++                    b, rmax, sep, ndecade, self.annihilation, distance=distance
++                )
++                val.append(2 * near + far)
++            else:
++                val.append(far)
+         integral_unit = u.Unit("GeV2 cm-5") if self.annihilation else u.Unit("GeV cm-2")
+-        jfact = u.Quantity(val).to(integral_unit).reshape(rmin.shape)
++        jfact = u.Quantity(val).to(integral_unit).reshape(separation.shape)
+         return jfact / u.steradian
+ 
+     def compute_jfactor(self, ndecade=1e4):

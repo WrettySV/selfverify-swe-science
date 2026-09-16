@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "closed_form_vector_density",
+      "invariant": "representation equivalence: ZeroSumNormal(shape=(K,)) must carry the standard Gaussian density (2 pi s^2)^(-(K-1)/2) exp(-||x||^2/(2 s^2)) on the (K-1)-dim zero-sum hyperplane, for new K and sigma values",
+      "rationale": "pre-fix the logp multiplies the per-entry Normal logp by D/N=((K-1)/K), i.e. it returns a power f^((K-1)/K) of the true density, distorting both the normalizer and the curvature, so the closed form is violated by O(1) (max err 0.72 at K=7); post-fix the logp equals the Gaussian-on-support density to <1e-8",
+      "path": "selfverify/invariants/invariant_0_closed_form_vector_density.py"
+    },
+    {
+      "name": "support_mass_normalization",
+      "invariant": "conservation/normalization: the density integrates to 1 over its (K-1)-dim support, checked by quadrature of int exp(logp(a,-a)) sqrt(2) da for K=2, sigma=1.35",
+      "rationale": "pre-fix the on-support density is f^(1/2), whose total mass is sqrt(2) ~= 1.414 instead of 1, so the mass check fails; post-fix the quadrature returns 1 within 1e-3",
+      "path": "selfverify/invariants/invariant_1_support_mass_normalization.py"
+    },
+    {
+      "name": "closed_form_interaction_density",
+      "invariant": "representation equivalence on a multi-axis support: ZeroSumNormal(shape=(6,7), n_zerosum_axes=2) must carry (2 pi s^2)^(-D/2) exp(-||x||^2/(2 s^2)) on the double zero-sum subspace with D=(6-1)*(7-1)=35",
+      "rationale": "the laboratory-by-protocol interaction effect is exactly this two-axis case; pre-fix the logp is scaled by D/N=35/42 and lacks the (N-D)*(log(2 pi)/2 + log s) correction, deviating from the correct density by ~3.76; post-fix deviation < 1e-8",
+      "path": "selfverify/invariants/invariant_2_closed_form_interaction_density.py"
+    },
+    {
+      "name": "sigma_rescaling_identity",
+      "invariant": "unit/scale consistency: at fixed data x, log f(x;s0) - log f(x;s1) must equal (D/2) log(s1^2/s0^2) - (||x||^2/2)(1/s0^2 - 1/s1^2), i.e. s in the exponent must be the standard deviation of the underlying unconstrained Normal (coefficient 1, as documented)",
+      "rationale": "pre-fix the exponent carries curvature (D/N)/s^2 instead of 1/s^2 (effective scale s*sqrt(N/D)), violating this identity by ~2.33; post-fix it holds to machine precision. The naive f(x;s1)=(s0/s1)^D f(s0 x/s1; s0) identity holds for BOTH versions and was deliberately avoided as a vacuous test",
+      "path": "selfverify/invariants/invariant_3_sigma_rescaling_identity.py"
+    },
+    {
+      "name": "model_logp_matches_reduced_reference",
+      "invariant": "representation equivalence of the documented model: for a new laboratory x protocol study (6 labs, 7 protocols, new scales and synthetic data), the sum of pymc's ZeroSumNormal logp factors plus the Gaussian cell likelihood must equal an independently implemented reduced-coordinate Gaussian posterior",
+      "rationale": "this is the exact disagreement reported in the problem statement (posterior vs independently validated reduced-coordinate implementation); pre-fix the three ZSN factors differ from the reduced-coordinate Gaussian priors by ~0.92 log units, post-fix they agree to < 1e-8",
+      "path": "selfverify/invariants/invariant_4_model_logp_matches_reduced_reference.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "All five tests were verified in both directions: with the draft patch reverted (source restored to the baseline commit) all five FAIL with O(1) violations, and with the patch applied all five PASS (errors < 1e-8 or quadrature within 1e-3); each script runs in ~1-5 s with fixed seeds. MCMC-based posterior summaries (contrast means/SDs) were not used because pm.sample is slow and noisy under the pure-Python pytensor build; the deterministic logp identities above pin the same quantity exactly, since the full posterior is Gaussian and determined by the logp. No fixture numbers, shapes, or paths are reused (fixture is 4 labs x 5 protocols with scales 2.0/0.7/0.6/0.5; tests use 7/10/2/6x7 dimensions and scales 1.1/2.8/1.35/1.4/0.8/2.5/2.1/1.9). One initially generated test (sigma-rescaling of the density along rays in (x, sigma) space) was found to also hold pre-fix and was replaced by the fixed-data sigma-derivative identity in invariant_3."
+}

@@ -1,0 +1,30 @@
+{
+  "invariants": [
+    {
+      "name": "reaction_direction_invariance",
+      "invariant": "Symmetry/representation equivalence: a transition-state graph and its reverse (0.9/0.1 reaction-edge orders swapped) are the same physical object, so the sorted rotor signature (canonical element-symbol sequences of the rotational coordinates) must be identical.",
+      "rationale": "Pre-fix, atom_neighbor_atom_key/atom_zmat_neighbor_atom_key hard-code ords_last=(0.1,) when choosing the atoms that cap rotational segments, so a 0.1 (breaking) neighbor is pushed last while the same neighbor at 0.9 in the reversed TS is not; the forward and reversed presentations cap different physical atoms and yield different signatures (verified: fwd has an S-bearing coordinate the reverse lacks, and vice versa). A correct fix must make reaction-edge orders irrelevant to that choice, making the two signatures exactly equal. FAILS pre-fix, PASSES post-fix.",
+      "path": "selfverify/invariants/invariant_1_reaction_direction_invariance.py"
+    },
+    {
+      "name": "reaction_direction_invariance_oxygen",
+      "invariant": "Same reaction-direction invariance, probed with a new TS whose differentiating neighbor is O instead of S (generalization across element and presentation of the reaction edge).",
+      "rationale": "The pre-fix 0.1-bias mis-selection depends on the sort order of the competing neighbors; with an O substituent the reversed TS again selects a different capping atom, so fwd/rev signatures disagree pre-fix (verified: reversed loses the O-bearing coordinate). Any correct fix, not merely one tuned to a sulfur-containing graph, must keep the two signatures exactly equal. FAILS pre-fix, PASSES post-fix.",
+      "path": "selfverify/invariants/invariant_2_reaction_direction_invariance_oxygen.py"
+    },
+    {
+      "name": "breaking_edge_direction_invariance",
+      "invariant": "Same reaction-direction invariance for a TS presented with the reaction edge in its breaking (0.1) direction first, with an F differentiating neighbor; the physical rotor content must not depend on which direction the reaction is written in.",
+      "rationale": "Mirrors invariant 1 with the edge orders inverted (0.1 in the base graph, 0.9 after reversal), so the pre-fix bias hits the other presentation: the forward graph keeps an F-bearing rotor that the reversed graph drops (verified pre-fix: fwd=[('C','C','C','H'),('F','C','C','H')] vs rev=[('C','C','C','H'),('C','C','C','H')]). A correct fix must report identical nonempty signatures in both directions. FAILS pre-fix, PASSES post-fix.",
+      "path": "selfverify/invariants/invariant_3_breaking_edge_direction_invariance.py"
+    },
+    {
+      "name": "relabel_reverse_equivalence",
+      "invariant": "Representation equivalence for a larger, branched TS: the rotor signature must be unchanged under (a) non-monotone relabeling of atom keys and (b) reversal of the reaction direction, in all four combinations.",
+      "rationale": "Relabeling alone is already invariant on the buggy code (the 0.1 bias is key-independent), so this test deliberately combines relabeling with reversal: pre-fix the reversed presentations of this C-N/C-CH3 TS lose a C-capped rotor and gain an N-capped one, so the four presentations do not agree (verified pre-fix). Pure-relabeling tests were rejected as non-discriminating for this reason. A correct fix must make all four equivalent presentations agree exactly. FAILS pre-fix, PASSES post-fix.",
+      "path": "selfverify/invariants/invariant_4_relabel_reverse_equivalence.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All four tests were verified by running them on both trees: each FAILs (AssertionError, nonzero exit) on the pre-fix baseline and PASSes (exit 0) with the draft patch applied. All graphs are new inputs with atom keys disjoint from the public fixture; no fixture numbers or paths are reused. The negative-control-distinctness property (changed connectivity must not collapse to the same observation) was deliberately not included: it already holds on the pre-fix tree, so such a test would not discriminate. A pure key-relabeling invariance test was likewise rejected because the pre-fix bias only affects 0.1-ordered neighbors, which are class-sorted before any key tie-break; relabeling alone cannot change the outcome on the buggy code. The only untested aspect is a genuinely different correct repair (e.g. one that normalizes 0.1/0.9 globally); the tests assert only the physical equality of equivalent presentations, not specific signature values, so any correct repair should pass them."
+}

@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "reversal_signature_invariance",
+      "invariant": "the rotor signature (sorted, unoriented element-symbol sequences of the torsion coordinates) is a property of the physical transition state and must be identical under reversal of the reaction direction (forming 0.1 <-> breaking 0.9), which is only a re-presentation of the same TS",
+      "rationale": "pre-fix, atom_zmat_neighbor_atom_key in rotational_coordinates demotes the forming-bond (order 0.1) neighbor when picking the out-of-segment cap atom, so ts.reverse(G) (edge becomes 0.1) collapses the extended linear segment to the plain reacting bond and yields signature (C,C,C,H) instead of (H,C,S,H) -> the test fails; a correct fix removes the direction-dependent demotion (ords_last=()), so both presentations give (H,C,S,H) -> the test passes. A fresh 9-atom C/S/H graph with new keys is used, plus a connectivity-changed control that must remain distinct (guards against a constant-output repair).",
+      "path": "selfverify/invariants/invariant_1_reversal_signature_invariance.py"
+    },
+    {
+      "name": "linear_segment_direction_invariance",
+      "invariant": "the extended linear rotor segment, including its in-line cap atoms chosen by linear_segment_cap_keys, must not depend on which reagent is reactant vs product",
+      "rationale": "pre-fix, linear_segment_cap_keys picks the in-line cap with the default ords_last=(0.1,), so for the reversed graph (edge order 0.1) the cap atom becomes the hydrogen (103) instead of the reaction-edge carbon (127), changing the extended segment from {101,107,113,127} to {103,101,107,113} -> the test fails; post-fix both presentations give {101,107,113,127} -> the test passes. This probes the _03kekule.py half of the fix directly, at the segment level rather than only through the final signature.",
+      "path": "selfverify/invariants/invariant_2_linear_segment_direction_invariance.py"
+    },
+    {
+      "name": "heteroatom_reversal_invariance",
+      "invariant": "direction-reversal invariance of the rotor signature must hold for other element compositions, not just the C/S/C skeleton of the public fixture",
+      "rationale": "uses a new 8-atom TS in which the reaction-edge partner is N (2 H substituents) and the in-line cap is O. Pre-fix the reversed presentation picks a different cap (demoting the N via its 0.1 bond) and gives (C,C,N,H) instead of (H,N,O,H) -> the test fails; post-fix both give (H,N,O,H) -> the test passes. This discriminates fixes that only coincidentally work for the C-first symbol ordering of the fixture.",
+      "path": "selfverify/invariants/invariant_3_heteroatom_reversal_invariance.py"
+    },
+    {
+      "name": "dual_construction_equivalence",
+      "invariant": "representation equivalence: the same physical TS, independently written once with a breaking (0.9) edge and once with a forming (0.1) edge (different atom keys), must produce the same rotor observation",
+      "rationale": "pre-fix the two independently constructed presentations disagree on their primary observations, (H,C,S,H) vs (C,C,C,H), and neither is self-consistent under ts.reverse -> the test fails; post-fix both constructions and both of their reversals give (H,C,S,H) -> the test passes. This is the strongest statement of the invariant: no particular presentation may be privileged.",
+      "path": "selfverify/invariants/invariant_4_dual_construction_equivalence.py"
+    },
+    {
+      "name": "segment_population_invariance",
+      "invariant": "the number and composition of physically distinct rotational segments (the rotor population) must not depend on the reaction direction, even when the reaction-center atom has a competing non-reaction neighbor that could also serve as the in-line cap",
+      "rationale": "uses a new branched 12-atom TS where the reaction center has both a reaction-edge carbon and a normal methyl carbon as candidate caps. Pre-fix, the direction decides which candidate is chosen, so the reversed graph yields a different segment population ({401,403,407,443}+{401,411} vs {401,407,411,443}+{401,403}) -> the test fails; post-fix both directions keep the same two segments -> the test passes. Note that here the pre-fix signature multisets coincidentally match, so the segment-level observable is the genuine discriminator.",
+      "path": "selfverify/invariants/invariant_5_segment_population_invariance.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "All five tests were empirically verified: every test fails on the pre-fix tree (git stash of the draft patch) and passes on the post-fix tree, then the patch was restored byte-identically. The pre-fix defect is an asymmetry in the neighbor-selection sort: atom_zmat_neighbor_atom_key / atom_neighbor_atom_key demote order-0.1 (forming-bond) neighbors (default ords_last=(0.1,)) when choosing rotor cap atoms, while ts.reverse swaps 0.1<->0.9, so the pre-fix observation is not a representation invariant. A pure atom-key relabeling test was deliberately not included: with symbol-ordered sorts, key relabeling only breaks ties within identical symbols and cannot change the observed symbol signature, so it would pass pre-fix and be a vacuous guard. Tests could not probe 3D-coordinate-dependent behavior (geometry generation) because the public contract is graph-level; all assertions use the public graph API (rotational_coordinates, rotational_segment_keys, linear_segments_atom_keys, ts.reverse, atom_symbols)."
+}

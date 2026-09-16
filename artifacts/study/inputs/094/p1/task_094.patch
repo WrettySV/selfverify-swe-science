@@ -1,0 +1,27 @@
+diff --git a/source/pymatgen/io/cif.py b/source/pymatgen/io/cif.py
+index 0d5052b..18dafe4 100644
+--- a/source/pymatgen/io/cif.py
++++ b/source/pymatgen/io/cif.py
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ from pymatgen.symmetry.maggroups import MagneticSpaceGroup
++from pymatgen.symmetry.settings import JonesFaithfulTransformation
+ 
+ 
+ class MagneticCifBlock:
+@@ -17,4 +18,13 @@ class CifParser:
+         else:
+             group_id = list(map(int, data.data["_space_group_magn.number_BNS_id"].split(".")))
+ 
+-        return MagneticSpaceGroup(group_id).symmetry_ops
++        if data.data.get("_space_group_magn.transform_BNS_Pp_abc"):
++            trans_string = data.data["_space_group_magn.transform_BNS_Pp_abc"]
++            trans = JonesFaithfulTransformation.from_transformation_string(trans_string)
++        else:
++            trans = JonesFaithfulTransformation.from_transformation_string("a,b,c;0,0,0")
++
++        # Operators are stored in the standard BNS setting; conjugate each
++        # operation into the producer's coordinate setting so archived
++        # records keep their scientific meaning across valid conventions.
++        return [trans.transform_symmop(op) for op in MagneticSpaceGroup(group_id).symmetry_ops]

@@ -1,0 +1,21 @@
+diff --git a/source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py b/source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py
+index dcbc5b5..9b766cb 100644
+--- a/source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py
++++ b/source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py
+@@ -883,8 +883,14 @@ class NetworkSedimentTransporter(Component):
+                 # assign new values to current link.
+                 current_link[moving_downstream] = downstream_link[moving_downstream]
+ 
+-                # find and address those links who have moved out of network.
+-                moved_oon = downstream_link == self._grid.BAD_INDEX
++                # find and address those parcels which have crossed the outlet
++                # of the network this timestep. Only parcels in
++                # ``moving_downstream`` can leave the network; parcels located
++                # elsewhere (e.g. still resting on the outlet link) must not
++                # be removed.
++                moved_oon = moving_downstream & (
++                    downstream_link == self._grid.BAD_INDEX
++                )
+ 
+                 if np.any(moved_oon):
+                     # print('  {x} exiting network'.format(x=np.sum(moved_oon)))

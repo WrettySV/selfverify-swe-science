@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "reversal_invariance_s_br_arm",
+      "invariant": "representation equivalence: the rotor signature of a TS graph must be identical for the reaction and its reverse (a coordinate and its reverse describe the same unoriented axis); a changed-connectivity control must stay distinct",
+      "rationale": "New C-C homolysis TS (keys 301-310) with a C-S-H arm and a CH2Br cap. Pre-fix, linear-segment extension at the reacting carbon competes between the reaction partner (bond order 0.9 in one presentation, 0.1 in the reverse) and an H; the pre-fix ords_last=(0.1,) bias picks the H cap in the reversed presentation, yielding (Br,C,C,C) instead of (Br,C,S,H), so the test FAILS pre-fix. Post-fix (ords_last=() at the cap/extension call sites) both presentations give (Br,C,S,H), so it PASSES. The control assertion (reaction edge moved to a different atom pair) additionally rejects a fix that collapses distinct connectivities to a constant.",
+      "path": "selfverify/invariants/invariant_0_reversal_invariance_s_br_arm.py"
+    },
+    {
+      "name": "reversal_invariance_o_n_arm",
+      "invariant": "representation equivalence under reaction reversal, on different heteroatom chemistry (C-O-H arm, CH2-NH2 cap) and a second rotor",
+      "rationale": "New C-C homolysis TS (keys 801-812) carrying a C-O-H arm and an explicit-H CH2-NH2 cap, giving two rotor axes. Pre-fix, the reversed presentation (reaction edge 0.1) changes which neighbor caps both the linear segment and the C-N rotor, producing [(C,C,C,N),(H,C,N,H)] vs [(C,C,N,H),(H,O,C,N)] for the forward one, so the test FAILS pre-fix; post-fix both presentations give [(C,C,N,H),(H,O,C,N)] and it PASSES. Probes that the fix generalizes beyond S/Br chemistry to O/N caps.",
+      "path": "selfverify/invariants/invariant_1_reversal_invariance_o_n_arm.py"
+    },
+    {
+      "name": "reversal_invariance_hydrocarbon",
+      "invariant": "representation equivalence under reaction reversal for a pure hydrocarbon TS (no heteroatoms), with two rotors",
+      "rationale": "New propane-type C-C homolysis TS (keys 901-910), all C/H. Pre-fix, the reversed presentation's 0.1 reaction edge is pushed last by ords_last=(0.1,), so the single-atom linear segment extends onto the H instead of the CH3 cap, flipping one axis from (C,C,C,H) to (H,C,C,H); the test FAILS pre-fix. Post-fix, both presentations give [(C,C,C,H),(C,C,C,H)] and it PASSES. Rules out a fix that only works when heteroatoms are present.",
+      "path": "selfverify/invariants/invariant_2_reversal_invariance_hydrocarbon.py"
+    },
+    {
+      "name": "reversal_invariance_3atom_segment",
+      "invariant": "representation equivalence under reaction reversal for a 3-atom linear segment, plus conservation of the number of observed axes (no axis added/dropped by the presentation)",
+      "rationale": "New TS (keys 1001-1011) whose linear segment spans three atoms (Cl-CH2-CH2-CH2-S-H) with the reaction edge capping the first atom. Pre-fix, the reversed presentation extends the segment onto the H instead of the reaction partner, so the extended segment is no longer rotatable and a spurious extra axis (C,C,C,Cl) appears: 2 entries vs 1, so the test FAILS pre-fix. Post-fix, both presentations give exactly one axis, (C,C,S,H), and it PASSES. The count assertion additionally rejects fixes that drop or duplicate axes to force agreement.",
+      "path": "selfverify/invariants/invariant_3_reversal_invariance_3atom_segment.py"
+    },
+    {
+      "name": "composite_presentation_invariance",
+      "invariant": "representation equivalence under the composite transformation: reaction reversal composed with an arbitrary atom-key permutation (relabeling)",
+      "rationale": "New TS (keys 701-712) with a single-atom linear segment and an S-H arm; four presentations are compared: original, reversed, relabeled, and relabeled-then-reversed (key order reversed). Pre-fix, the reversed and relabeled-reversed presentations give [(C,C,S),(H,C,C,H),(H,C,S,H)]-type signatures while the original gives [(C,C,C,H),(C,C,C,S),(C,C,S,H)], so the test FAILS pre-fix; post-fix all four presentations agree and it PASSES. Probes that the observation depends only on the physical graph, not on atom-key numbering or reaction orientation.",
+      "path": "selfverify/invariants/invariant_4_composite_presentation_invariance.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All five tests were run against both the pre-fix tree (draft patch reverted via git checkout) and the post-fix tree: every test fails on pre-fix and passes on post-fix. The discriminating mechanism is the ords_last=(0.1,) bond-order bias at the linear-segment extension and rotational-cap call sites, which the patch neutralizes with ords_last=(). The third hunk of the patch (union of sigma radicals over both reagent limits in ts_linear_reacting_atom_keys) is not directly observable on valid TS inputs, because sigma_radical_atom_bond_keys requires a bond of order 3 in a reagent limit, which a pi-free TS graph cannot contain; no fabricated test was added for that branch. G3-style double-homolysis TSs were rejected because the Kekule limit turns the central C-C bond into a pi bond (correctly excluded from rotors), and a G8-style multi-rotor graph washed out (agrees pre-fix). Tests use only the public graph API (automol.graph) and their own graphs; no public fixture, paths, or golden values are referenced."
+}

@@ -1,0 +1,66 @@
+diff --git a/source/src/landlab/grid/network.py b/source/src/landlab/grid/network.py
+index 46ccc16..0e017ad 100644
+--- a/source/src/landlab/grid/network.py
++++ b/source/src/landlab/grid/network.py
+@@ -33,6 +33,10 @@ class NetworkModelGrid(NetworkGraph, GraphFields):
+         Coordinate value in projected space of (0., 0.)
+         Default is (0., 0.)
+ 
++    Node and link ids are preserved as supplied: the *i*-th node and *i*-th
++    link of the grid are the *i*-th node and *i*-th link of the input arrays,
++    so data assigned by node or link id refers to the intended element.
++
+     Examples
+     --------
+     >>> from landlab import NetworkModelGrid
+@@ -45,9 +49,9 @@ class NetworkModelGrid(NetworkGraph, GraphFields):
+     >>> grid.y_of_node
+     array([0.,  1.,  2.,  2.])
+     >>> grid.nodes_at_link
+-    array([[0, 1],
++    array([[1, 0],
+            [2, 1],
+-           [1, 3]])
++           [3, 1]])
+     """
+ 
+     #: Indicates a node is *bad index*.
+@@ -86,7 +90,12 @@ class NetworkModelGrid(NetworkGraph, GraphFields):
+         xy_axis_units="-",
+         xy_of_reference=(0.0, 0.0),
+     ):
+-        NetworkGraph.__init__(self, yx_of_node, links=links, sort=True)
++        # Preserve the node and link ids supplied by the user so that data
++        # assigned by node or link id refers to the intended element.
++        NetworkGraph.__init__(self, yx_of_node, links=links, sort=False)
++        self._sorted_nodes = np.arange(self.number_of_nodes, dtype=np.intp)
++        self._sorted_links = np.arange(self.number_of_links, dtype=np.intp)
++        self._sorted_patches = np.arange(0, dtype=np.intp)
+         GraphFields.__init__(
+             self,
+             {"node": self.number_of_nodes, "link": self.number_of_links, "grid": 1},
+diff --git a/source/src/landlab/io/shapefile.py b/source/src/landlab/io/shapefile.py
+index 42930c3..a1a1f8d 100644
+--- a/source/src/landlab/io/shapefile.py
++++ b/source/src/landlab/io/shapefile.py
+@@ -9,6 +9,7 @@ import shapefile as ps
+ 
+ from landlab.graph.graph import NetworkGraph
+ from landlab.grid.network import NetworkModelGrid
++from landlab.graph.sort.sort import reorient_link_dirs
+ 
+ 
+ def _read_shapefile(file, dbf):
+@@ -375,6 +376,12 @@ def read_shapefile(
+         np.vstack((graph.node_at_link_head, graph.node_at_link_tail)).T,
+     )
+ 
++    # The grid preserves the link orientation it is given. Re-apply the
++    # orientation pass the grid used to run internally so the returned grid
++    # keeps the same link directions as before.
++    with grid.thawed():
++        reorient_link_dirs(grid)
++
+     # add values to fields.
+     for field_name in link_fields:
+         mapped_field_name = link_field_conversion.get(field_name, field_name)

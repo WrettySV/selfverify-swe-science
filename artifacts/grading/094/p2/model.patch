@@ -1,0 +1,29 @@
+diff --git a/source/pymatgen/io/cif.py b/source/pymatgen/io/cif.py
+index 0d5052b..5670069 100644
+--- a/source/pymatgen/io/cif.py
++++ b/source/pymatgen/io/cif.py
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ from pymatgen.symmetry.maggroups import MagneticSpaceGroup
++from pymatgen.symmetry.settings import JonesFaithfulTransformation
+ 
+ 
+ class MagneticCifBlock:
+@@ -17,4 +18,15 @@ class CifParser:
+         else:
+             group_id = list(map(int, data.data["_space_group_magn.number_BNS_id"].split(".")))
+ 
+-        return MagneticSpaceGroup(group_id).symmetry_ops
++        ops = MagneticSpaceGroup(group_id).symmetry_ops
++
++        transform = data.data.get("_space_group_magn.transform_BNS_Pp_abc")
++        if transform is not None and str(transform).strip() not in ("", "None"):
++            # The catalogue stores the operation family in the BNS setting,
++            # while the producer record is expressed in its own cell.  Map the
++            # operations into the producer setting so that they act correctly
++            # on coordinates supplied in the archived (archive basis) frame.
++            transformation = JonesFaithfulTransformation.from_transformation_string(transform)
++            ops = [transformation.transform_symmop(op) for op in ops]
++
++        return ops

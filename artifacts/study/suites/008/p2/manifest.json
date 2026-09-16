@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "wall_distinguishes_stability",
+      "invariant": "a conducting wall is physical input: two materially different explicit conducting walls must produce distinct global stability observations (total potential energy, normalized omega2, growth rate)",
+      "rationale": "pre-fix, the outer-shell coefficient projection and outer-shell potential assembly are empty scaffolds, so every wall (and the fallback) collapses to the identical plasma-only observations; a correct fix must make the wall-sensitive vacuum metric propagate through the operator path into interval energy accounting, so two distinct walls give distinct (wp, omega2, growth_rate). Test uses its own 5-surface/3-vacuum grid, R0=3.2 geometry and two custom wall shapes.",
+      "path": "selfverify/invariants/invariant_1_wall_distinguishes_stability.py"
+    },
+    {
+      "name": "vacuum_interval_energy_wall_sensitive",
+      "invariant": "interval-level energy accounting over the pseudo-vacuum region must be non-trivial and wall-dependent, not just the wall-independent fixed-wall closure on the outermost interval",
+      "rationale": "pre-fix the vacuum potential blocks are all zero except the last-interval fixed-wall blocks, so per-interval vacuum wp is [0, 0.99...] for every wall; post-fix the interior pseudo-vacuum intervals carry wall-dependent energy. Test uses a different mesh (surfs=6, ivac=2, dsvac=0.6, R0=2.6, pvac=2.0, qvac=1.5) and two custom walls.",
+      "path": "selfverify/invariants/invariant_2_vacuum_interval_energy_wall_sensitive.py"
+    },
+    {
+      "name": "fallback_distinct_from_explicit_wall",
+      "invariant": "the scaled no-explicit-wall fallback (wall=None, nowall=-1, wall at wall_scale*boundary) is a materially different physical configuration from an explicit wall placed elsewhere, while remaining runnable and finite",
+      "rationale": "pre-fix both configurations collapse to the same observations because the external-region contribution is zero for all walls; post-fix the fallback metric (wall at 1.25*boundary) differs from the explicit wall metric, so wp and omega2 must differ. Test uses surfs=5, ivac=4, dsvac=0.35, R0=3.8, pvac=1.5, qvac=1.2.",
+      "path": "selfverify/invariants/invariant_3_fallback_distinct_from_explicit_wall.py"
+    },
+    {
+      "name": "wall_family_pairwise_distinct",
+      "invariant": "the wall response must not collapse to a constant across a one-parameter family of materially different wall geometries (generalization beyond the two-wall comparison)",
+      "rationale": "pre-fix all four family members produce bit-identical (wp, omega2), since the external region contributes nothing wall-dependent; a correct fix must yield pairwise-distinct observations for any distinct wall shapes/distances. Test uses surfs=6, ivac=3, dsvac=0.5, R0=2.9 with four walls at offsets 0.5/0.9/1.3/1.7.",
+      "path": "selfverify/invariants/invariant_4_wall_family_pairwise_distinct.py"
+    },
+    {
+      "name": "mode_table_generalization",
+      "invariant": "wall sensitivity of the global observations and of the vacuum-region interval-energy contribution must survive a different Fourier mode table (M_max=2, n=-1..1, 9 modes) rather than only the public 2-mode table",
+      "rationale": "pre-fix the zero outer-shell coefficient projection makes the observation independent of both the wall and the mode table (identical 9-mode results for both walls); post-fix the sum/difference mapping projects wall-dependent integrals for the larger table, so wp, omega2 and the vacuum interval-energy sum must differ between the two walls. Test uses surfs=5, ivac=3, dsvac=0.45, R0=3.2.",
+      "path": "selfverify/invariants/invariant_5_mode_table_generalization.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All five tests were empirically verified: on the pre-fix tree (HEAD, draft patch reverted) each fails with AssertionError (identical/collapsed wall observations), and on the patched working tree each prints PASS (exit 0). No public fixture, its numbers, or its wall arrays are reused: each test builds its own equilibrium (distinct surfs/ivac/dsvac/R0/pvac/qvac/mode table) and its own wall geometry from the public vacmet_inputs_from_equilibrium_data API. Rejected candidates: (1) uniform-geometry scale invariance - empirically not a symmetry of the reduced VACMET metric (metric components mix R/Z coordinates with their derivatives, so wp changes under uniform scaling even post-fix); (2) plasma-region wall-invariance alone - true pre-fix as well, so not a discriminator; (3) ivac=1 wall sensitivity - excluded because with a single pseudo-vacuum interval only the wall-independent fixed-wall closure blocks are active, so even a correct fix shows no wall dependence there. Pre-fix failure mode: _project_outer_shell_integrals_to_modal_coefficients returned all-zero coefficients and the outer-shell assembly left all potential blocks zero, so all wall configurations collapsed to the same plasma-only observations."
+}

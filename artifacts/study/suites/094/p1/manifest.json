@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "orbit_convention_invariance",
+      "invariant": "representation equivalence: the magnetic orbit of a physical point, expressed in BNS standard coordinates, is independent of the producer coordinate setting used to archive it",
+      "rationale": "pre-fix, get_magsymops ignores _space_group_magn.transform_BNS_Pp_abc and returns BNS-standard operators, so applying them to a probe site stored in the producer setting and mapping back double-counts/misapplies the coordinate change: the archived orbit differs from the standard-setting orbit (verified: second orbit point lands at (0.22,0.69,0.763) instead of (0.78,0.0233,0.57)). A correct fix conjugates each operator into the producer setting, making the two orbits identical.",
+      "path": "selfverify/invariants/invariant_0_orbit_convention_invariance.py"
+    },
+    {
+      "name": "two_settings_same_orbit",
+      "invariant": "convention independence (symmetry under choice of valid convention): two different valid producer settings describing the same magnetic symmetry must yield the same catalogue orbit for the same physical point",
+      "rationale": "the same physical point (fixed in BNS standard coordinates) is expressed in two different valid settings (an axis permutation and a pure origin shift) and catalogued through each. Pre-fix the two orbits disagree (e.g. (0.23,0.53,0.7533) vs (0.27,0.8633,0.58)) because the transformation string is discarded; post-fix both reduce to the standard-setting orbit and agree exactly.",
+      "path": "selfverify/invariants/invariant_1_two_settings_same_orbit.py"
+    },
+    {
+      "name": "conjugated_point_group",
+      "invariant": "operator semantics: the multiset of linear parts of the returned operations must equal the BNS point-group operators conjugated by the setting matrix (P^-1 W P), with time-reversal labels preserved",
+      "rationale": "a correct fix expresses each operator in the producer coordinate frame, so the 2z rotation of BNS 4.9 becomes 2y under the '-a+b,c,a;1/2,0,0' setting. Pre-fix the un-conjugated standard multiset {I, 2z} is returned instead of the expected {I, 2y}, so the assertion fails; post-fix the conjugated multiset matches exactly.",
+      "path": "selfverify/invariants/invariant_2_conjugated_point_group.py"
+    },
+    {
+      "name": "origin_shift_only_setting",
+      "invariant": "boundary/degenerate parameter: for a pure origin-shift setting (P = identity) the archived orbit must still equal the standard-setting orbit, which requires the translation part to absorb the (W - I) p correction",
+      "rationale": "with only an origin shift, any correct fix must still transform translation vectors as w' = w + (W - I) p. Pre-fix the translation is untouched, so the non-symmorphic image point is offset by (I - W) p = (1/2, 0, 0) (observed (0.06,0.913,0.66) vs correct (0.44,0.42,0.66) pairing); post-fix orbits coincide. This isolates the origin-shift code path that pure axis-permutation tests would not exercise.",
+      "path": "selfverify/invariants/invariant_3_origin_shift_only_setting.py"
+    },
+    {
+      "name": "origin_site_invariance",
+      "invariant": "boundary behavior at a high-symmetry (degenerate) site: the orbit of the origin under an archived record with an origin-shift setting must equal the orbit of the transformed origin site under the BNS standard operators",
+      "rationale": "probing the exact origin of BNS 4.11 (nonsymmorphic operation (2z|1/2,0,0)) under 'a,b,c;1/3,0,0' exercises both the (W - I) p translation correction and the lattice translation of the 1/2 glide at a zero-valued input. Pre-fix the orbit is {(1/3,0,0),(5/6,0,0)} instead of the standard {(1/6,0,0),(1/3,0,0)}; post-fix it matches. Uses BNS 4.11 (the only other group in the retained catalogue) but with a setting string and probe entirely different from the public fixture.",
+      "path": "selfverify/invariants/invariant_4_origin_site_invariance.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All 5 tests were executed against the pre-fix tree (baseline cif.py from git HEAD): all FAIL with AssertionError, and against the patched tree: all PASS. The retained offline catalogue (symm_data_magnetic.sqlite) contains only BNS 4.9 and 4.11, so tests 0-3 use the fixture-free group 4.9 with new settings/probes and test 4 uses 4.11 with a new origin-shift setting and origin probe; no test reuses the public fixture's setting string, probe, or numbers. Lattice-constant, mesh, and unit-system variants are not applicable because the retained source operates on fractional coordinates and fixed BNS group data."
+}

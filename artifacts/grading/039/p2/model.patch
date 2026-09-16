@@ -1,0 +1,80 @@
+diff --git a/source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py b/source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py
+index dcbc5b5..999fced 100644
+--- a/source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py
++++ b/source/src/landlab/components/network_sediment_transporter/network_sediment_transporter.py
+@@ -632,6 +632,9 @@ class NetworkSedimentTransporter(Component):
+                     # I'm sure there's a better way to do this, but...
+                     length_of_downstream_link = 0
+                     width_of_downstream_link = 0
++                    # no downstream link, so no stored sediment contributes to
++                    # the elevation of this node (e.g., an outlet or sink)
++                    downstream_stored_volume = 0.0
+                 else:
+                     length_of_downstream_link = self._grid.at_link["reach_length"][
+                         downstream_link_id
+@@ -639,9 +642,10 @@ class NetworkSedimentTransporter(Component):
+                     width_of_downstream_link = self._grid.at_link["channel_width"][
+                         downstream_link_id
+                     ][n]
++                    downstream_stored_volume = self._vol_stor[downstream_link_id][n]
+ 
+                 alluvium__depth = _calculate_alluvium_depth(
+-                    self._vol_stor[downstream_link_id][n],
++                    downstream_stored_volume,
+                     width_of_upstream_links,
+                     length_of_upstream_links,
+                     width_of_downstream_link,
+@@ -716,13 +720,35 @@ class NetworkSedimentTransporter(Component):
+             rhos_act_i = Rhoarray[active_here]
+             vol_act_tot_i: float = np.sum(vol_act_i)
+ 
+-            self._d_mean_active[i] = np.sum(d_act_i * vol_act_i) / (vol_act_tot_i)
+             if vol_act_tot_i > 0:
++                self._d_mean_active[i] = np.sum(d_act_i * vol_act_i) / (
++                    vol_act_tot_i
++                )
+                 self._rhos_mean_active[i] = np.sum(rhos_act_i * vol_act_i) / (
+                     vol_act_tot_i
+                 )
+             else:
+-                self._rhos_mean_active[i] = np.nan
++                # No active parcels on this link. Characterize the sediment
++                # that is actually present (the stored parcels, if any) so the
++                # active layer estimate reflects this link's own hydraulics:
++                # stored sediment only becomes mobile when the hydraulic
++                # stress can support a mobile layer. A link with no parcels at
++                # all is left undefined (NaN) and handled downstream.
++                stored_here = np.nonzero(Linkarray == i)[0]
++                if stored_here.size > 0 and np.sum(Volarray[stored_here]) > 0.0:
++                    d_stor_i = Darray[stored_here]
++                    vol_stor_i = Volarray[stored_here]
++                    rhos_stor_i = Rhoarray[stored_here]
++                    vol_stor_tot_i: float = np.sum(vol_stor_i)
++                    self._d_mean_active[i] = np.sum(d_stor_i * vol_stor_i) / (
++                        vol_stor_tot_i
++                    )
++                    self._rhos_mean_active[i] = (
++                        np.sum(rhos_stor_i * vol_stor_i) / (vol_stor_tot_i)
++                    )
++                else:
++                    self._d_mean_active[i] = np.nan
++                    self._rhos_mean_active[i] = np.nan
+             D_mean_activearray[Linkarray == i] = self._d_mean_active[i]
+             frac_sand_array[Linkarray == i] = frac_sand[i]
+             vol_act_array[Linkarray == i] = self._vol_act[i]
+@@ -834,6 +860,15 @@ class NetworkSedimentTransporter(Component):
+                 1.0 - location_in_link
+             )
+ 
++            # Parcels on a link with no defined flow direction have no
++            # downstream link to carry them; they cannot be advected and come
++            # to rest where they are.
++            no_flow_link = (
++                self._fd.downstream_node_at_link()[current_link]
++                == self._grid.BAD_INDEX
++            )
++            distance_left_to_travel[on_network & no_flow_link] = 0.0
++
+             # Identify which ones will come to rest in the current link.
+             rest_this_link = (
+                 (distance_left_to_travel < distance_to_exit_current_link)

@@ -1,0 +1,40 @@
+schema_version = "1.3"
+artifacts = ["/logs/artifacts/model.patch"]
+
+[task]
+name = "openmoss/swe-bench-science-001"
+description = "Repair an inconsistent transition-state rotor workflow"
+authors = []
+keywords = ["scientific-computing", "software-engineering"]
+
+[metadata]
+task_id = "001"
+language = "python"
+base_commit_hash = "cbe1a0c1102b8125608841eb8ac536cfe3b09671"
+
+[agent]
+network_mode = "no-network"
+timeout_sec = 5400.0
+
+[environment]
+docker_image = "docker.io/kevinxulearning/swe-bench-science-environment-python-task-001:v0.1.0@sha256:0b6b41e556cd862f10e9e8c489e9b539eda27d277718e0504de440048c62d3c7"
+os = "linux"
+allow_internet = false
+cpus = 2
+memory_mb = 8192
+storage_mb = 20480
+workdir = "/app/task_001"
+
+[verifier]
+network_mode = "no-network"
+environment_mode = "separate"
+timeout_sec = 1800.0
+
+[verifier.environment]
+docker_image = "docker.io/kevinxulearning/swe-bench-science-verifier-python-task-001:v0.1.0@sha256:7af68a1c44876615b0f961abd18e7fb656dae5f117820a35ff8e1d10faa430b0"
+os = "linux"
+allow_internet = false
+cpus = 2
+memory_mb = 8192
+storage_mb = 20480
+workdir = "/app/task_001"

@@ -1,0 +1,27 @@
+diff --git a/source/pymc/distributions/multivariate.py b/source/pymc/distributions/multivariate.py
+index df175af..09aa08e 100644
+--- a/source/pymc/distributions/multivariate.py
++++ b/source/pymc/distributions/multivariate.py
+@@ -2782,8 +2782,9 @@ def zerosumnormal_logp(op, values, normal_dist, sigma, support_shape, **kwargs):
+     shape = value.shape
+     n_zerosum_axes = op.ndim_supp
+ 
+-    _deg_free_support_shape = pt.inc_subtensor(shape[-n_zerosum_axes:], -1)
+-    _full_size = pt.prod(shape)
++    _support_shape = shape[-n_zerosum_axes:]
++    _support_size = pt.prod(_support_shape)
++    _deg_free_support_shape = _support_shape - 1
+     _degrees_of_freedom = pt.prod(_deg_free_support_shape)
+ 
+     zerosums = [
+@@ -2792,8 +2793,9 @@ def zerosumnormal_logp(op, values, normal_dist, sigma, support_shape, **kwargs):
+     ]
+ 
+     out = pt.sum(
+-        pm.logp(normal_dist, value) * _degrees_of_freedom / _full_size,
++        pm.logp(normal_dist, value),
+         axis=tuple(np.arange(-n_zerosum_axes, 0)),
+     )
++    out = out + 0.5 * (_support_size - _degrees_of_freedom) * pt.log(2.0 * np.pi * sigma**2)
+ 
+     return check_parameters(out, *zerosums, msg="mean(value, axis=n_zerosum_axes) = 0")

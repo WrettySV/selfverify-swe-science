@@ -1,0 +1,40 @@
+schema_version = "1.3"
+artifacts = ["/logs/artifacts/model.patch"]
+
+[task]
+name = "openmoss/swe-bench-science-107"
+description = "Repair a public symbolic workflow"
+authors = []
+keywords = ["scientific-computing", "software-engineering"]
+
+[metadata]
+task_id = "107"
+language = "python"
+base_commit_hash = "afe8935530a61ae5bd7a90400fa60c0d2c8c18a4"
+
+[agent]
+network_mode = "no-network"
+timeout_sec = 5400.0
+
+[environment]
+docker_image = "docker.io/kevinxulearning/swe-bench-science-environment-python-task-107:v0.1.2@sha256:8137ff8cedbda6d8b15e865ed79f05132e2d42f1f27a24223ab1235bbcac05cc"
+os = "linux"
+allow_internet = false
+cpus = 2
+memory_mb = 8192
+storage_mb = 20480
+workdir = "/app/task_107"
+
+[verifier]
+network_mode = "no-network"
+environment_mode = "separate"
+timeout_sec = 1800.0
+
+[verifier.environment]
+docker_image = "docker.io/kevinxulearning/swe-bench-science-verifier-python-task-107:v0.1.2@sha256:7db7880a15a0ce7332709262897b2eeadf9a19145d9f3eae6cb190c4a16b497b"
+os = "linux"
+allow_internet = false
+cpus = 2
+memory_mb = 8192
+storage_mb = 20480
+workdir = "/app/task_107"

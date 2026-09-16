@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "reference_is_series_mean",
+      "invariant": "conservation/definition: the common reference built from a dynamic series must be the (time-domain) average of its transients, not a single transient",
+      "rationale": "pre-fix dynamic_reference() returns series[0], so the 'common reference' carries the first transient's own drift and noise; on a new 5-transient series with distinct drifts the returned reference deviates ~1.5 in norm from the true mean and the test fails. Post-fix dynamic_reference() averages the series (preserving MRSData metadata), so the reference equals the mean and the test passes.",
+      "path": "selfverify/invariants/invariant_1_reference_is_series_mean.py"
+    },
+    {
+      "name": "drift_recovery_independent_of_guess",
+      "invariant": "representation equivalence / estimator correctness: the registered frequency and phase shifts must equal the physical drifts actually applied to each transient, independent of the arbitrary initial guess",
+      "rationale": "a correct registration is a property of the data, not of the seed: on a new series (dt=1/2600 s, 512 pts, 3 peaks, 5 transients with known drifts 12-40 Hz) the estimates must recover the true drifts within 1 Hz / 0.12 rad and drive the window-free residual below the noise floor. Pre-fix spectral_registration is a plain local scipy.optimize.leastsq started from the initial guess; with a poor seed (500 Hz, 0.9 rad) it diverges to ~-500 Hz shifts, so the estimates, the residual reduction, and the post-correction residual all fail. Post-fix uses a global full-width scan with analytic per-frequency phase plus local refinement, so the same series passes.",
+      "path": "selfverify/invariants/invariant_2_drift_recovery_independent_of_guess.py"
+    },
+    {
+      "name": "window_invariance_to_nuisance_peak",
+      "invariant": "scientific window / representation equivalence: restricting registration to the stable spectral window must make the estimates insensitive to a strong condition-dependent peak appearing outside that window",
+      "rationale": "two otherwise identical new series (dt=1/3000 s, 2048 pts, stable peak at -60 Hz inside the (-110,-10) Hz window, second peak and a strong 260 Hz nuisance peak outside it) must yield the same drift estimates (and estimates that match the applied drifts). Pre-fix register_dynamic_series ignores its frequency_range argument entirely and fits the whole spectrum, so the 260 Hz nuisance contaminates the fit and the estimates deviate from the truth; post-fix the windowed cross-spectrum excludes the nuisance and both series pass.",
+      "path": "selfverify/invariants/invariant_3_window_invariance_to_nuisance_peak.py"
+    },
+    {
+      "name": "unusable_transient_rejected",
+      "invariant": "contamination guard: a transient that cannot be registered to the reference (its spectrum does not match in the stable window) must be rejected, while usable transients are kept",
+      "rationale": "on a new 5-transient series (dt=1/2600 s, 512 pts) where transient 2 is a strong peak at a different location than the reference peaks, the acceptance mask must be [T,T,F,T,T] with the rejected residual above the 0.42 threshold and the accepted ones below it. Pre-fix register_dynamic_series hard-codes accepted=True for every transient (reject_threshold is never used), so the mask assertion fails deterministically; post-fix the post-correction windowed residual exceeds the threshold only for the corrupted transient and the test passes.",
+      "path": "selfverify/invariants/invariant_4_unusable_transient_rejected.py"
+    },
+    {
+      "name": "corrected_average_sharper_snr",
+      "invariant": "paper's qualitative invariant: after valid drift correction the averaged spectrum must be sharper (narrower dominant peak) and have higher SNR than the uncorrected average",
+      "rationale": "on a new 8-transient series (dt=1/2400 s, 1024 pts, narrow 14-16 Hz-FWHM peaks, per-transient drifts of 30-80 Hz) the pre-drift-removal average is a broad smeared blob, while the corrected average must collapse back to the intrinsic linewidth. Pre-fix, registration is guess-dependent local leastsq (with the poor seed it returns ~-500 Hz shifts), the 'corrected' FIDs are scrambled, and neither the SNR nor the linewidth improves, so the assertions fail; post-fix the global scan recovers the drifts and the corrected average narrows below 85% of the original FWHM with >15% higher SNR, so the test passes.",
+      "path": "selfverify/invariants/invariant_5_corrected_average_sharper_snr.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All 5 tests were verified in a scratch copy of the repo with the draft patch reverted: every test fails pre-fix (clean AssertionError) and all pass on the post-fix tree, each in a few seconds. All inputs are synthetic with fixed seeds (dt=1/2400-1/3000 s, n=512-2048, new peak layouts), so none of the public fixture's point count, dt, peaks, drifts, or paths are reused; reject_threshold=0.42 is the workflow parameter documented by the public reproduction, used here as the input to the rejection mechanism. Not tested: absolute drift recovery in the reference=None (self-referencing) mode - without an external reference the common offset is physically unidentifiable, and the draft's iterative self-reference only converges when the drifted peaks form a dominant cluster, so asserting absolute values there would not be a well-posed invariant. Tests 2 and 5 both seed a poor initial guess on purpose: guess-independence is required for the estimates to be a physical property of the data, and the pre-fix local optimizer demonstrably depends on it."
+}

@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "ftc_derivative_shifted_quadratic",
+      "invariant": "Fundamental theorem of calculus: d/dx of the antiderivative returned by integrate() must reproduce the integrand, for a new rational integrand x^2/((x+a)^2+b) whose square-free denominator is an irreducible quadratic over the parameter field",
+      "rationale": "pre-fix, log_to_real cannot count real roots of the Trager polynomial over the parameter ring (count_roots raises DomainError) and the buggy code trusts the incomplete filter='R' root list, so the returned antiderivative silently drops the log/atan contribution: |dF/dx - f| ~ 0.40-0.93 at the new (a,b,x) sample points -> FAIL. post-fix, log_to_real bails out (returns None) and integrate falls back to the correct expression, so the derivative error is ~1e-10 -> PASS",
+      "path": "selfverify/invariants/invariant_1_ftc_derivative_shifted_quadratic.py"
+    },
+    {
+      "name": "specialization_equivalence",
+      "invariant": "Representation equivalence: the general-parameter antiderivative F(x; a) of 1/(x^2+a), specialized to a=2, must equal the directly computed antiderivative of 1/(x^2+2) up to an additive constant, i.e. d/dx of their difference vanishes",
+      "rationale": "pre-fix, integrate(1/(x^2+a), x) returns 0 (log terms silently dropped), so the derivative of F(a=2) - F_direct equals -1/(x^2+2) ~ 0.40 (nonzero) -> FAIL. post-fix both are true antiderivatives of the same specialized integrand, their difference is a pure constant and the derivative is ~0 -> PASS",
+      "path": "selfverify/invariants/invariant_2_specialization_equivalence.py"
+    },
+    {
+      "name": "quadrature_consistency",
+      "invariant": "Conservation of integral value: the symbolic definite integral F(1.6)-F(0.4) must agree with direct numerical quadrature of a new two-parameter integrand u^2*(r+s-3u)^3/((r+s-3u)^2+2)^2 at r=3, s=5",
+      "rationale": "pre-fix the antiderivative is missing the log/atan contribution, so the symbolic definite integral is -1.5353 while mpmath quadrature gives 0.25394 (discrepancy ~1.79 >> 1e-8) -> FAIL. post-fix the two agree to ~1e-15 -> PASS. This probes the same structural failure family as the public fixture (parameterized irreducible quadratic denominator) with a different integrand and a value (not derivative) check",
+      "path": "selfverify/invariants/invariant_3_quadrature_consistency.py"
+    },
+    {
+      "name": "variable_rescaling_consistency",
+      "invariant": "Scaling / change of variables: for F = integrate(1/(x^2+a), x), the rescaled antiderivative must satisfy d/dy F(2y; a=2) = 1/(2y^2+1)",
+      "rationale": "pre-fix, F = 0 (log terms dropped), so d/dy F(2y) = 0 against the required 1/(2y^2+1) ~ 0.50 at y=0.7 -> FAIL. post-fix the change of variables x = 2y maps the antiderivative consistently and the identity holds to ~1e-11 -> PASS",
+      "path": "selfverify/invariants/invariant_4_variable_rescaling_consistency.py"
+    },
+    {
+      "name": "degenerate_quadratic_limit",
+      "invariant": "Boundary/degenerate limit: the general-parameter antiderivative F(x; a) of 1/(x^2+a) must remain a valid antiderivative at the boundary value a=-1 where the quadratic splits into real linear factors, i.e. d/dx F(x; -1) = 1/(x^2-1)",
+      "rationale": "pre-fix, F(x; a) = 0, so the derivative at a=-1 is 0 against 1/(x^2-1) ~ 0.333 at x=2 -> FAIL. post-fix F(x; -1) = 1/2*(log(x-1)-log(x+1)) differentiates to 1/(x^2-1) to ~1e-11 at x=2.0 and x=3.5 -> PASS",
+      "path": "selfverify/invariants/invariant_5_degenerate_quadratic_limit.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "Pre-fix tree simulated by extracting baseline commit a364221 to a scratch dir and running the identical scripts: all 5 exit rc=1 with AssertionError there, all 5 print PASS (rc=0) on the patched tree. No public fixture integrand, numbers, or paths are used; all tests use new integrands/parameters in the same failure family (Trager resultant over a parameter ring where count_roots raises DomainError). Parameter values are exact rationals/ints deliberately: Float coefficients in integrate() (e.g. 1/(x^2+2.0)) trigger an unrelated pre-existing coefficient-handling bug that returns a wrong antiderivative, which this suite avoids. Two additional candidate invariants were probed and rejected because they also hold pre-fix (not discriminators): parameter-swap symmetry for 1/(((x-r)^2+s)*((x-s)^2+r)) (integrates correctly even pre-fix) and translation invariance for (r+3s-2x)^3/((r+3s-2x)^2+5)^2 (the pre-fix dropped terms are shift-covariant). 1/((x^2+a)*(x^2+b)) was also probed but rejected because integrate() on it does not terminate in reasonable time on the pre-fix tree."
+}

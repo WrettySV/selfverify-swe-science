@@ -1,0 +1,56 @@
+{
+  "name": "verification-python-9",
+  "description": "Purposive, resource-constrained Python scientific-repair subset: 9 tasks from 9 repositories/domains, selected from the existing main-12 development panel.",
+  "allow_restricted_licenses": false,
+  "task_ids": [
+    "001",
+    "007",
+    "008",
+    "017",
+    "024",
+    "039",
+    "053",
+    "094",
+    "107"
+  ],
+  "parent_selection": "selections/main-12.json",
+  "selection_frozen_at": "2026-09-16T13:21:27.968018+00:00",
+  "selection_basis": [
+    "Homogeneous Python source-patch execution, avoiding an unvalidated native rebuild path.",
+    "No restricted-license opt-in, matching the parent panel.",
+    "At most one task per repository; among same-commit DESC tasks retain the faster historical baseline task.",
+    "Exclude 033 by declared compute constraint, including its unusually expensive repeated verifier runs.",
+    "Retain all remaining eligible parent-panel tasks, including historical all-fail and all-pass tasks."
+  ],
+  "exclusions": {
+    "033": {
+      "decision": "excluded",
+      "reason": "Explicit user resource constraint; both historical baseline agents hit ~90 min, followed by ~10-13.5 min verifier runs. Expensive repeated evaluation is outside this study scope."
+    },
+    "004": {
+      "decision": "supplementary_native",
+      "reason": "C++/bedtools2 needs a clean rebuild after each source patch. The current cross evaluator applies source patches and runs Python checks without an explicit rebuild. Native-language evaluation is outside the homogeneous Python main study; may be reported separately after build validation."
+    },
+    "014": {
+      "decision": "excluded_duplicate_repository",
+      "reason": "Same DESC repository and base commit as 008. Retain one task per repository to reduce correlated sampling; retain 008, with lower historical median baseline wall time. All three 014 baseline agent executions hit 90 min. Reward was not a tie-breaking input."
+    }
+  },
+  "disclosure": {
+    "historical_outcomes_seen": true,
+    "prospective_or_random_sample": false,
+    "unseen_task_holdout": false,
+    "scope": "Small exploratory multi-domain Python subset; no estimate of full 119-task benchmark accuracy.",
+    "task_017": "Used to debug the paired verification protocol. Report main-nine results both with and without 017 as a declared sensitivity analysis; neither is an unseen-task holdout.",
+    "models": "Keep Qwen3.6 and Qwen3.8 runs separate; model and harness differences confound cross-project comparisons."
+  },
+  "evaluation_rules": [
+    "Apply the same selected IDs to all compared arms.",
+    "Freeze protocol and model/CLI versions before new evaluation runs.",
+    "Count timeouts, invalid suites and abstentions explicitly; do not remove tasks after observing outcomes.",
+    "Separate fixed historical-pool selection diagnostics from fresh equal-total-budget end-to-end comparisons.",
+    "Report macro task accuracy, pool oracle ceiling, false accepts/rejects, coverage and full inference cost."
+  ],
+  "evidence": "analysis/task-selection-20260916/evidence.json",
+  "protocol_document": "docs/task-selection-verification-python-9.md"
+}

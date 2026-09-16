@@ -1,0 +1,17 @@
+{
+  "model_id": "Qwen/Qwen3.8-27B",
+  "served_name": "Qwen3.8-27B",
+  "revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+  "revision_source": "Local Hugging Face download metadata",
+  "model_url": "https://huggingface.co/Qwen/Qwen3.8-27B/tree/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+  "serving": "vLLM",
+  "vllm_version": "0.28.0",
+  "weight_dtype": "bfloat16",
+  "kv_cache_dtype": "fp8",
+  "context_window": 262144,
+  "reasoning_parser": "qwen3",
+  "tool_call_parser": "qwen3_xml",
+  "reasoning_effort": "xhigh",
+  "codex_version": "0.154.0",
+  "pier_version": "0.3.0"
+}

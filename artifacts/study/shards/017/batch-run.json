@@ -1,0 +1,27 @@
+{
+  "task_ids": [
+    "017"
+  ],
+  "allow_restricted_licenses": null,
+  "selection_sha256": "764fa12a1d6299d6585ea54dc939b0f0a2c9ac25765530204828459212aafa0a",
+  "image_refs": [
+    "docker.io/kevinxulearning/swe-bench-science-environment-python-task-017:v0.1.2@sha256:95f109be6784572b7903f03e0f6617498b3b14f9578c7c2f703313ce90d9451d",
+    "docker.io/kevinxulearning/swe-bench-science-verifier-python-task-017:v0.1.2@sha256:082a831bd6af86c7a13fd06feddd97a9886990571583a42a9f9ec829c2f05873"
+  ],
+  "platform": "linux/amd64",
+  "agent": "codex",
+  "models": [
+    "Qwen3.8-27B"
+  ],
+  "n_concurrent": 1,
+  "n_attempts": 1,
+  "max_retries": 0,
+  "pier_version": "0.3.0",
+  "pier_command": "/home/lukina/selfverify-swe-science/work/verification-python9-v1/implementation/scripts/pier-sv run --path /home/lukina/selfverify-swe-science/work/verification-python9-v1/shards/017 --agent codex --env docker --n-concurrent 1 --n-attempts 1 --max-retries 0 --no-force-build --delete --yes --agent-timeout-multiplier 2.0 --env-file /home/lukina/selfverify-swe-science/work/verification-python9-v1/private/gpu5.env --agent-import-path selfverify.paired:PairedVerification --model Qwen3.8-27B --agent-kwarg 'config_toml=<provider-config>' --agent-kwarg command_model_name=Qwen3.8-27B --agent-kwarg reasoning_effort=xhigh --agent-kwarg version=0.154.0 --agent-kwarg max_verify_rounds=4 --agent-kwarg enable_selfverify=true --agent-kwarg verification_mode=contract --agent-kwarg require_challenge_rewrite=false --agent-kwarg enable_ablation_gate=false --agent-kwarg max_loop_seconds=6000 --agent-kwarg codex_stage_timeout_sec=3600 --agent-kwarg finalize_reserve_sec=180 --agent-kwarg keep_worktree_invariants=false --agent-kwarg test_design_timeout_sec=1800 --agent-kwarg draft_timeout_sec=1500 --agent-kwarg repair_timeout_sec=900 --agent-kwarg max_repair_rounds=1 --agent-kwarg verify_timeout_sec=60 --agent-kwarg review_timeout_sec=360 --agent-kwarg review_recheck_timeout_sec=180 --agent-kwarg initial_patches=/home/lukina/selfverify-swe-science/work/verification-python9-v1/inputs/017/p0 --agent-kwarg suite_context=blind --agent-kwarg test_design_focus=default --jobs-dir /home/lukina/selfverify-swe-science/work/verification-python9-v1/results --job-name paired-017-p0",
+  "agent_import_path": "selfverify.paired:PairedVerification",
+  "provider": {
+    "protocol": "responses",
+    "base_url": "http://172.17.0.1:8003/v1",
+    "credential_env": "OPENAI_API_KEY"
+  }
+}

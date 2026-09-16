@@ -39,3 +39,6 @@ analysis/crosscheck/*
 !analysis/crosscheck/matrix.json
 !analysis/crosscheck/label_free_audit.json
 !analysis/crosscheck/label_free_audit.md
+
+# Packaged task metadata is required by the study checksum manifest.
+!artifacts/study/shards/*/batch-run.json

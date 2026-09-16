@@ -1,0 +1,46 @@
+diff --git a/source/pymatgen/io/cif.py b/source/pymatgen/io/cif.py
+index 0d5052b..a83cd4f 100644
+--- a/source/pymatgen/io/cif.py
++++ b/source/pymatgen/io/cif.py
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ from pymatgen.symmetry.maggroups import MagneticSpaceGroup
++from pymatgen.symmetry.settings import JonesFaithfulTransformation
+ 
+ 
+ class MagneticCifBlock:
+@@ -11,10 +12,29 @@ class MagneticCifBlock:
+ class CifParser:
+     """Retained magnetic-CIF operation reader for the task snapshot."""
+ 
++    @staticmethod
++    def _block_fields(data):
++        fields = getattr(data, "data", data)
++        if isinstance(fields, dict):
++            return fields
++        return dict(fields)
++
+     def get_magsymops(self, data):
+-        if data.data.get("_space_group_magn.number_BNS"):
+-            group_id = list(map(int, data.data["_space_group_magn.number_BNS"].split(".")))
++        fields = self._block_fields(data)
++        if fields.get("_space_group_magn.number_BNS"):
++            group_id = list(map(int, fields["_space_group_magn.number_BNS"].split(".")))
+         else:
+-            group_id = list(map(int, data.data["_space_group_magn.number_BNS_id"].split(".")))
++            group_id = list(map(int, fields["_space_group_magn.number_BNS_id"].split(".")))
++
++        magsymops = MagneticSpaceGroup(group_id).symmetry_ops
++
++        # transform_BNS_Pp_abc gives the producer coordinate setting relative
++        # to the BNS setting. Conjugate the retained BNS operations into that
++        # setting so operation semantics are preserved across producer
++        # conventions.
++        transform_string = fields.get("_space_group_magn.transform_BNS_Pp_abc")
++        if transform_string:
++            transform = JonesFaithfulTransformation.from_transformation_string(transform_string)
++            magsymops = [transform.transform_symmop(op) for op in magsymops]
+ 
+-        return MagneticSpaceGroup(group_id).symmetry_ops
++        return magsymops

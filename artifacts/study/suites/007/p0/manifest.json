@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "window_drift_recovery",
+      "invariant": "Drift must be estimated from the stable registration window only: with unstable spectral features that sit at different frequencies than in the reference, windowed registration still recovers the true (frequency, phase) drift and collapses the windowed residual.",
+      "rationale": "Pre-fix code ignores the requested frequency window and fits the full spectrum (and its windowed path multiplies the time-domain residual by the spectral mask), so the out-of-window features bias the estimate: measured pre-fix error +10.2 Hz / 0.14 turns and residual ratio 0.40 vs post-fix +0.15 Hz / 0.002 turns and ratio 0.08. Fails pre-fix on the frequency/phase/reduction assertions; passes post-fix.",
+      "path": "selfverify/invariants/invariant_1_window_drift_recovery.py"
+    },
+    {
+      "name": "reject_unusable_transient",
+      "invariant": "A transient whose stable-region spectrum cannot be matched by any frequency/phase rotation (in-window peak amplitude x2.5) must be rejected by the reject threshold and kept out of the average, while genuinely drifted transients are accepted.",
+      "rationale": "Pre-fix register_dynamic_series hard-codes accepted=True and ignores reject_threshold, so the unusable transient is accepted and would pollute the average; post-fix computes the windowed post-correction residual (0.48 for the bad transient, <=0.09 for the good ones) and rejects at threshold 0.25. Fails pre-fix, passes post-fix.",
+      "path": "selfverify/invariants/invariant_2_reject_unusable_transient.py"
+    },
+    {
+      "name": "average_sharpening",
+      "invariant": "Correcting per-transient drift must sharpen the average: the mean windowed residual must collapse by at least 5x, every estimate must match its transient's true drift within 4 Hz / 0.05 turns, and the averaged dominant peak must narrow and gain SNR.",
+      "rationale": "Pre-fix full-spectrum registration is biased differently per transient by the varying unstable peaks (max error 54.5 Hz, mean residual ratio 0.55), so the average stays misaligned; post-fix windowed registration recovers all 8 drifts (max 1.9 Hz error, ratio 0.13) and the peak sharpens. Fails pre-fix on the residual-ratio and estimate-accuracy assertions; passes post-fix.",
+      "path": "selfverify/invariants/invariant_3_average_sharpening.py"
+    },
+    {
+      "name": "initial_guess_invariance",
+      "invariant": "The recovered drift must be independent of the initial guess: starting the refinement from (0, 0) and from a far-off (250 Hz, 0.45 turns) must both recover the true drift of the same transient.",
+      "rationale": "Pre-fix performs a bare least-squares refinement from the guess with no search, so with unstable regions present both starts land on a spurious local minimum ~53 Hz from the truth; post-fix uses a coarse-to-fine frequency search with optimal phase at every candidate followed by local refinement and recovers 60.0 +/- 0.8 Hz from both starts. Fails pre-fix on the truth-recovery assertions; passes post-fix.",
+      "path": "selfverify/invariants/invariant_4_initial_guess_invariance.py"
+    },
+    {
+      "name": "empty_window_boundary",
+      "invariant": "Boundary behavior: when the requested registration window contains no reference signal (a true spectral hole), nothing can be registered, so the workflow must keep observations finite and accept no transient.",
+      "rationale": "Pre-fix ignores the window, registers against the full spectrum, and accepts the transient (accepted=True); post-fix detects the zero-power window, emits the sentinel residual, and rejects it while keeping all reported observations finite. Fails pre-fix on the acceptance assertion; passes post-fix.",
+      "path": "selfverify/invariants/invariant_5_empty_window_boundary.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All five tests were verified against both trees: every one fails on the pre-fix (baseline) code with exit 1 and passes on the patched code with exit 0, deterministically across repeated runs and from any working directory; all inputs are freshly synthesized (n=512, dt=2e-4 s, window -350..350 Hz), with no reuse of the public fixture, its numbers, or its paths. Thinnest margin is invariant_2: the unusable transient's best achievable windowed residual is ~0.48 vs the 0.25 threshold (good transients <=0.09), so a correct fix must reject unmatchable transients at a threshold in roughly [0.1, 0.45]. invariant_5 uses a frequency-domain reference with an exactly zero-power window, so the boundary triggers under any finite rejection threshold. I could not test against real MRS hardware data (none available offline); synthetic decaying-sinusoid FIDs with known ground-truth drift are the standard surrogate for this registration problem."
+}

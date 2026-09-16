@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "wide_field_finiteness",
+      "invariant": "The differential J-factor map must be finite, positive, and well defined at every pixel, including pixels at wide angular separations from the halo centre (up to ~52 deg here), for both annihilation and decay modes.",
+      "rationale": "Pre-fix, pixels with separation > 45 deg make the near-side integration range [d*tan(theta), d] inverted (tan(theta) > 1), so the log-space grid gets a negative length and compute_differential_jfactor raises ValueError (observed: 'Number of samples, -227, must be non-negative'). A correct fix bounds the near-side branch at the true impact parameter b = d*sin(theta) < d, so every pixel completes with finite positive values (observed post-fix).",
+      "path": "selfverify/invariants/invariant_1_wide_field_finiteness.py"
+    },
+    {
+      "name": "annihilation_los_equivalence",
+      "invariant": "Representation equivalence: the annihilation J-factor from the radial-substitution formula must agree pixel-by-pixel with a direct line-of-sight quadrature of int rho(r(l))**2 dl, r(l) = sqrt(l^2 + d^2 - 2 d l cos(theta)), truncated at r = 4d per the code convention.",
+      "rationale": "Pre-fix, the near-side lower bound is d*tan(theta) instead of b = d*sin(theta), dropping the inner region [b, d*tan(theta)] that carries the integrable Jacobian singularity, so the result is underestimated by tens of percent (and the computation raises an exception for theta > 45 deg on this 96x72 deg map). Post-fix the substitution matches the independent line-of-sight integral to ~6e-08 relative, far inside the 5% tolerance.",
+      "path": "selfverify/invariants/invariant_2_annihilation_los_equivalence.py"
+    },
+    {
+      "name": "decay_los_equivalence",
+      "invariant": "Same representation-equivalence invariant for the decay D-factor int rho(r(l)) dl, exercised with a new NFW profile (r_s = 15 kpc instead of the default) on a new 96x96 deg map, so the check generalizes over profile parameters and the decay (non-squared) branch.",
+      "rationale": "Pre-fix, the decay mode hits the same inverted-range crash for pixels beyond 45 deg (observed ValueError 'Number of samples, -357'), and wherever it does not crash the tan(theta) lower bound still removes the near-side contribution, so the result cannot match the direct line-of-sight integral. Post-fix the decay D-factor agrees with the reference to ~3e-08 relative.",
+      "path": "selfverify/invariants/invariant_3_decay_los_equivalence.py"
+    },
+    {
+      "name": "small_field_accuracy",
+      "invariant": "Quantitative boundary behavior: even on a small field of view (pixels at 3.2-22.3 deg, where the buggy code does not crash and a smoke test would pass), the J and D factors must agree with the direct line-of-sight integral; no small-angle rmin = d*tan(theta) approximation may remain.",
+      "rationale": "This test discriminates a 'smoke-test-passing' buggy implementation: pre-fix the computation completes without exception but is off by up to 36% (annihilation) and 20% (decay) versus the line-of-sight reference because tan(theta) != sin(theta) even at moderate angles. A correct fix replaces the near-side lower bound with the true impact parameter d*sin(theta), and all pixels of both modes agree within 3% (observed ~2e-08).",
+      "path": "selfverify/invariants/invariant_4_small_field_accuracy.py"
+    },
+    {
+      "name": "distance_unit_generalization",
+      "invariant": "Parameter generality and unit consistency: the computation must use the halo distance actually supplied to JFactory (not a hard-coded 8.33 kpc), and the physical result must be identical whether that distance is expressed in kpc or in pc.",
+      "rationale": "Pre-fix, (a) the Jacobian hard-codes DISTANCE_GC = 8.33 kpc while the integration bounds use the factory distance, giving up to 49% error even at the GC distance with a 20 kpc scale radius; (b) rebuilding rmin as value*kpc shifts the near-side bounds by a factor of 1000 when the distance is given in pc, and the run raises ValueError (observed: 'Number of samples, -5451'); (c) a halo at 21 kpc is computed with the wrong impact parameter and is off by 69% versus the direct line-of-sight integral. All three sub-checks fail pre-fix; post-fix the kpc/pc difference is ~3e-16 and both distances match the reference to ~3e-08.",
+      "path": "selfverify/invariants/invariant_5_distance_unit_generalization.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "All five tests were empirically verified on both the pre-fix tree (baseline commit) and the post-fix tree (current draft patch): every test FAILS pre-fix and PASSES post-fix, with post-fix deviations of ~1e-8 against 3-5% tolerances. The on-axis pixel (theta = 0) is deliberately excluded from all maps: for an NFW profile the on-axis integrals int rho dl (decay) and int rho^2 dl (annihilation) are physically divergent, so finiteness there is not a valid invariant. The reference integral shares the code's 4d truncation convention, so the claim that contributions beyond 4d are negligible is not independently verified, and pixel geometries stop below 90 deg, so the far-side-only branch (theta > 90 deg) is not covered."
+}

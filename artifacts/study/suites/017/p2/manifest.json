@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "los_direct_integration_agreement",
+      "invariant": "representation equivalence: dJ/dOmega from the JFactory workflow must equal an independent dense line-of-sight integration of rho(r(l))^2 dl (annihilation) and rho(r(l)) dl (decay) over the same truncated domain 2*[b,D]+[D,4D] for theta<=90 deg, for a new geometry, distance (7.9 kpc), NFW scale radius (17.3 kpc) and normalization",
+      "rationale": "pre-fix the near branch is integrated from D*tan(theta) instead of the impact parameter b=D*sin(theta), so pre-fix maps are low by ~5% (theta=7 deg), ~35% (theta=21 deg) and ~64% (theta=35 deg) and the assertion fails; post-fix agrees with the independent quadrature to ~1e-6 relative at all tested pixels and in both annihilation and decay modes",
+      "path": "selfverify/invariants/invariant_1_los_direct_integration_agreement.py"
+    },
+    {
+      "name": "b0_wide_field_finiteness",
+      "invariant": "boundary behavior: for a cored (Burkert) profile the theta=0 sightline (b=0, degenerate r=b*cosh(t) substitution) must be finite, must keep the requested radial bounds [0,D], and a wide 75-degree field at a new distance (6.8 kpc) must be fully finite and match the direct LoS reference at theta = 0, 25, 35 deg",
+      "rationale": "pre-fix the theta=0 pixel feeds rmin=0 into a log-log grid (log10(0) -> int32 overflow) and the whole map computation raises ValueError, so the test fails; post-fix the b=0 limit is integrated directly and all wide-field pixels are finite and agree with the reference to ~1e-5",
+      "path": "selfverify/invariants/invariant_2_b0_wide_field_finiteness.py"
+    },
+    {
+      "name": "unit_consistency_kpc_pc",
+      "invariant": "unit consistency: the same physical setup (distance 7.9 kpc vs 7900 pc, same profile) must yield identical dJ/dOmega maps in GeV2 cm-5 sr-1 regardless of the length unit used",
+      "rationale": "pre-fix JFactory hard-codes 'u.kpc' onto the numeric rmin value, so with the distance given in pc the integration bounds are mislabeled by 1000x, the log-log grid is inverted and the computation raises ValueError -> test fails; post-fix both unit representations give identical maps (max relative deviation ~1e-15)",
+      "path": "selfverify/invariants/invariant_3_unit_consistency_kpc_pc.py"
+    },
+    {
+      "name": "beyond_90deg_branch_bookkeeping",
+      "invariant": "branch bookkeeping at the theta=90 deg boundary: for theta>90 deg the forward ray has no doubled [b,D] contribution (only [D,4D] with the same impact parameter b=D sin theta), while for theta just below 90 deg the near branch is still counted twice; a 360-degree equatorial strip must be finite and match the branch-correct reference at 82.6 and 97.4 deg",
+      "rationale": "pre-fix rmin=D*tan(theta) is negative for theta>90 deg and >D beyond ~45 deg, so the log-log quadrature grid is inverted and the map raises ValueError -> test fails; post-fix the strip is finite and both the sub-90 and super-90 pixels agree with the correct branch decomposition to ~1e-6, pinning down that a fix cannot simply always double the near branch",
+      "path": "selfverify/invariants/invariant_4_beyond_90deg_branch_bookkeeping.py"
+    },
+    {
+      "name": "density_normalization_scaling",
+      "invariant": "scaling: multiplying the density normalization by q=3.2 must scale the annihilation map as q^2 and the decay map as q, pixel by pixel, across a wide 90-degree field whose corners reach 53 deg",
+      "rationale": "pre-fix the corner pixels (theta>45 deg) produce inverted log-log grids and the map computation raises ValueError, so the scaling law cannot even be evaluated -> test fails; post-fix all maps are finite and the ratios are exactly q^2 and q to ~1e-12, which also rejects any non-linear corruption of the profile evaluation in a fix",
+      "path": "selfverify/invariants/invariant_5_density_normalization_scaling.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "All five tests were empirically verified against both trees: pre-fix (git HEAD source) each test exits nonzero with a clear AssertionError; post-fix (draft patch) each prints PASS. Independent reference quadrature (r=b*cosh(t) substitution, 20001 points) was validated against the analytic constant-density result and against brute-force l-space integration before use. Not tested: profiles beyond NFW/Burkert at the b=0 limit, and supercell/tiling invariance of the halo integral (the map is differential per pixel, so no supercell construction exists in this API). A pixel at exactly theta=0 with a cusped NFW profile is physically infinite (integral of rho^2 diverges for the 1/r cusp), so the b=0 test deliberately uses the cored Burkert profile."
+}

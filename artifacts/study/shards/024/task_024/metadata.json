@@ -1,0 +1,23 @@
+{
+  "task_id": "024",
+  "science_knowledge_ablation": true,
+  "title": "Restore coherent inference in a centered factorial-effects model",
+  "domain": "probabilistic-scientific-computing",
+  "language": "python",
+  "source_repository": "https://github.com/pymc-devs/pymc",
+  "source_commit": "9ee5d84b5048aea0690bba2629ece684656ad186",
+  "source_license": "MIT",
+  "license_source": "LICENSE",
+  "gpl_family": false,
+  "restricted_license": false,
+  "license_gate": "none",
+  "material_license": null,
+  "material_license_source": null,
+  "material_restricted": false,
+  "materials_gate": false,
+  "materials_manifest_sha256": "",
+  "material_licenses": [],
+  "materials_provenance": "",
+  "restricted_reason": "",
+  "public_payload_sha256": "ae7eec5199ff7cd1363660c5a2d49e369dbb293f720a4d40b77d6b4628945b82"
+}

@@ -1,0 +1,13 @@
+diff --git a/source/sympy/integrals/rationaltools.py b/source/sympy/integrals/rationaltools.py
+index e95ff5d..c5a8738 100644
+--- a/source/sympy/integrals/rationaltools.py
++++ b/source/sympy/integrals/rationaltools.py
+@@ -332,7 +332,7 @@ def _get_real_roots(f, x):
+     try:
+         num_roots = f.count_roots()
+     except DomainError:
+-        return rs
++        return None
+     else:
+         if len(rs) == num_roots:
+             return rs

@@ -1,0 +1,190 @@
+diff --git a/source/desc/stability/terpsichore/assembly.py b/source/desc/stability/terpsichore/assembly.py
+index f75bb99..0fdb007 100644
+--- a/source/desc/stability/terpsichore/assembly.py
++++ b/source/desc/stability/terpsichore/assembly.py
+@@ -265,7 +265,17 @@ def assemble_potential_blocks_from_coefficients(
+ def _assemble_outer_shell_potential_blocks_from_modal_terms(
+     *, c1, c2, c3, c4, c5, c6, ftp_edge, fpp_edge, radial_grid, mode_table
+ ):
+-    """Assemble reduced outer-shell potential blocks from modal coefficient terms."""
++    """Assemble reduced outer-shell potential blocks from modal coefficient terms.
++
++    This is the pseudo-vacuum branch of the plasma path: the pressureless,
++    current-free vacuum region is treated as a pseudo-plasma whose profiles are
++    frozen at their plasma-edge values (``ftp_edge``, ``fpp_edge``), with the
++    higher pressure derivatives and the vacuum ``c0``/``c5`` integrals absent.
++    The wall-sensitive modal terms ``c1..c6`` therefore feed the same block
++    structure (``A, B, C, D, E, F, G, H, BL, BU``) used by the plasma intervals,
++    and the conducting-wall boundary condition is applied on the last
++    pseudo-vacuum interval.
++    """
+ 
+     arrays = {
+         "c1": np.asarray(c1, dtype=float),
+@@ -290,35 +300,85 @@ def _assemble_outer_shell_potential_blocks_from_modal_terms(
+     H = np.zeros(shape)
+     BL = np.zeros(shape)
+     BU = np.zeros(shape)
++    ql = np.asarray(mode_table.ql, dtype=float)
+     ms = np.asarray(mode_table.m, dtype=float)
+     ns = np.asarray(mode_table.n, dtype=float)
++    ni = radial_grid.ni
++    upper_rows, upper_cols = np.triu_indices(lmns)
++    diag_rows, diag_cols = np.diag_indices(lmns)
++    qlc = ql[:, None]
++    qlr = ql[None, :]
+     ftp_edge = float(ftp_edge)
+     fpp_edge = float(fpp_edge)
+-    fppfpp = fpp_edge * fpp_edge
+-    ftpfpp = 2.0 * ftp_edge * fpp_edge
+-    ftpftp = ftp_edge * ftp_edge
+-    upper_rows, upper_cols = np.triu_indices(lmns)
+-    ms_lc = ms[upper_rows]
+-    ms_lr = ms[upper_cols]
+-    ns_lc = ns[upper_rows]
+-    ns_lr = ns[upper_cols]
+-    pmn_u = ms_lc * fpp_edge - ns_lc * ftp_edge
+-    rmn_u = ms_lr * fpp_edge - ns_lr * ftp_edge
++    pmn = ms * fpp_edge - ns * ftp_edge
++    pmn_lc = pmn[:, None]
++    rmn_lr = pmn[None, :]
++    # The pseudo-vacuum carries no pressure and no current, so the profiles
++    # are frozen at their plasma-edge values and the higher pressure
++    # derivatives vanish.  The effective T1 denominator is the edge
++    # combination FPP*FPP - FTP*FTP of the pseudo-plasma.
++    t1 = fpp_edge * fpp_edge - ftp_edge * ftp_edge
++    if abs(t1) < 1e-14:
++        raise ValueError(
++            "LHSMAT outer-shell branch encountered near-zero T1 denominator."
++        )
+     for vac_interval in range(ivac):
+-        global_interval = radial_grid.ni + vac_interval
++        global_interval = ni + vac_interval
+         ds = radial_grid.ds[global_interval]
+-        dsvar = radial_grid.ni * ds
+-        tdsvac = 2.0 / ds
+-        tdsvsq = tdsvac * tdsvac
+-        c1_u = arrays["c1"][upper_rows, upper_cols, vac_interval]
+-        c2_u = arrays["c2"][upper_rows, upper_cols, vac_interval]
+-        c3_u = arrays["c3"][upper_rows, upper_cols, vac_interval]
+-        c4_u = arrays["c4"][upper_rows, upper_cols, vac_interval]
+-        c5_u = arrays["c5"][upper_rows, upper_cols, vac_interval]
+-        c6_u = arrays["c6"][upper_rows, upper_cols, vac_interval]
+-        c4_t_u = arrays["c4"][upper_cols, upper_rows, vac_interval]
+-        c5_t_u = arrays["c5"][upper_cols, upper_rows, vac_interval]
+-        del dsvar, tdsvac, tdsvsq, c1_u, c2_u, c3_u, c4_u, c5_u, c6_u, c4_t_u, c5_t_u
++        si = radial_grid.centers[global_interval]
++        dsvar = ni * ds
++        t2ds = 2.0 / ds
++        siic = 0.5 * dsvar / si**ql
++        siic_lc = siic[:, None]
++        siir_lr = siic[None, :]
++        siis = siic_lc * siir_lr / dsvar
++        c1_i = arrays["c1"][:, :, vac_interval]
++        c2_i = arrays["c2"][:, :, vac_interval]
++        c3_i = arrays["c3"][:, :, vac_interval]
++        c4_i = arrays["c4"][:, :, vac_interval]
++        c5_i = arrays["c5"][:, :, vac_interval]
++        c6_i = arrays["c6"][:, :, vac_interval]
++        c1_t = c1_i.T
++        c4_t = c4_i.T
++        c9_i = (
++            -(qlc + qlr) / si * c2_i
++            + pmn_lc * rmn_lr * c3_i
++            + rmn_lr * qlc / si * c1_i
++            + pmn_lc * qlr / si * c1_t
++        )
++        a_base = t2ds * (rmn_lr * c1_i + pmn_lc * c1_t - 2.0 * c2_i)
++        bl_upper = (-a_base + c9_i) * siis
++        d_upper = pmn_lc * rmn_lr * c6_i / t1 * dsvar
++        delta = rmn_lr * c1_i - pmn_lc * c1_t
++        c_upper = siis * (c9_i + t2ds * delta)
++        c_lower = c_upper - 2.0 * t2ds * siis * delta
++        g_formula = siir_lr * (
++            pmn_lc * (rmn_lr * c4_i - t1 * c5_i)
++            - pmn_lc * c2_i
++            + pmn_lc * rmn_lr * c1_i
++        ) / t1
++        e_formula = siic_lc * (
++            rmn_lr * (pmn_lc * c4_t - t1 * c5_i)
++            - rmn_lr * c2_i
++            + rmn_lr * pmn_lc * c1_t
++        ) / t1
++        bu_upper = (a_base + c9_i) * siis
++        BL[upper_rows, upper_cols, vac_interval] = bl_upper[upper_rows, upper_cols]
++        D[upper_rows, upper_cols, vac_interval] = d_upper[upper_rows, upper_cols]
++        D[upper_cols, upper_rows, vac_interval] = d_upper[upper_rows, upper_cols]
++        BU[upper_rows, upper_cols, vac_interval] = bu_upper[upper_rows, upper_cols]
++        C[upper_rows, upper_cols, vac_interval] = c_upper[upper_rows, upper_cols]
++        C[upper_cols, upper_rows, vac_interval] = c_lower[upper_rows, upper_cols]
++        E[upper_rows, upper_cols, vac_interval] = e_formula[upper_rows, upper_cols]
++        E[upper_cols, upper_rows, vac_interval] = g_formula[upper_rows, upper_cols]
++        G[upper_rows, upper_cols, vac_interval] = g_formula[upper_rows, upper_cols]
++        G[upper_cols, upper_rows, vac_interval] = e_formula[upper_rows, upper_cols]
++        F[upper_rows, upper_cols, vac_interval] = g_formula[upper_rows, upper_cols]
++        F[upper_cols, upper_rows, vac_interval] = e_formula[upper_rows, upper_cols]
++        A[upper_rows, upper_cols, vac_interval] = c_lower[upper_rows, upper_cols]
++        A[upper_cols, upper_rows, vac_interval] = c_upper[upper_rows, upper_cols]
++        H[upper_rows, upper_cols, vac_interval] = e_formula[upper_rows, upper_cols]
++        H[upper_cols, upper_rows, vac_interval] = g_formula[upper_rows, upper_cols]
+         if vac_interval == ivac - 1:
+             C[:, :, vac_interval] = 0.0
+             G[:, :, vac_interval] = 0.0
+@@ -326,9 +386,8 @@ def _assemble_outer_shell_potential_blocks_from_modal_terms(
+             B[:, :, vac_interval] = 0.0
+             H[:, :, vac_interval] = 0.0
+             A[:, :, vac_interval] = 0.0
+-            diag = np.diag_indices(lmns)
+-            BL[diag[0], diag[1], vac_interval] = -3.0
+-            B[diag[0], diag[1], vac_interval] = -4.0
++            BL[diag_rows, diag_cols, vac_interval] = -3.0
++            B[diag_rows, diag_cols, vac_interval] = -4.0
+     return TerpsichorePotentialBlocks(
+         A=-A,
+         B=-B,
+diff --git a/source/desc/stability/terpsichore/coefficients.py b/source/desc/stability/terpsichore/coefficients.py
+index 8ad632c..cfc5c8b 100644
+--- a/source/desc/stability/terpsichore/coefficients.py
++++ b/source/desc/stability/terpsichore/coefficients.py
+@@ -517,12 +517,40 @@ def _project_outer_shell_integrals_to_modal_coefficients(
+     cnb = np.asarray(cnb, dtype=float)
+     if cna.shape != cnb.shape or cna.ndim != 3:
+         raise ValueError("cna and cnb must be rank-3 arrays with identical shape.")
++    if cna.shape[0] < 7:
++        raise ValueError("cna/cnb first dimension must include indices 1..6.")
+     lmns = mode_table.size
+     intervals = cna.shape[2]
+     shape = (lmns, lmns, intervals)
+     coeffs = {name: np.zeros(shape) for name in ALL_COEFFICIENTS}
+     indices = compute_fourin_mapping_indices(mode_table, nper=nper, lsx=lsx)
+-    del indices, dtdp, cospar
++    ld = indices["ld"]
++    lp = indices["lp"]
++    for interval in range(intervals):
++        coeffs["c2"][:, :, interval] = dtdp * (
++            cna[1, ld, interval] - cospar * cna[1, lp, interval]
++        )
++        coeffs["c6"][:, :, interval] = dtdp * (
++            cna[2, ld, interval] - cospar * cna[2, lp, interval]
++        )
++        coeffs["c7"][:, :, interval] = dtdp * (
++            cna[3, ld, interval] - cospar * cna[3, lp, interval]
++        )
++        coeffs["c5"][:, :, interval] = dtdp * (
++            cna[4, ld, interval] - cospar * cna[4, lp, interval]
++        )
++        coeffs["c0"][:, :, interval] = dtdp * (
++            cna[6, ld, interval] - cospar * cna[6, lp, interval]
++        )
++        coeffs["c1"][:, :, interval] = dtdp * (
++            cnb[1, ld, interval] + cospar * cnb[1, lp, interval]
++        )
++        coeffs["c3"][:, :, interval] = dtdp * (
++            cnb[2, ld, interval] + cospar * cnb[2, lp, interval]
++        )
++        coeffs["c4"][:, :, interval] = dtdp * (
++            cnb[3, ld, interval] + cospar * cnb[3, lp, interval]
++        )
+     return TerpsichoreCoefficientData(coefficients=coeffs, fixed_boundary=False)
+ 
+ def map_fourin_grid_to_coefficients(

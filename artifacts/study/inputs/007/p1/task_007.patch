@@ -1,0 +1,427 @@
+diff --git a/source/suspect/processing/frequency_correction.py b/source/suspect/processing/frequency_correction.py
+index 464033d..d9eaf2c 100644
+--- a/source/suspect/processing/frequency_correction.py
++++ b/source/suspect/processing/frequency_correction.py
+@@ -1,3 +1,5 @@
++import warnings
++
+ import numpy
+ import scipy.optimize
+ 
+@@ -20,6 +22,25 @@ def residual_water_alignment(data):
+     return peak_index * data.df
+ 
+ 
++def _spectral_weights(data, frequency_range):
++    """
++    Build the per-bin spectral weights used to restrict the comparison to a
++    stable spectral region.
++
++    ``frequency_range`` may be ``None`` (compare the whole spectrum), a
++    two-element (low, high) pair of frequencies in Hz (compare only the bins
++    strictly inside that interval), or an array-like of per-bin weights with
++    the same number of points as the data.
++
++    """
++    if frequency_range is None:
++        return None
++    if isinstance(frequency_range, (tuple, list)) and len(frequency_range) == 2:
++        axis = data.frequency_axis()
++        return (axis > float(frequency_range[0])) & (axis < float(frequency_range[1]))
++    return numpy.asanyarray(frequency_range)
++
++
+ def spectral_registration(data, target, initial_guess=(0.0, 0.0), frequency_range=None):
+     """
+     Performs the spectral registration method to calculate the frequency and
+@@ -27,49 +48,130 @@ def spectral_registration(data, target, initial_guess=(0.0, 0.0), frequency_rang
+     frequency range over which the two spectra are compared can be specified to
+     exclude regions where the spectra differ.
+ 
++    The returned shifts (frequency in Hz, phase in radians) describe how the
++    input data is displaced from the target, i.e. data ~= target *
++    exp(2j * pi * (frequency * t + phase)). Multiplying the data with
++    transform_fid(data, -frequency, -phase) therefore re-aligns it to the
++    target.
++
++    The frequency estimate comes from a global scan of the whole spectral
++    width, with the optimal constant phase solved exactly at every scanned
++    frequency, so the result does not depend on the quality of the initial
++    guess. The initial guess is only used as a seed for the local refinement
++    when no coherent alignment can be found.
++
+     Parameters
+     ----------
+     data : MRSData
+     target : MRSData
+     initial_guess : tuple
+-    frequency_range : 
++    frequency_range :
+ 
+     Returns
+     -------
++    tuple
++        (frequency_shift, phase_shift) of the data relative to the target.
+ 
+     """
+ 
+-    # make sure that there are no extra dimensions in the data
+-    data = data.squeeze()
+-    target = target.squeeze()
++    # make sure that there are no extra dimensions in the data; any leading
++    # (e.g. channel) dimensions are averaged so registration sees a single FID
++    data = numpy.asanyarray(data).squeeze()
++    target = numpy.asanyarray(target).squeeze()
++    if data.ndim > 1:
++        data = data.mean(axis=tuple(range(data.ndim - 1)))
++    if target.ndim > 1:
++        target = target.mean(axis=tuple(range(target.ndim - 1)))
++    data = data.astype(numpy.complex128, copy=False)
++    target = target.astype(numpy.complex128, copy=False)
++
++    if len(data) != len(target):
++        raise ValueError("data and target must have the same number of points")
+ 
+-    # the supplied frequency range can be none, in which case we use the whole
+-    # spectrum, or it can be a tuple defining two frequencies in Hz, in which
+-    # case we use the spectral points between those two frequencies, or it can
+-    # be a numpy.array of the same size as the data in which case we simply use
+-    # that array as the weightings for the comparison
+-    if type(frequency_range) is tuple:
+-        spectral_weights = frequency_range[0] < data.frequency_axis() & data.frequency_axis() < frequency_range[1]
++    n_points = len(data)
++    if n_points < 4:
++        raise ValueError("registration requires at least four time points")
++
++    weights = _spectral_weights(data, frequency_range)
++    if weights is not None and weights.size != n_points:
++        raise ValueError("frequency_range weight array must match the data length")
++
++    # fft bin indices that put the spectrum in the same order as
++    # data.frequency_axis() (i.e. fftshifted order)
++    bins = numpy.fft.ifftshift(numpy.arange(n_points))
++    time_axis = numpy.arange(n_points, dtype=float) * data.dt
++    spectral_width = 1.0 / data.dt
++
++    reference_spectrum = numpy.fft.fft(target)[bins]
++    if weights is None:
++        reference_window = reference_spectrum
+     else:
+-        spectral_weights = frequency_range
++        reference_window = reference_spectrum * numpy.asanyarray(weights).astype(float)
++
++    def windowed_residual_vector(frequency_shift, phase_shift):
++        corrected = data * numpy.exp(-2j * numpy.pi * (frequency_shift * time_axis + phase_shift))
++        window = numpy.fft.fft(corrected)[bins]
++        if weights is not None:
++            window = window * numpy.asanyarray(weights).astype(float)
++        difference = window - reference_window
++        return numpy.concatenate((difference.real, difference.imag))
+ 
+-    # define a residual function for the optimizer to use
+     def residual(input_vector):
+-        transformed_data = transform_fid(data, input_vector[0], input_vector[1])
+-        residual_data = transformed_data - target
+-        if frequency_range is not None:
+-            spectrum = residual_data.spectrum()
+-            weighted_spectrum = residual_data * spectral_weights
+-            # remove zero-elements
+-            weighted_spectrum = weighted_spectrum[weighted_spectrum != 0]
+-            residual_data = numpy.fft.ifft(numpy.fft.ifftshift(weighted_spectrum))
+-        return_vector = numpy.zeros(len(residual_data) * 2)
+-        return_vector[:len(residual_data)] = residual_data.real
+-        return_vector[len(residual_data):] = residual_data.imag
+-        return return_vector
+-
+-    out = scipy.optimize.leastsq(residual, initial_guess)
+-    return -out[0][0], -out[0][1]
++        return windowed_residual_vector(input_vector[0], input_vector[1])
++
++    def refine(start):
++        start = numpy.asarray(start, dtype=float)
++        with warnings.catch_warnings():
++            warnings.simplefilter("ignore")
++            try:
++                out = scipy.optimize.leastsq(residual, start, maxfev=200)
++            except Exception:
++                return start, float("inf")
++        if not numpy.all(numpy.isfinite(out[0])):
++            return start, float("inf")
++        value = float(numpy.linalg.norm(residual(out[0])))
++        return out[0], value
++
++    # Global 1-D scan over the whole spectral width. For a fixed frequency the
++    # optimal constant phase is analytic (the phase of the windowed
++    # cross-spectrum), so the two-dimensional problem reduces to finding the
++    # maximum of the cross-spectrum magnitude minus the self-power of the
++    # corrected window, which is evaluated on a dense frequency grid.
++    frequency_step = max(spectral_width / n_points / 2.0, spectral_width / 4096.0)
++    n_grid = int(max(16, min(8192, numpy.ceil(spectral_width / frequency_step))))
++    scan_frequencies = numpy.arange(-spectral_width / 2, spectral_width / 2, spectral_width / n_grid)
++
++    best_score = -numpy.inf
++    best_frequency = float(scan_frequencies[0])
++    best_phase = 0.0
++    scan_residual = float("inf")
++    for candidate in scan_frequencies:
++        corrected = data * numpy.exp(-2j * numpy.pi * candidate * time_axis)
++        window = numpy.fft.fft(corrected)[bins]
++        if weights is not None:
++            window = window * numpy.asanyarray(weights).astype(float)
++        cross = numpy.vdot(reference_window, window)
++        self_power = float(numpy.vdot(window, window).real)
++        score = 2.0 * float(numpy.abs(cross)) - self_power
++        if numpy.isfinite(score) and score > best_score:
++            best_score = score
++            best_frequency = float(candidate)
++            best_phase = float(numpy.angle(cross) / (2.0 * numpy.pi))
++            scan_residual = float(numpy.linalg.norm(residual((best_frequency, best_phase))))
++
++    if numpy.isfinite(best_score) and best_score > 0:
++        (frequency_shift, phase_shift), refined_residual = refine((best_frequency, best_phase))
++        if not numpy.isfinite(refined_residual) or refined_residual > scan_residual:
++            frequency_shift, phase_shift = best_frequency, best_phase
++    else:
++        # no coherent alignment in the scan window; fall back to a local
++        # refinement seeded by the supplied initial guess
++        (frequency_shift, phase_shift), _ = refine(initial_guess)
++
++    if not (numpy.isfinite(frequency_shift) and numpy.isfinite(phase_shift)):
++        frequency_shift, phase_shift = (float(initial_guess[0]), float(initial_guess[1]))
++
++    return float(frequency_shift), float(phase_shift)
+ 
+ 
+ def residual_ratio(data, target, frequency_range=None):
+@@ -77,7 +179,7 @@ def residual_ratio(data, target, frequency_range=None):
+     target = target.squeeze()
+     residual = data - target
+     if frequency_range is not None:
+-        weights = _frequency_weights(data, frequency_range)
++        weights = _spectral_weights(data, frequency_range)
+         spectrum = residual.spectrum()
+         residual = numpy.fft.ifft(numpy.fft.ifftshift(spectrum * weights))
+     denom = numpy.linalg.norm(target)
+@@ -108,17 +210,21 @@ def linewidth_hz(series, dt):
+     return float((right - left) * (1.0 / dt) / len(magnitude))
+ 
+ 
+-def _frequency_weights(data, frequency_range):
+-    if type(frequency_range) is tuple:
+-        return frequency_range[0] < data.frequency_axis() & data.frequency_axis() < frequency_range[1]
+-    return frequency_range
+-
+-
+ def dynamic_reference(series):
++    """
++    Build a common reference for a dynamic series by averaging its transients.
++
++    Averaging is taken in the time domain so that the reference keeps the
++    sampling metadata of the series (when the transients provide it).
++    """
+     series = [item.squeeze() for item in series]
+     if len(series) == 0:
+         raise ValueError("series must contain at least one transient")
+-    return series[0]
++    mean = numpy.mean(numpy.asarray(series, dtype=complex), axis=0)
++    first = series[0]
++    if hasattr(first, "inherit"):
++        return first.inherit(mean)
++    return mean
+ 
+ 
+ def register_dynamic_series(
+@@ -131,43 +237,98 @@ def register_dynamic_series(
+     """
+     Register a dynamic MRS series to a common reference.
+ 
++    Every transient is aligned to the reference by estimating its frequency
++    and phase drift in the supplied registration window (``frequency_range``,
++    ``None`` for the full spectrum) and applying the compensating
++    time-domain correction to the whole transient. The reported residuals are
++    measured in the same window, so they reflect the stable spectral region
++    used for registration. Transients whose post-correction residual does not
++    drop below ``reject_threshold`` are flagged as rejected so that they do
++    not pollute downstream averages.
++
++    When no reference is supplied, a common reference is built by averaging
++    the series and the registration is iterated a few times against the
++    average of the corrected transients, so that the final residuals and the
++    acceptance decision are measured against a converged, drift-free reference.
++
+     The returned dictionary is intentionally simple so that downstream quality
+-    control can inspect the corrected transients, per-transient drift estimates,
+-    residuals, and accepted mask.
++    control can inspect the corrected transients, per-transient drift
++    estimates, residuals, and accepted mask.
+     """
+     transients = [item.squeeze() for item in series]
+     if len(transients) == 0:
+         raise ValueError("series must contain at least one transient")
+     if reference is None:
+         reference = dynamic_reference(transients)
++        build_reference = True
+     else:
+-        reference = reference.squeeze()
++        reference = numpy.asanyarray(reference).squeeze()
++        build_reference = False
+ 
+     if initial_guesses is None:
+         initial_guesses = [(0.0, 0.0)] * len(transients)
+     if len(initial_guesses) != len(transients):
+         raise ValueError("initial_guesses must match the number of transients")
+ 
+-    corrected = []
+-    estimates = []
+-    before = []
+-    after = []
+-    accepted = []
+-
+-    for transient, initial_guess in zip(transients, initial_guesses):
+-        before.append(residual_ratio(transient, reference, frequency_range=None))
+-        freq, phase = spectral_registration(
+-            transient,
+-            reference,
+-            initial_guess=initial_guess,
+-            frequency_range=None,
+-        )
+-        aligned = transform_fid(transient, -freq, -phase)
+-        corrected.append(aligned)
+-        estimates.append((freq, phase))
+-        after_value = residual_ratio(aligned, reference, frequency_range=None)
+-        after.append(after_value)
+-        accepted.append(True)
++    def registration_pass(current_reference):
++        corrected = []
++        estimates = []
++        before = []
++        after = []
++        accepted = []
++        for transient, initial_guess in zip(transients, initial_guesses):
++            before_value = residual_ratio(transient, current_reference, frequency_range)
++            freq, phase = spectral_registration(
++                transient,
++                current_reference,
++                initial_guess=(float(initial_guess[0]), float(initial_guess[1])),
++                frequency_range=frequency_range,
++            )
++            aligned = transform_fid(transient, -freq, -phase)
++            after_value = residual_ratio(aligned, current_reference, frequency_range)
++            if reject_threshold is None:
++                keep = bool(numpy.isfinite(after_value))
++            else:
++                keep = bool(numpy.isfinite(after_value) and after_value <= float(reject_threshold))
++            corrected.append(aligned)
++            estimates.append((freq, phase))
++            before.append(before_value)
++            after.append(after_value)
++            accepted.append(keep)
++        return corrected, estimates, before, after, accepted
++
++    corrected, estimates, before, after, accepted = registration_pass(reference)
++    if build_reference:
++        # sharpen the common reference from the corrected transients and
++        # re-register against it, so that the final residuals and the
++        # acceptance decision are measured against the converged reference
++        # rather than the (drift-smeared) initial average
++        for _ in range(3):
++            previous_estimates = numpy.asarray(estimates, dtype=float)
++            previous_mask = numpy.asarray(accepted, dtype=bool)
++            reference = dynamic_reference(corrected)
++            (
++                new_corrected,
++                new_estimates,
++                new_before,
++                new_after,
++                new_accepted,
++            ) = registration_pass(reference)
++            stable = (
++                numpy.asarray(new_accepted, dtype=bool).tolist() == previous_mask.tolist()
++                and numpy.allclose(
++                    numpy.asarray(new_estimates, dtype=float), previous_estimates, atol=1e-3
++                )
++            )
++            corrected, estimates, before, after, accepted = (
++                new_corrected,
++                new_estimates,
++                new_before,
++                new_after,
++                new_accepted,
++            )
++            if stable:
++                break
+ 
+     return {
+         "reference": reference,
+diff --git a/source/tests/test_mrs/test_processing.py b/source/tests/test_mrs/test_processing.py
+index 9bf35ef..5a5c3b0 100644
+--- a/source/tests/test_mrs/test_processing.py
++++ b/source/tests/test_mrs/test_processing.py
+@@ -108,3 +108,67 @@ def test_water_suppression():
+     components = suspect.processing.water_suppression.hsvd(channel_combined_data[10], 4, int(data.np / 2))
+     fid = suspect.processing.water_suppression.construct_fid(components, data.time_axis())
+     assert len(components) == 4
++
++
++def _synthetic_dynamic_series(drifts, noise, nuisance=None, corrupt_index=None, seed=0):
++    # small MRS-like series: a common multi-peak reference with per-transient
++    # frequency/phase drift, a condition-dependent nuisance peak, and noise
++    import numpy.random as random
++
++    rng = random.RandomState(seed)
++    dt = 1.0 / 2200.0
++    n = 512
++    time_axis = numpy.arange(n) * dt
++    reference = numpy.zeros(n, 'complex')
++    for frequency, amplitude, fwhm in [(-400, 30, 18), (-180, 260, 22), (60, 55, 25), (210, 140, 20)]:
++        damping = numpy.exp(-numpy.pi ** 2 * fwhm ** 2 * time_axis ** 2 / (4 * numpy.log(2)))
++        reference += amplitude * numpy.exp(2j * numpy.pi * frequency * time_axis) * damping
++    series = []
++    for index, (frequency, phase) in enumerate(drifts):
++        transient = reference * numpy.exp(2j * numpy.pi * (frequency * time_axis + phase))
++        if nuisance is not None and index != corrupt_index:
++            for frequency2, amplitude2, fwhm2 in nuisance:
++                damping = numpy.exp(-numpy.pi ** 2 * fwhm2 ** 2 * time_axis ** 2 / (4 * numpy.log(2)))
++                transient = transient + amplitude2 * numpy.exp(2j * numpy.pi * frequency2 * time_axis) * damping
++        if index == corrupt_index:
++            transient = numpy.exp(2j * numpy.pi * 300.0 * time_axis) * numpy.exp(-time_axis / (0.1 * n * dt))
++        transient = transient + noise * (rng.randn(n) + 1j * rng.randn(n))
++        series.append(suspect.MRSData(transient, dt, 123))
++    return suspect.MRSData(reference, dt, 123), series
++
++
++def test_dynamic_registration_corrects_drift():
++    drifts = [(22.4, 0.18), (-19.6, -0.21), (31.0, -0.15), (-12.0, 0.12), (25.5, 0.31)]
++    reference, series = _synthetic_dynamic_series(
++        drifts, noise=0.4, nuisance=[(260, 90, 20), (-320, 60, 18)]
++    )
++    result = suspect.processing.frequency_correction.register_dynamic_series(
++        series,
++        reference=reference,
++        initial_guesses=[(frequency * 1.2, phase) for frequency, phase in drifts],
++        frequency_range=(-250, -110),
++        reject_threshold=0.42,
++    )
++    estimates = result['estimates']
++    numpy.testing.assert_allclose(estimates[:, 0], [frequency for frequency, _ in drifts], atol=1.0)
++    numpy.testing.assert_allclose(estimates[:, 1], [phase for _, phase in drifts], atol=0.1)
++    assert numpy.all(result['residuals_after'] < result['residuals_before'])
++    assert numpy.mean(result['residuals_after']) < 0.2
++    assert numpy.all(result['accepted'])
++
++
++def test_dynamic_registration_rejects_unusable_transient():
++    drifts = [(22.4, 0.18), (-19.6, -0.21), (31.0, -0.15), (-12.0, 0.12), (25.5, 0.31)]
++    reference, series = _synthetic_dynamic_series(
++        drifts, noise=0.4, nuisance=[(260, 90, 20), (-320, 60, 18)], corrupt_index=2
++    )
++    result = suspect.processing.frequency_correction.register_dynamic_series(
++        series,
++        reference=reference,
++        frequency_range=(-250, -110),
++        reject_threshold=0.42,
++    )
++    expected = numpy.array([True, True, False, True, True])
++    numpy.testing.assert_array_equal(result['accepted'], expected)
++    assert result['residuals_after'][2] > 0.42
++    assert numpy.all(result['residuals_after'][expected] < 0.42)

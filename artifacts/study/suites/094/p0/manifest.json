@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "bns_roundtrip_repr_equivalence",
+      "invariant": "representation equivalence: the magnetic operation family a producer stored in setting S, expressed back into the BNS frame, must equal the canonical BNS operations of the group",
+      "rationale": "pre-fix CifParser.get_magsymops ignores _space_group_magn.transform_BNS_Pp_abc and returns the BNS operations, so conjugating the returned family back with the stated transform yields a different set (translation 1/3 -> 2/3 on the doubled b axis) and the assertion fails; post-fix the parser conjugates BNS ops into the producer setting, so the round trip recovers exactly the canonical BNS set and it passes. Uses new group BNS 4.9 with basis 'a,2b,c;0,0,0' (not the public fixture record).",
+      "path": "selfverify/invariants/invariant_1_bns_roundtrip_repr_equivalence.py"
+    },
+    {
+      "name": "change_of_producer_basis",
+      "invariant": "symmetry / change-of-frame: operation families in two different non-BNS producer settings must be related by the change-of-basis conjugation (T2 T1^-1)",
+      "rationale": "pre-fix both settings return the same (wrong) BNS set, so the family transformed from setting 1 to setting 2 no longer matches the family parsed in setting 2 (conjugation moves the 1/3 translation) and the assertion fails; post-fix the parser output is equivariant under any change of producer basis, so the two families agree as sets and it passes. New inputs: group BNS 4.9 with 'a,2b,c;0,0,0' vs 'b,a,c;0,0,0'.",
+      "path": "selfverify/invariants/invariant_2_change_of_producer_basis.py"
+    },
+    {
+      "name": "origin_shift_invariance",
+      "invariant": "boundary/degeneracy behavior: changing only the origin choice (same basis, p = 0 vs p = 1/4,1/6,0) must not change the physical affine operation family, only its coordinate representation",
+      "rationale": "pre-fix the parser returns the BNS family for both origin choices, so expressing one family into the other's frame (a pure translation conjugation) changes the translations and the sets disagree; post-fix both families are the correctly conjugated producer families, which are identical as affine maps in a common frame, so it passes. Probes the (W - I) p term of the Jones-Faithful transform that a naive fix could get wrong.",
+      "path": "selfverify/invariants/invariant_3_origin_shift_invariance.py"
+    },
+    {
+      "name": "orbit_convention_invariance",
+      "invariant": "conservation of a physical observable: the catalogue orbit of a generic probe point (mapped back to BNS coordinates) must equal the orbit of the corresponding BNS point under the canonical BNS operations, independent of the producer coordinate convention",
+      "rationale": "pre-fix the workflow applies BNS operations to a probe point that is stored in the producer basis and then maps it with the archive basis, mixing two frames, so the catalogue orbit differs from the canonical BNS orbit and the assertion fails; post-fix the producer-frame operations act consistently on the producer-frame point, and the catalogue observable equals the BNS orbit of P q + p, so it passes. Runs through the public workflow API (operation_family) with a brand-new record: group BNS 4.9, basis 'a,c,b;0,0,0', probe (0.2, 0.31, 0.42).",
+      "path": "selfverify/invariants/invariant_4_orbit_convention_invariance.py"
+    },
+    {
+      "name": "independent_conjugation_oracle",
+      "invariant": "unit/coordinate consistency: for an origin-shifted setting, the parser output must equal the Jones-Faithful conjugate of the BNS operations, W' = P^-1 W P, w' = P^-1 (w + (W - I) p), computed with an independent raw-numpy oracle",
+      "rationale": "pre-fix the parser returns the unshifted BNS operations (translation 1/2 on x), while the manually computed conjugate for p = (-1/4, 0, 0) gives translation 0, so the sets differ and the assertion fails; post-fix the parser performs exactly this conjugation, so the output matches the independent oracle and it passes. Uses new group BNS 4.11 with 'a,b,c;-1/4,0,0' (a transform type different from the public fixture's basis scaling).",
+      "path": "selfverify/invariants/invariant_5_independent_conjugation_oracle.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "All five tests were empirically verified: each FAILS on the pre-fix tree (git HEAD cif.py) with a clear AssertionError and PASSES on the patched tree; none touch the public fixture file, its record id, or its numbers. The retained benchmark catalogue contains only BNS 4.9 and 4.11, both consisting solely of time-reversal-unprimed operations, so time-reversal-sector invariants (index-2 normality of the unprimed subgroup, primed-op behavior) are degenerate in this snapshot and no weak always-pass test was fabricated for them. Tests 1-3 and 5 exercise the patched API (pymatgen.io.cif.CifParser) directly with new producer records; test 4 goes through the public workflow (workflow.magnetic_catalogue.operation_family). Each script resolves the repo root from its own path, so it runs from any CWD."
+}

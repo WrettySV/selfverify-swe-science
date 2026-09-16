@@ -1,0 +1,30 @@
+{
+  "invariants": [
+    {
+      "name": "outlet_elevation_equals_bedrock",
+      "invariant": "Boundary behavior: a network outlet node (no downstream reach) has no channel downstream of it to hold stored sediment, so the alluvium depth assigned to that node must be zero and its topographic elevation must equal its bedrock elevation.",
+      "rationale": "Pre-fix, _adjust_node_elevation reads self._vol_stor[downstream_link_id][n] even when downstream_link_id[n] is BAD_INDEX (-1), so Python negative indexing feeds the stored volume of the last link in the array into the outlet's alluvium depth; with 20 m3 stored in the final reach the pre-fix outlet sits 0.0533 m above bedrock while the post-fix value is exactly bedrock. The test loads a new 4-node channel (not the public fixture), runs 3 steps, and asserts outlet topographic == bedrock elevation.",
+      "path": "selfverify/invariants/invariant_1_outlet_elevation_equals_bedrock.py"
+    },
+    {
+      "name": "outlet_elevation_invariant_to_sediment_volume",
+      "invariant": "Scaling/sensitivity: the outlet node's elevation is a boundary observable and must not scale with the amount of sediment delivered to the network, because there is no downstream reach whose stored load could raise the outlet water level.",
+      "rationale": "Pre-fix the outlet elevation is proportional to the (wraparound-selected) stored volume: 0.0533 m for 20 m3/reach vs 0.1067 m for 40 m3/reach, so the two identical-geometry runs disagree and the assertion fails; post-fix both runs give exactly the bedrock elevation (0 m) and the test passes. Same new network as test 1, run twice with a 2x volume perturbation.",
+      "path": "selfverify/invariants/invariant_2_outlet_elevation_invariant_to_sediment_volume.py"
+    },
+    {
+      "name": "outlet_elevation_invariant_to_bed_porosity",
+      "invariant": "Parameter invariance of a boundary condition: the outlet node's elevation must be independent of channel-bed porosity, an internal bed property, since no downstream bed exists to store porosity-displaced sediment at the outlet.",
+      "rationale": "Pre-fix the spurious outlet alluvium is scaled by 1/(1-porosity), giving 0.0533 m at porosity 0.25 vs 0.0667 m at porosity 0.40 on the same network and same sediment load, so the runs disagree and the test fails; post-fix both runs return exactly the bedrock elevation and the test passes.",
+      "path": "selfverify/invariants/invariant_3_outlet_elevation_invariant_to_bed_porosity.py"
+    },
+    {
+      "name": "mean_grain_size_finite_where_sediment_present",
+      "invariant": "Well-defined material state: the volume-weighted mean grain size of the sediment present on a reach must be a finite physical quantity wherever that reach holds sediment, including reaches whose sediment is entirely in the (inactive) storage layer.",
+      "rationale": "Pre-fix, _calc_transport_wilcock_crowe computes d_mean_active as sum(d*vol)/vol_tot unconditionally, so a reach with only stored parcels yields 0/0 = NaN, and the test observes d_mean_active = [nan nan nan] and fails; post-fix the stored-parcel volume-weighted mean is used, giving the finite value 0.05 m on every reach holding sediment, and the test passes. The scenario (20 m3 per 100 m reach exceeds the Wong-Parker active-layer capacity, so all sediment is stored) is a new network, not the public fixture.",
+      "path": "selfverify/invariants/invariant_4_mean_grain_size_finite_where_sediment_present.py"
+    }
+  ],
+  "confidence": 0.9,
+  "notes": "All four tests were executed on both tree states: every test raises AssertionError pre-fix (exit 1) and prints PASS post-fix (exit 0), and two of them were also run concurrently to confirm they do not race on the shared .build/candidate_landlab overlay (a file lock serializes the candidate load). Total sediment volume is conserved in both pre-fix and post-fix for these zero-abrasion scenarios, so a mass-conservation test would pass pre-fix and was deliberately not included. The third patch hunk (parcels on links with no defined flow direction coming to rest) could not be turned into a reliable discriminator: such links get only the slope_threshold gradient, so pre-fix parcels drift at ~1e-19 m/step, below any robust assertion tolerance within a realistic number of steps. Mirror/representation-equivalence variants were investigated, but NetworkModelGrid's canonical reindex_by_xy makes mirrored copies of these small networks layout-identical, so they do not discriminate."
+}

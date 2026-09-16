@@ -1,0 +1,30 @@
+{
+  "invariants": [
+    {
+      "name": "repr_consistency_3d_ellipsoid",
+      "invariant": "representation invariance: the normalized surface-overlap score of a fixed physical prediction/reference pair (3D ellipsoids, anisotropic spacing 1/1/2 vs 2/2/4 mm) must not depend on the voxel grid used to represent the study",
+      "rationale": "pre-fix scores are 0.969 (fine) vs 0.877 (coarse): the edge-voxel counting plus edge-center-to-edge-center distance quantizes distances on the coarse grid, dropping the score below the 0.90 floor (AssertionError); post-fix, face-centered physical surface sampling with face-measure weights gives 0.998 vs 0.981, spread 0.017 <= 0.10, so all assertions hold",
+      "path": "selfverify/invariants/invariant_1_repr_consistency_3d_ellipsoid.py"
+    },
+    {
+      "name": "repr_consistency_2d_ellipse",
+      "invariant": "2-D representation invariance plus unit consistency: the same physical ellipse pair on 1-mm and 2-mm grids, and the same pixel arrays expressed in mm vs cm (spacing 1 vs 0.1, threshold 2.4 vs 0.24), must yield the same score",
+      "rationale": "pre-fix scores are 1.0 (fine) vs 0.926 (coarse): the coarse-grid edge-voxel quantization pushes the score below the 0.95 floor and the grid spread 0.074 exceeds 0.05 (AssertionError); post-fix both grids give 1.0 and the mm/cm run is identical to 1e-9 (physical, spacing-scaled computation), so all assertions hold",
+      "path": "selfverify/invariants/invariant_2_repr_consistency_2d_ellipse.py"
+    },
+    {
+      "name": "repr_consistency_3d_lobe_shift",
+      "invariant": "representation invariance for a non-ellipsoidal object: a 4-lobe 3-D shape displaced by a rigid physical shift of (1,1,2) mm (integer voxels on the fine grid, half-voxels on the coarse grid) must score stably across a 2x resolution change",
+      "rationale": "pre-fix scores are 0.977 (fine) vs 0.887 (coarse): with multi-lobed, strongly curved boundaries the sparse coarse edge-voxel set overestimates directed distances, breaching the 0.90 floor and the 0.08 spread cap (AssertionError); post-fix the exact surface-to-surface distances give 1.0 vs 0.974 (spread 0.026), so all assertions hold",
+      "path": "selfverify/invariants/invariant_3_repr_consistency_3d_lobe_shift.py"
+    },
+    {
+      "name": "grid_refinement_convergence_2d",
+      "invariant": "scaling/convergence invariance: the same physical ellipse pair scored on three nested resolutions (0.5/1.0/2.0 mm grids over a 64 mm domain) must converge, and the coarsest grid must not degrade the score",
+      "rationale": "pre-fix the ladder is 1.0 / 1.0 / 0.846: the coarsest grid loses 15 points of surface agreement (0.846 < 0.90 floor, |fine-coarse| = 0.154 > 0.10, AssertionError) because edge-voxel spacing quantizes the directed distances; post-fix all three resolutions give 1.0, so the convergence and floor assertions hold",
+      "path": "selfverify/invariants/invariant_4_grid_refinement_convergence_2d.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All shapes, grid sizes, spacings and the 2.4 mm tolerance are newly constructed (no fixture arrays, scores, shapes or tolerance reused). Every test was run directly on the pre-fix baseline (git HEAD worktree) and on the post-fix tree: each exits 1 with an AssertionError pre-fix and 0 post-fix. A zero-tolerance boundary test (NSD(A,A,tau=0) must be 1.0) was rejected: in this scipy version distance_transform_edt returns exact 0.0 at background, so the buggy code also scores an identical pair 1.0 at tau=0 and the test would not discriminate. Batch/one-hot handling and pure unit rescaling behave identically pre- and post-fix (the bug is the grid dependence of mismatched-pair scores), so they are not separate tests; unit consistency is kept as a secondary assertion in test 2."
+}

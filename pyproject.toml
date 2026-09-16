@@ -1,7 +1,7 @@
 [project]
 name = "selfverify-swe-science"
 version = "0.1.0"
-description = "Single-agent self-verification (metamorphic tests) for SWE-bench Science via Pier"
+description = "Cross-candidate verification and own-test refinement for scientific software repair"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,6 +10,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = []
+report = ["reportlab==5.0.1", "pypdf==6.19.0"]
 
 [build-system]
 requires = ["setuptools>=68"]

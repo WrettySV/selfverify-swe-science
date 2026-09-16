@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "wall_distinct_observations",
+      "invariant": "materially different conducting walls must produce finite, distinct global potential-energy (wp), normalized omega2, and growth-rate observations (wall coupling in the vacuum/outer region)",
+      "rationale": "pre-fix the outer-shell blocks are a wall-independent constant scaffold (all-zero blocks plus a fixed diagonal on the last vacuum interval), so wp/omega2/growth rate are bit-identical for two different walls (measured max gap = 0.0 -> FAIL); the fix feeds the wall-dependent modal terms c1..c6 into the outer-shell blocks, giving distinct finite observations on a fresh case (surfs=5, ivac=3, dsvac=0.55, seed 11, wall offsets 1.0 vs 2.6; measured post-fix gap ~3.3 -> PASS)",
+      "path": "selfverify/invariants/invariant_1_wall_distinct_observations.py"
+    },
+    {
+      "name": "alt_mesh_wall_response",
+      "invariant": "the wall-sensitivity of the global observations must generalize to a different radial mesh, lattice, and vacuum extent, and the no-explicit-wall (nowall=-1) scaled fallback must remain finite and physically distinct from an explicit wall",
+      "rationale": "pre-fix every top-level observation collapses to the same value on any mesh and for any wall (wall gap = 0, fallback gap = 0 -> FAIL); the fix must make the outer-region response depend on wall geometry on this new mesh (surfs=6, ivac=2, dsvac=0.8, seed 29, different pvac/qvac and wall shapes; measured post-fix wall gap ~0.38, fallback gap ~71.6 -> PASS). This guards against a fix that only special-cases the public fixture mesh or wall shape.",
+      "path": "selfverify/invariants/invariant_2_alt_mesh_wall_response.py"
+    },
+    {
+      "name": "outer_shell_modal_sensitivity",
+      "invariant": "the pseudo-vacuum potential-energy operator must be a genuine (non-constant) function of the wall-sensitive modal terms c1..c6 and of the frozen plasma-edge profiles (ftp_edge, fpp_edge)",
+      "rationale": "pre-fix the assembler ignores its coefficient inputs entirely and returns the same constant scaffold for every input set, so base vs zero-coefficient, base vs different-coefficient, and base vs different-edge-profile blocks are all identical (gap = 0 -> FAIL); a correct fix builds A,B,C,D,E,F,G,H,BL,BU from c1..c6 and the edge-frozen T1/pmn combinations, so each perturbation must move the blocks (measured post-fix gaps ~1.50, ~1.66, ~0.31 -> PASS). Uses synthetic modal terms on a new grid/mode table, so it cannot be satisfied by special-casing one wall.",
+      "path": "selfverify/invariants/invariant_3_outer_shell_modal_sensitivity.py"
+    },
+    {
+      "name": "projection_representation_equivalence",
+      "invariant": "representation equivalence: the raw FOURIN Fourier-integral representation (cna/cnb) and the modal-coefficient representation (c0..c7) must agree under the documented sum/difference projection c = dtdp*(cna[row,ld] - cospar*cna[row,lp]) / dtdp*(cnb[row,ld] + cospar*cnb[row,lp])",
+      "rationale": "pre-fix the outer-shell projection is a stub that returns all-zero coefficients, so for non-degenerate random cna/cnb (with non-trivial dtdp=1.7, cospar=0.6) every projected coefficient deviates from its representation-equivalent value (measured max deviation ~1.94 -> FAIL); the correct fix performs the projection exactly (allclose at rtol 1e-12 -> PASS). This is a fresh synthetic input, independent of any wall geometry.",
+      "path": "selfverify/invariants/invariant_4_projection_representation_equivalence.py"
+    },
+    {
+      "name": "metric_wall_sensitivity",
+      "invariant": "wall geometry must propagate through the full metric-to-modal chain: different conducting walls -> different vacmet metric arrays -> different outer-shell cna/cnb integrals -> different projected wall-sensitive coefficients c1..c6 (and these coefficients must be non-vanishing for a real wall)",
+      "rationale": "pre-fix the projection returns zeros for any metric, so the coefficients are identically zero and identical for two materially different walls (scale = 0, gap = 0 -> FAIL); the correct fix projects the wall-dependent integrals (measured post-fix coefficient scale ~4.7e3 and wall-to-wall gap ~5.1e3 on a fresh 6-point boundary, seed 53 -> PASS). This localizes wall sensitivity to the projection step, complementing the end-to-end tests 1-2.",
+      "path": "selfverify/invariants/invariant_5_metric_wall_sensitivity.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All five tests were verified on both trees: they FAIL (AssertionError) on the pre-fix baseline and PASS on the patched tree, with post-fix margins orders of magnitude above the 1e-9 thresholds (gaps 0.3-72, coefficient scale ~4.7e3). No public fixture, fixture numbers, or fixture paths are used; every test builds its own case (new seeds, lattice constants, meshes, pvac/qvac, wall offsets). Tests 3-5 use the repo's underscore-prefixed assembly/projection entry points (same functions the patch modifies) while tests 1-2 use only the public build_external_region_payload API. I did not add a pure mesh-refinement invariance test: the outer-shell port is a reduced integration scheme, so strict convergence under dsvac refinement is not a guaranteed property of a correct reduced fix, and such a test could reject a valid patch. The no-wall fallback check in test 2 asserts only finiteness plus physical distinctness from the explicit wall (availability), not equality with any wall case."
+}

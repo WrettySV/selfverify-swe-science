@@ -1,0 +1,36 @@
+{
+  "invariants": [
+    {
+      "name": "wall_distinct_global_energy",
+      "invariant": "Materially different explicit conducting walls must produce finite, distinct global potential-energy and stability observations (wall-sensitive external-region coupling).",
+      "rationale": "Pre-fix the outer-region modal projection returns all-zero coefficients and the outer-shell potential blocks are never assigned, so the vacuum region adds no wall-dependent content and wp/omega2/growth_rate are bit-identical for any two walls; the test observes the exact collapse and fails. Post-fix the VACMET metric -> FOURIN projection -> outer-shell assembly chain carries wall-dependent content into the global energy reduction, so two distinct walls on a new case (surfs=6/ivac=3/dsvac=0.5, M<=2 with n in [-1,1], nfp=2, new wall shapes, wall_scale=1.6) yield distinct finite wp and the test passes.",
+      "path": "selfverify/invariants/invariant_1_wall_distinct_global_energy.py"
+    },
+    {
+      "name": "wall_vs_fallback_energy_shift",
+      "invariant": "Boundary/fallback behavior: an explicit conducting wall must shift the global potential energy relative to the scaled no-explicit-wall (nowall=-1) fallback, which must remain runnable and finite.",
+      "rationale": "Pre-fix the wall never couples, so the explicit-wall case and the scaled fallback return identical wp (the fallback is finite but the coupling is absent) and the test fails. Post-fix the explicit wall (variant-1 geometry, wall_scale=2.2, new mesh and seeded perturbations) changes the pseudo-vacuum response and wp differs from the finite fallback, so the test passes. A fix that only special-cases the public wall shape could not satisfy this because the wall, mesh and scale are all new.",
+      "path": "selfverify/invariants/invariant_2_wall_vs_fallback_energy_shift.py"
+    },
+    {
+      "name": "vacuum_interval_energy_wall_dependent",
+      "invariant": "Interval-level energy accounting: wall-sensitive geometry must propagate into the per-interval energy over the pseudo-vacuum intervals, and the interior vacuum intervals (not just the constant wall boundary penalty) must carry real energy.",
+      "rationale": "Pre-fix the only nonzero vacuum-interval contribution is the wall-interval boundary penalty (a constant 3*|xi|^2 that is identical for every wall), so the per-interval vacuum energies are wall-identical (interior intervals exactly zero) and the test fails. Post-fix, on a new case (surfs=5/ivac=4/dsvac=0.4, M<=3, n=0, nfp=1, different wall shapes and wall_scale=1.9) the interval energies differ between walls and the interior intervals carry nonzero energy, so the test passes. This blocks a 'cosmetic' fix that only makes the wall penalty wall-dependent.",
+      "path": "selfverify/invariants/invariant_3_vacuum_interval_energy_wall_dependent.py"
+    },
+    {
+      "name": "modal_projection_wall_sensitive",
+      "invariant": "Representation/propagation equivalence (step 2 of the outer-region chain): wall-sensitive VACMET metric integrals must project to non-zero, wall-dependent reduced modal coefficient families c0..c6 via the same FOURIN sum/difference indexing as the plasma path.",
+      "rationale": "Pre-fix _project_outer_shell_integrals_to_modal_coefficients discards the raw integrals and returns an all-zero coefficient dictionary, so every projected coefficient is exactly zero for any wall and the test fails on the non-zero check. Post-fix the projection fills the modal families from the wall-dependent cna/cnb integrals; on a new case (surfs=7/ivac=2/dsvac=0.9, M<=1, n in [-1,1], nfp=3, sin parity, different wall shapes, wall_scale=1.4) the coefficients are nonzero and differ between the two walls, so the test passes.",
+      "path": "selfverify/invariants/invariant_4_modal_projection_wall_sensitive.py"
+    },
+    {
+      "name": "outer_shell_blocks_wall_sensitive",
+      "invariant": "Operator/assembly propagation (step 3 of the outer-region chain): the wall-sensitive modal families must be assembled into non-zero, wall-dependent outer-shell potential interval blocks (A..H, BL, BU), not merely a constant wall boundary penalty.",
+      "rationale": "Pre-fix the outer-shell assembly computes modal terms but never writes them into the block arrays, so every block is zero except the constant wall-interval BL diagonal; blocks from two different walls are therefore identical (max diff = 0) and the test fails. Post-fix the blocks are filled from the wall-dependent coefficients c1..c6; on a new case (surfs=8/ivac=3/dsvac=0.3, M<=2, n=0, nfp=1, different wall shapes, wall_scale=2.0) the blocks are nonzero and wall-dependent, so the test passes.",
+      "path": "selfverify/invariants/invariant_5_outer_shell_blocks_wall_sensitive.py"
+    }
+  ],
+  "confidence": 0.85,
+  "notes": "All five tests were validated against a checkout of the pre-fix (baseline) tree, where each fails with an AssertionError matching the bug signature (wall-blind collapsed energies / zero projected coefficients / wall-blind blocks), and against the patched tree, where each prints PASS. Tests run independently via `python selfverify/invariants/invariant_<i>_<name>.py` from any cwd; numpy 2.2.6. The five test scripts share the deterministic case factory selfverify/invariants/_case_factory.py (kept alongside so each script stays within the 30-line limit); it constructs every array (mesh, mode table, trig tables, equilibrium geometry, coefficients, perturbations, walls) from scratch and does not import or hard-code the public fixture (demo_case, reproduce.py) or its numbers. Wall/mesh/scale parameters differ across tests to probe generalization. Not tested (outside this reduced slice): convergence to the full geometry, interval-energy oracle parity, and eigenvector/stability-chain details owned by the private tests."
+}

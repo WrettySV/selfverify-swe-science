@@ -1,0 +1,102 @@
+diff --git a/source/automol/graph/base/_00core.py b/source/automol/graph/base/_00core.py
+index 379ef06..5891cd8 100644
+--- a/source/automol/graph/base/_00core.py
++++ b/source/automol/graph/base/_00core.py
+@@ -2993,6 +2993,7 @@ def atom_zmat_sorted_neighbor_atom_keys(
+     prioritize_keys=(),
+     excl_keys=(),
+     incl_keys=None,
++    ords_last=(0.1,),
+ ):
+     """Get keys for this atom's neighbors, sorted in a particular order
+ 
+@@ -3006,6 +3007,9 @@ def atom_zmat_sorted_neighbor_atom_keys(
+     :type excl_keys: tuple, optional
+     :param incl_keys: Restrict the search to a subset of atom keys, defaults to None
+     :type incl_keys: tuple, optional
++    :param ords_last: Put neighbors bonded with these bond orders last,
++        defaults to (0.1,). (Mainly for internal use.)
++    :type ords_last: tuple, optional
+     :return: The neighboring atom keys, in the requested order
+     :rtype: tuple[int]
+     """
+@@ -3015,7 +3019,7 @@ def atom_zmat_sorted_neighbor_atom_keys(
+         symbs_first=("X", "C"),
+         symbs_last=("H",),
+         ords_first=(),
+-        ords_last=(0.1,),
++        ords_last=ords_last,
+         prioritize_keys=prioritize_keys,
+         excl_keys=excl_keys,
+         incl_keys=incl_keys,
+@@ -3029,6 +3033,7 @@ def atom_zmat_neighbor_atom_key(
+     prioritize_keys=(),
+     excl_keys=(),
+     incl_keys=None,
++    ords_last=(0.1,),
+ ):
+     """Get keys for this atom's neighbors, sorted in a particular order
+ 
+@@ -3042,6 +3047,9 @@ def atom_zmat_neighbor_atom_key(
+     :type excl_keys: tuple, optional
+     :param incl_keys: Restrict the search to a subset of atom keys, defaults to None
+     :type incl_keys: tuple, optional
++    :param ords_last: Put neighbors bonded with these bond orders last,
++        defaults to (0.1,). (Mainly for internal use.)
++    :type ords_last: tuple, optional
+     :return: A neighboring atom key
+     :rtype: int
+     """
+@@ -3051,6 +3059,7 @@ def atom_zmat_neighbor_atom_key(
+         prioritize_keys=prioritize_keys,
+         excl_keys=excl_keys,
+         incl_keys=incl_keys,
++        ords_last=ords_last,
+     )
+     return nkeys[0] if nkeys else None
+ 
+diff --git a/source/automol/graph/base/_03kekule.py b/source/automol/graph/base/_03kekule.py
+index f66c53c..622ad8a 100644
+--- a/source/automol/graph/base/_03kekule.py
++++ b/source/automol/graph/base/_03kekule.py
+@@ -356,12 +356,13 @@ def linear_segment_cap_keys(
+         end_key1 = keys[0]
+         end_key2 = keys[-1]
+ 
+-        # Identify in-line neighbors
++        # Identify in-line neighbors; the choice must not depend on the
++        # direction of the reaction, so reacting bond orders are not demoted
+         excl_keys = set(keys)
+-        ext_key1 = atom_neighbor_atom_key(gra_, end_key1, excl_keys=excl_keys)
++        ext_key1 = atom_neighbor_atom_key(gra_, end_key1, excl_keys=excl_keys, ords_last=())
+ 
+         excl_keys.add(ext_key1)
+-        ext_key2 = atom_neighbor_atom_key(gra_, end_key2, excl_keys=excl_keys)
++        ext_key2 = atom_neighbor_atom_key(gra_, end_key2, excl_keys=excl_keys, ords_last=())
+ 
+         # Add in-line neighbors to the extended keys list, if not None
+         ext_keys = keys
+diff --git a/source/automol/graph/base/_06heur.py b/source/automol/graph/base/_06heur.py
+index 5199fb4..89d6e12 100644
+--- a/source/automol/graph/base/_06heur.py
++++ b/source/automol/graph/base/_06heur.py
+@@ -315,10 +315,17 @@ def rotational_coordinates(
+         end_key1 = skeys[0] if segment else skeys[-2]
+         end_key2 = skeys[-1]
+ 
+-        end_nkey1 = atom_zmat_neighbor_atom_key(gra, end_key1, excl_keys=skeys)
++        # The coordinate is a presentation of the physical axis, so the choice
++        # of the out-of-segment atoms must not depend on the direction of the
++        # reaction; reacting bond orders are therefore not demoted here
++        end_nkey1 = atom_zmat_neighbor_atom_key(
++            gra, end_key1, excl_keys=skeys, ords_last=()
++        )
+ 
+         excl_keys = list(skeys) + [end_nkey1]
+-        end_nkey2 = atom_zmat_neighbor_atom_key(gra, end_key2, excl_keys=excl_keys)
++        end_nkey2 = atom_zmat_neighbor_atom_key(
++            gra, end_key2, excl_keys=excl_keys, ords_last=()
++        )
+ 
+         assert end_nkey1 is not None, f"Missing dummy atom for key {end_key1}?\n{gra}"
+         assert end_nkey2 is not None, f"Missing dummy atom for key {end_key2}?\n{gra}"

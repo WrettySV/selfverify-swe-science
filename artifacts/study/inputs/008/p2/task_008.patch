@@ -1,0 +1,217 @@
+diff --git a/source/desc/stability/terpsichore/assembly.py b/source/desc/stability/terpsichore/assembly.py
+index f75bb99..c8752a0 100644
+--- a/source/desc/stability/terpsichore/assembly.py
++++ b/source/desc/stability/terpsichore/assembly.py
+@@ -265,7 +265,17 @@ def assemble_potential_blocks_from_coefficients(
+ def _assemble_outer_shell_potential_blocks_from_modal_terms(
+     *, c1, c2, c3, c4, c5, c6, ftp_edge, fpp_edge, radial_grid, mode_table
+ ):
+-    """Assemble reduced outer-shell potential blocks from modal coefficient terms."""
++    """Assemble reduced outer-shell potential blocks from modal coefficient terms.
++
++    This implements the vacuum branch of Fortran ``LHSMAT`` for the reduced
++    pseudo-plasma.  On the pseudo-vacuum intervals the edge profiles
++    ``ftp_edge``/``fpp_edge`` act as constant pseudo-plasma profiles, the
++    pressure-driven terms (``c0``, ``c5``, ``c9``) vanish, and the pseudo-plasma
++    carries no current.  The wall enters exclusively through the modal
++    coefficient terms, which carry the wall-sensitive vacuum metric content
++    from the outer-region operator path.  The last pseudo-vacuum interval
++    enforces the fixed conducting-wall condition on the outer surface.
++    """
+ 
+     arrays = {
+         "c1": np.asarray(c1, dtype=float),
+@@ -290,45 +300,78 @@ def _assemble_outer_shell_potential_blocks_from_modal_terms(
+     H = np.zeros(shape)
+     BL = np.zeros(shape)
+     BU = np.zeros(shape)
++    ql = np.asarray(mode_table.ql, dtype=float)
+     ms = np.asarray(mode_table.m, dtype=float)
+     ns = np.asarray(mode_table.n, dtype=float)
++    ni = radial_grid.ni
++    upper_rows, upper_cols = np.triu_indices(lmns)
++    diag_rows, diag_cols = np.diag_indices(lmns)
+     ftp_edge = float(ftp_edge)
+     fpp_edge = float(fpp_edge)
+     fppfpp = fpp_edge * fpp_edge
+     ftpfpp = 2.0 * ftp_edge * fpp_edge
+     ftpftp = ftp_edge * ftp_edge
+-    upper_rows, upper_cols = np.triu_indices(lmns)
+     ms_lc = ms[upper_rows]
+-    ms_lr = ms[upper_cols]
+     ns_lc = ns[upper_rows]
++    ms_lr = ms[upper_cols]
+     ns_lr = ns[upper_cols]
++    ql_lc = ql[upper_rows]
++    ql_lr = ql[upper_cols]
+     pmn_u = ms_lc * fpp_edge - ns_lc * ftp_edge
+     rmn_u = ms_lr * fpp_edge - ns_lr * ftp_edge
++    pmn_rm_expanded = (
++        ms_lc * ms_lr * fppfpp
++        - (ms_lc * ns_lr + ns_lc * ms_lr) * 0.5 * ftpfpp
++        + ns_lc * ns_lr * ftpftp
++    )
+     for vac_interval in range(ivac):
+-        global_interval = radial_grid.ni + vac_interval
++        global_interval = ni + vac_interval
+         ds = radial_grid.ds[global_interval]
+-        dsvar = radial_grid.ni * ds
+-        tdsvac = 2.0 / ds
+-        tdsvsq = tdsvac * tdsvac
++        si = radial_grid.centers[global_interval]
++        dsvar = ni * ds
++        t2ds = 2.0 / ds
+         c1_u = arrays["c1"][upper_rows, upper_cols, vac_interval]
+         c2_u = arrays["c2"][upper_rows, upper_cols, vac_interval]
+-        c3_u = arrays["c3"][upper_rows, upper_cols, vac_interval]
+         c4_u = arrays["c4"][upper_rows, upper_cols, vac_interval]
+-        c5_u = arrays["c5"][upper_rows, upper_cols, vac_interval]
+         c6_u = arrays["c6"][upper_rows, upper_cols, vac_interval]
++        c1_t_u = arrays["c1"][upper_cols, upper_rows, vac_interval]
+         c4_t_u = arrays["c4"][upper_cols, upper_rows, vac_interval]
+-        c5_t_u = arrays["c5"][upper_cols, upper_rows, vac_interval]
+-        del dsvar, tdsvac, tdsvsq, c1_u, c2_u, c3_u, c4_u, c5_u, c6_u, c4_t_u, c5_t_u
++        siic = 0.5 * dsvar / si**ql
++        siic_lc = siic[upper_rows]
++        siic_lr = siic[upper_cols]
++        siis = 0.5 / si ** (ql_lc + ql_lr)
++        a_base = t2ds * (rmn_u * c1_u + pmn_u * c1_t_u - 2.0 * c2_u)
++        delta = rmn_u * c1_u - pmn_u * c1_t_u
++        c_upper = t2ds * siis * delta
++        c_lower = c_upper - 2.0 * t2ds * siis * delta
++        d_upper = pmn_rm_expanded * c6_u * dsvar
++        g_upper = siic_lr * pmn_u * rmn_u * c4_u
++        e_upper = siic_lc * rmn_u * pmn_u * c4_t_u
++        A[upper_rows, upper_cols, vac_interval] = c_lower
++        A[upper_cols, upper_rows, vac_interval] = c_upper
++        C[upper_rows, upper_cols, vac_interval] = c_upper
++        C[upper_cols, upper_rows, vac_interval] = c_lower
++        D[upper_rows, upper_cols, vac_interval] = d_upper
++        D[upper_cols, upper_rows, vac_interval] = d_upper
++        E[upper_rows, upper_cols, vac_interval] = e_upper
++        E[upper_cols, upper_rows, vac_interval] = g_upper
++        F[upper_rows, upper_cols, vac_interval] = g_upper
++        F[upper_cols, upper_rows, vac_interval] = e_upper
++        G[upper_rows, upper_cols, vac_interval] = g_upper
++        G[upper_cols, upper_rows, vac_interval] = e_upper
++        H[upper_rows, upper_cols, vac_interval] = e_upper
++        H[upper_cols, upper_rows, vac_interval] = g_upper
++        BL[upper_rows, upper_cols, vac_interval] = -a_base * siis
++        BU[upper_rows, upper_cols, vac_interval] = a_base * siis
+         if vac_interval == ivac - 1:
++            A[:, :, vac_interval] = 0.0
+             C[:, :, vac_interval] = 0.0
+             G[:, :, vac_interval] = 0.0
+             BL[:, :, vac_interval] = 0.0
+             B[:, :, vac_interval] = 0.0
+             H[:, :, vac_interval] = 0.0
+-            A[:, :, vac_interval] = 0.0
+-            diag = np.diag_indices(lmns)
+-            BL[diag[0], diag[1], vac_interval] = -3.0
+-            B[diag[0], diag[1], vac_interval] = -4.0
++            BL[diag_rows, diag_cols, vac_interval] = -3.0
++            B[diag_rows, diag_cols, vac_interval] = -4.0
+     return TerpsichorePotentialBlocks(
+         A=-A,
+         B=-B,
+diff --git a/source/desc/stability/terpsichore/coefficients.py b/source/desc/stability/terpsichore/coefficients.py
+index 8ad632c..6e05e82 100644
+--- a/source/desc/stability/terpsichore/coefficients.py
++++ b/source/desc/stability/terpsichore/coefficients.py
+@@ -511,18 +511,49 @@ def _compute_outer_shell_integral_arrays_from_metric_data(*, vacuum_grid_data, t
+ def _project_outer_shell_integrals_to_modal_coefficients(
+     *, cna, cnb, mode_table, nper, lsx, dtdp, cospar
+ ):
+-    """Project reduced outer-shell ``cna``/``cnb`` integrals to modal coefficients."""
++    """Project reduced outer-shell ``cna``/``cnb`` integrals to modal coefficients.
++
++    The Fortran vacuum branch of ``FOURIN`` fills only the metric-driven rows
++    ``CNA(1..3)`` (``gppl``, ``gtpl``, ``gttl``) and ``CNB(1..3)``
++    (``gstl``, ``gssl``, ``gssu``) on the pseudo-vacuum intervals.  The
++    pressure-driven rows and the kinetic rows remain zero in the vacuum, so the
++    projection reuses the plasma-side sum/difference mapping to build
++    ``c1..c4``, ``c6`` and ``c7`` and leaves the remaining coefficients at
++    their zero initial value.
++    """
+ 
+     cna = np.asarray(cna, dtype=float)
+     cnb = np.asarray(cnb, dtype=float)
+     if cna.shape != cnb.shape or cna.ndim != 3:
+         raise ValueError("cna and cnb must be rank-3 arrays with identical shape.")
++    if cna.shape[0] < 7:
++        raise ValueError("cna/cnb first dimension must include indices 1..6.")
+     lmns = mode_table.size
+     intervals = cna.shape[2]
+     shape = (lmns, lmns, intervals)
+     coeffs = {name: np.zeros(shape) for name in ALL_COEFFICIENTS}
+     indices = compute_fourin_mapping_indices(mode_table, nper=nper, lsx=lsx)
+-    del indices, dtdp, cospar
++    ld = indices["ld"]
++    lp = indices["lp"]
++    for interval in range(intervals):
++        coeffs["c2"][:, :, interval] = dtdp * (
++            cna[1, ld, interval] - cospar * cna[1, lp, interval]
++        )
++        coeffs["c6"][:, :, interval] = dtdp * (
++            cna[2, ld, interval] - cospar * cna[2, lp, interval]
++        )
++        coeffs["c7"][:, :, interval] = dtdp * (
++            cna[3, ld, interval] - cospar * cna[3, lp, interval]
++        )
++        coeffs["c1"][:, :, interval] = dtdp * (
++            cnb[1, ld, interval] + cospar * cnb[1, lp, interval]
++        )
++        coeffs["c3"][:, :, interval] = dtdp * (
++            cnb[2, ld, interval] + cospar * cnb[2, lp, interval]
++        )
++        coeffs["c4"][:, :, interval] = dtdp * (
++            cnb[3, ld, interval] + cospar * cnb[3, lp, interval]
++        )
+     return TerpsichoreCoefficientData(coefficients=coeffs, fixed_boundary=False)
+ 
+ def map_fourin_grid_to_coefficients(
+diff --git a/source/tests/test_vacuum_smoke.py b/source/tests/test_vacuum_smoke.py
+index 05a483e..a560957 100644
+--- a/source/tests/test_vacuum_smoke.py
++++ b/source/tests/test_vacuum_smoke.py
+@@ -2,7 +2,7 @@ from __future__ import annotations
+ 
+ import numpy as np
+ 
+-from desc.stability.terpsichore.demo_case import build_demo_case
++from desc.stability.terpsichore.demo_case import build_demo_case, build_wall_variants
+ from desc.stability.terpsichore.external_region import build_external_region_payload
+ from desc.stability.terpsichore.radial import TerpsichoreRadialGrid
+ 
+@@ -35,3 +35,31 @@ def test_scaled_wall_smoke_report_is_finite():
+     assert np.all(np.isfinite(report["rvac"]))
+     assert np.all(np.isfinite(report["wp_by_interval"]))
+     assert np.all(np.isfinite(report["wk_by_interval"]))
++
++
++def test_wall_coupled_external_region_distinguishes_walls():
++    case = build_demo_case()
++    eq_data = case["equilibrium_data"]
++    wall_a, wall_b = build_wall_variants(eq_data, wall_scale=1.3, nowall=1)
++    common = {
++        "mode_table": case["mode_table"],
++        "trig_table": case["trig_table"],
++        "xi": case["xi"],
++        "eta": case["eta"],
++        "wall_scale": 1.3,
++    }
++    report_a = build_external_region_payload(eq_data, wall=wall_a, nowall=1, **common)
++    report_b = build_external_region_payload(eq_data, wall=wall_b, nowall=1, **common)
++    fallback = build_external_region_payload(eq_data, wall=None, nowall=-1, **common)
++    for report in (report_a, report_b, fallback):
++        assert np.all(np.isfinite(report["wp_by_interval"]))
++        assert np.all(np.isfinite(report["wk_by_interval"]))
++        assert np.isfinite(report["result"].wp)
++        assert np.isfinite(report["result"].omega2)
++    vacuum_slice = slice(eq_data.radial_grid.ni, None)
++    assert not np.allclose(report_a["wp_by_interval"][vacuum_slice], 0.0)
++    assert not np.allclose(report_a["wp_by_interval"], report_b["wp_by_interval"])
++    assert not np.allclose(report_a["result"].wp, report_b["result"].wp)
++    assert not np.allclose(
++        report_a["result"].omega2, report_b["result"].omega2
++    )
