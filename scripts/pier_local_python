@@ -1,0 +1,21 @@
+#!/home/lukina/.local/share/uv/tools/datacurve-pier/bin/python
+"""Experiment-local proxy adapter for the user-authorised GPU 4/5 endpoints."""
+import runpy
+import sys
+from pier.environments import agent_setup
+original = agent_setup.squid_bootstrap_command
+
+def local_proxy_bootstrap():
+    text = original()
+    old = "http_access deny !Safe_ports"
+    new = """acl cross_local_model dst 172.17.0.1/32
+acl cross_local_ports port 8002 8003
+http_access allow authenticated allowed_domains cross_local_model cross_local_ports !CONNECT
+http_access deny !Safe_ports"""
+    if text.count(old) != 1:
+        raise RuntimeError("Unexpected proxy template; refusing broad network changes")
+    return text.replace(old, new)
+
+agent_setup.squid_bootstrap_command = local_proxy_bootstrap
+sys.argv = sys.argv[1:]
+runpy.run_path(sys.argv[0], run_name="__main__")

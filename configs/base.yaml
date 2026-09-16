@@ -1,0 +1,36 @@
+# Shared experiment defaults (documentation + scripts).
+# Pier itself is driven by CLI flags + ~/.config env file.
+
+model: Qwen3.8-27B
+served_model_name: Qwen3.8-27B
+model_weights: /data/datasets/Qwen/Qwen3.8-27B
+
+# Keep Codex and vLLM aligned on the same context ceiling.
+# Previous SE-enh bug: Codex logged model_context_window≈258400 (fallback)
+# while vLLM was capped at 131072 — peak_context_tokens hit 131072.
+vllm:
+  max_model_len: 262144
+  kv_cache_dtype: fp8
+  dtype: bfloat16
+  tensor_parallel_size: 1
+  data_parallel_size: 2
+  reasoning_parser: qwen3
+  image: vllm-qwen38-27b:0.28.0-cu129
+
+codex:
+  wire_api: responses   # set chat if the local gateway rejects responses
+  reasoning_effort: high
+  model_context_window: 262144
+
+harness:
+  agent: codex
+  env: docker
+  n_attempts: 3
+  n_concurrent: 1
+
+selfverify:
+  max_verify_rounds: 3
+  verify_timeout_sec: 180
+
+selection: selections/main-12.json
+tasks_path: work/tasks-12

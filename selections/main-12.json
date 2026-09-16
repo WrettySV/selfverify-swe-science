@@ -1,0 +1,32 @@
+{
+  "name": "main-12",
+  "description": "12 unrestricted-license tasks for baseline vs self-verify (3 trials × 2 conditions = 72).",
+  "allow_restricted_licenses": false,
+  "budget": {
+    "n_tasks": 12,
+    "n_attempts": 3,
+    "n_conditions": 2,
+    "n_trials_total": 72
+  },
+  "task_ids": [
+    "001",
+    "004",
+    "007",
+    "008",
+    "014",
+    "017",
+    "024",
+    "033",
+    "039",
+    "053",
+    "094",
+    "107"
+  ],
+  "notes": {
+    "domain_slice": "Primary analysis slice is CSV domain (and language). No Issue/Expert/Engineering paradigm claims.",
+    "reuse_from_se_enh": "Subset of SE-enh pilot-16, dropping 044/048/064/076 for n=12.",
+    "033": "Canonical paper example (periodic representation / energy invariance).",
+    "004": "Non-Python (c++) coverage.",
+    "008_014": "Plasma / DESC-adjacent pair."
+  }
+}

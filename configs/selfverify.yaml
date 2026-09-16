@@ -1,0 +1,15 @@
+# Documentation only: run_experiment.py uses CLI flags, not this YAML.
+extends: base.yaml
+condition: selfverify
+agent_import_path: selfverify.agent:SelfVerifyCodex
+job_name: contract-pilot
+selfverify:
+  verification_mode: contract
+  enable_selfverify: true
+  max_repair_rounds: 1
+  test_design_timeout_sec: 900
+  draft_timeout_sec: 1500
+  repair_timeout_sec: 900
+  verify_timeout_sec: 120
+  max_loop_seconds: 4800
+  finalize_reserve_sec: 180

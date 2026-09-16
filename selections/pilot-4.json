@@ -1,0 +1,12 @@
+{
+  "name": "pilot-4",
+  "description": "Smoke subset before the 12-task main run.",
+  "allow_restricted_licenses": false,
+  "task_ids": ["033", "008", "053", "107"],
+  "notes": {
+    "033": "Representation invariance — metamorphic tests should be natural.",
+    "008": "Plasma / DESC integration-style.",
+    "053": "Medical surface Dice / representation dependence.",
+    "107": "Symbolic / computer-algebra workflow."
+  }
+}

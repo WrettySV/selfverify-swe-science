@@ -1,0 +1,16 @@
+{
+  "name": "adaptive-pilot-4",
+  "description": "Four-task overlap with the Scientist→Engineer pilot.",
+  "allow_restricted_licenses": false,
+  "task_ids": ["004", "008", "017", "033"],
+  "budget": {
+    "initial_attempts": 1,
+    "continue_only_after_signal": true
+  },
+  "notes": {
+    "004": "Existing correct and incorrect candidates; foreign suite splits the pool.",
+    "008": "Negative control: existing suites accept every incorrect candidate.",
+    "017": "Existing foreign suite strongly separates a subset of candidates.",
+    "033": "Representation-invariance benchmark example; no existing suite coverage."
+  }
+}

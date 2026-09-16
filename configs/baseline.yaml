@@ -1,0 +1,5 @@
+# Baseline condition: ScienceBenchCodex, no self-verify loop.
+extends: base.yaml
+condition: baseline
+agent_import_path: null  # run_batch default → scripts.pier_adapters:ScienceBenchCodex
+job_name: baseline-main12-n3
