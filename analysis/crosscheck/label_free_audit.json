@@ -1,0 +1,1610 @@
+{
+  "interpretation": "Retrospective; heterogeneous pool; NOT matched inference budget",
+  "tie_policy": "Uniform over picked IDs; scores are expectations, not realised solves",
+  "fallback_policy": "Uniform public-passing candidate, or uniform all if none pass",
+  "error_policies": {
+    "cross_vote": "Every nonzero test result rejects; failed apply/empty suite unknown",
+    "assertion_only": "Any non-assertion failure makes the entire suite unknown",
+    "caution": "Runtime exceptions can expose the real bug; strict policy is a sensitivity analysis"
+  },
+  "n_tasks": 8,
+  "n_candidates": 76,
+  "n_suites": 21,
+  "macro_expected_reward": {
+    "random": 0.29848484848484846,
+    "public_random": 0.3068181818181818,
+    "first_public": 0.375,
+    "cross_vote": 0.4114583333333333,
+    "cross_baseline_split": 0.4114583333333333,
+    "cross_baseline_split_assertion_only": 0.3697916666666667,
+    "vote_including_self": 0.3958333333333333
+  },
+  "oracle_pool_ceiling": 0.5,
+  "execution_counts": {
+    "cells": 280,
+    "foreign_incorrect_total": 223,
+    "foreign_incorrect_accepted": 186,
+    "self_incorrect_total": 18,
+    "self_incorrect_accepted": 17,
+    "foreign_correct_total": 15,
+    "foreign_correct_accepted": 13,
+    "self_correct_total": 3,
+    "self_correct_accepted": 3
+  },
+  "failure_classes": {
+    "assertion": 243,
+    "runtime_error": 3,
+    "other_nonzero": 1
+  },
+  "per_task": {
+    "001": {
+      "n_candidates": 12,
+      "n_correct": 0,
+      "n_suites": 2,
+      "oracle_pool_ceiling": 0,
+      "methods": {
+        "random": {
+          "picked": [
+            "task_001__nrCrMNF",
+            "task_001__qeyxGkq",
+            "task_001__TmnoaRP",
+            "task_001__9gKaTMW",
+            "task_001__e3BhXJv",
+            "task_001__kGMhW9P",
+            "task_001__pBtN7Bk",
+            "task_001__HsBhKPP",
+            "task_001__efa4ZQL",
+            "task_001__kn7jR39",
+            "task_001__25mjwL6",
+            "task_001__UeAitxV"
+          ],
+          "decision": "random",
+          "expected_reward": 0,
+          "n_tied": 12
+        },
+        "public_random": {
+          "picked": [
+            "task_001__nrCrMNF",
+            "task_001__qeyxGkq",
+            "task_001__TmnoaRP",
+            "task_001__9gKaTMW",
+            "task_001__e3BhXJv",
+            "task_001__kGMhW9P",
+            "task_001__pBtN7Bk",
+            "task_001__HsBhKPP",
+            "task_001__efa4ZQL",
+            "task_001__kn7jR39",
+            "task_001__25mjwL6",
+            "task_001__UeAitxV"
+          ],
+          "decision": "public_random",
+          "expected_reward": 0,
+          "n_tied": 12
+        },
+        "first_public": {
+          "picked": [
+            "task_001__nrCrMNF"
+          ],
+          "decision": "first_public",
+          "expected_reward": 0,
+          "n_tied": 1
+        },
+        "cross_vote": {
+          "picked": [
+            "task_001__9gKaTMW",
+            "task_001__25mjwL6",
+            "task_001__UeAitxV"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_001__9gKaTMW",
+            "task_001__TmnoaRP"
+          ],
+          "scores": {
+            "task_001__nrCrMNF": 0.5,
+            "task_001__qeyxGkq": 0.5,
+            "task_001__TmnoaRP": 0,
+            "task_001__9gKaTMW": 1,
+            "task_001__e3BhXJv": 0,
+            "task_001__kGMhW9P": 0,
+            "task_001__pBtN7Bk": 0,
+            "task_001__HsBhKPP": 0,
+            "task_001__efa4ZQL": 0,
+            "task_001__kn7jR39": 0,
+            "task_001__25mjwL6": 1,
+            "task_001__UeAitxV": 1
+          },
+          "vote_counts": {
+            "task_001__nrCrMNF": 2,
+            "task_001__qeyxGkq": 2,
+            "task_001__TmnoaRP": 1,
+            "task_001__9gKaTMW": 1,
+            "task_001__e3BhXJv": 2,
+            "task_001__kGMhW9P": 2,
+            "task_001__pBtN7Bk": 2,
+            "task_001__HsBhKPP": 2,
+            "task_001__efa4ZQL": 2,
+            "task_001__kn7jR39": 2,
+            "task_001__25mjwL6": 2,
+            "task_001__UeAitxV": 2
+          },
+          "expected_reward": 0,
+          "n_tied": 3
+        },
+        "cross_baseline_split": {
+          "picked": [
+            "task_001__9gKaTMW",
+            "task_001__25mjwL6",
+            "task_001__UeAitxV"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_001__9gKaTMW",
+            "task_001__TmnoaRP"
+          ],
+          "scores": {
+            "task_001__nrCrMNF": 0.5,
+            "task_001__qeyxGkq": 0.5,
+            "task_001__TmnoaRP": 0,
+            "task_001__9gKaTMW": 1,
+            "task_001__e3BhXJv": 0,
+            "task_001__kGMhW9P": 0,
+            "task_001__pBtN7Bk": 0,
+            "task_001__HsBhKPP": 0,
+            "task_001__efa4ZQL": 0,
+            "task_001__kn7jR39": 0,
+            "task_001__25mjwL6": 1,
+            "task_001__UeAitxV": 1
+          },
+          "vote_counts": {
+            "task_001__nrCrMNF": 2,
+            "task_001__qeyxGkq": 2,
+            "task_001__TmnoaRP": 1,
+            "task_001__9gKaTMW": 1,
+            "task_001__e3BhXJv": 2,
+            "task_001__kGMhW9P": 2,
+            "task_001__pBtN7Bk": 2,
+            "task_001__HsBhKPP": 2,
+            "task_001__efa4ZQL": 2,
+            "task_001__kn7jR39": 2,
+            "task_001__25mjwL6": 2,
+            "task_001__UeAitxV": 2
+          },
+          "expected_reward": 0,
+          "n_tied": 3
+        },
+        "cross_baseline_split_assertion_only": {
+          "picked": [
+            "task_001__9gKaTMW",
+            "task_001__25mjwL6",
+            "task_001__UeAitxV"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_001__9gKaTMW",
+            "task_001__TmnoaRP"
+          ],
+          "scores": {
+            "task_001__nrCrMNF": 0.5,
+            "task_001__qeyxGkq": 0.5,
+            "task_001__TmnoaRP": 0,
+            "task_001__9gKaTMW": 1,
+            "task_001__e3BhXJv": 0,
+            "task_001__kGMhW9P": 0,
+            "task_001__pBtN7Bk": 0,
+            "task_001__HsBhKPP": 0,
+            "task_001__efa4ZQL": 0,
+            "task_001__kn7jR39": 0,
+            "task_001__25mjwL6": 1,
+            "task_001__UeAitxV": 1
+          },
+          "vote_counts": {
+            "task_001__nrCrMNF": 2,
+            "task_001__qeyxGkq": 2,
+            "task_001__TmnoaRP": 1,
+            "task_001__9gKaTMW": 1,
+            "task_001__e3BhXJv": 2,
+            "task_001__kGMhW9P": 2,
+            "task_001__pBtN7Bk": 2,
+            "task_001__HsBhKPP": 2,
+            "task_001__efa4ZQL": 2,
+            "task_001__kn7jR39": 2,
+            "task_001__25mjwL6": 2,
+            "task_001__UeAitxV": 2
+          },
+          "expected_reward": 0,
+          "n_tied": 3
+        },
+        "vote_including_self": {
+          "picked": [
+            "task_001__9gKaTMW",
+            "task_001__25mjwL6",
+            "task_001__UeAitxV"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_001__9gKaTMW",
+            "task_001__TmnoaRP"
+          ],
+          "scores": {
+            "task_001__nrCrMNF": 0.5,
+            "task_001__qeyxGkq": 0.5,
+            "task_001__TmnoaRP": 0.5,
+            "task_001__9gKaTMW": 1,
+            "task_001__e3BhXJv": 0,
+            "task_001__kGMhW9P": 0,
+            "task_001__pBtN7Bk": 0,
+            "task_001__HsBhKPP": 0,
+            "task_001__efa4ZQL": 0,
+            "task_001__kn7jR39": 0,
+            "task_001__25mjwL6": 1,
+            "task_001__UeAitxV": 1
+          },
+          "vote_counts": {
+            "task_001__nrCrMNF": 2,
+            "task_001__qeyxGkq": 2,
+            "task_001__TmnoaRP": 2,
+            "task_001__9gKaTMW": 2,
+            "task_001__e3BhXJv": 2,
+            "task_001__kGMhW9P": 2,
+            "task_001__pBtN7Bk": 2,
+            "task_001__HsBhKPP": 2,
+            "task_001__efa4ZQL": 2,
+            "task_001__kn7jR39": 2,
+            "task_001__25mjwL6": 2,
+            "task_001__UeAitxV": 2
+          },
+          "expected_reward": 0,
+          "n_tied": 3
+        }
+      }
+    },
+    "004": {
+      "n_candidates": 10,
+      "n_correct": 6,
+      "n_suites": 1,
+      "oracle_pool_ceiling": 1,
+      "methods": {
+        "random": {
+          "picked": [
+            "task_004__Vyqf2nh",
+            "task_004__eZiFoMd",
+            "task_004__QP4HDQL",
+            "task_004__WFRcyWQ",
+            "task_004__wcPsB6n",
+            "task_004__CtzQvLo",
+            "task_004__p6VwenA",
+            "task_004__YYgLrAB",
+            "task_004__bPXARcH",
+            "task_004__cCCjn3M"
+          ],
+          "decision": "random",
+          "expected_reward": 0.6,
+          "n_tied": 10
+        },
+        "public_random": {
+          "picked": [
+            "task_004__Vyqf2nh",
+            "task_004__eZiFoMd",
+            "task_004__QP4HDQL",
+            "task_004__WFRcyWQ",
+            "task_004__wcPsB6n",
+            "task_004__p6VwenA",
+            "task_004__YYgLrAB",
+            "task_004__bPXARcH",
+            "task_004__cCCjn3M"
+          ],
+          "decision": "public_random",
+          "expected_reward": 0.6666666666666666,
+          "n_tied": 9
+        },
+        "first_public": {
+          "picked": [
+            "task_004__Vyqf2nh"
+          ],
+          "decision": "first_public",
+          "expected_reward": 1,
+          "n_tied": 1
+        },
+        "cross_vote": {
+          "picked": [
+            "task_004__Vyqf2nh",
+            "task_004__eZiFoMd",
+            "task_004__QP4HDQL",
+            "task_004__WFRcyWQ",
+            "task_004__p6VwenA",
+            "task_004__YYgLrAB",
+            "task_004__bPXARcH",
+            "task_004__cCCjn3M"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_004__wcPsB6n"
+          ],
+          "scores": {
+            "task_004__Vyqf2nh": 1,
+            "task_004__eZiFoMd": 1,
+            "task_004__QP4HDQL": 1,
+            "task_004__WFRcyWQ": 1,
+            "task_004__p6VwenA": 1,
+            "task_004__YYgLrAB": 1,
+            "task_004__bPXARcH": 1,
+            "task_004__cCCjn3M": 1
+          },
+          "vote_counts": {
+            "task_004__Vyqf2nh": 1,
+            "task_004__eZiFoMd": 1,
+            "task_004__QP4HDQL": 1,
+            "task_004__WFRcyWQ": 1,
+            "task_004__wcPsB6n": 0,
+            "task_004__p6VwenA": 1,
+            "task_004__YYgLrAB": 1,
+            "task_004__bPXARcH": 1,
+            "task_004__cCCjn3M": 1
+          },
+          "expected_reward": 0.625,
+          "n_tied": 8
+        },
+        "cross_baseline_split": {
+          "picked": [
+            "task_004__Vyqf2nh",
+            "task_004__eZiFoMd",
+            "task_004__QP4HDQL",
+            "task_004__WFRcyWQ",
+            "task_004__p6VwenA",
+            "task_004__YYgLrAB",
+            "task_004__bPXARcH",
+            "task_004__cCCjn3M"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_004__wcPsB6n"
+          ],
+          "scores": {
+            "task_004__Vyqf2nh": 1,
+            "task_004__eZiFoMd": 1,
+            "task_004__QP4HDQL": 1,
+            "task_004__WFRcyWQ": 1,
+            "task_004__p6VwenA": 1,
+            "task_004__YYgLrAB": 1,
+            "task_004__bPXARcH": 1,
+            "task_004__cCCjn3M": 1
+          },
+          "vote_counts": {
+            "task_004__Vyqf2nh": 1,
+            "task_004__eZiFoMd": 1,
+            "task_004__QP4HDQL": 1,
+            "task_004__WFRcyWQ": 1,
+            "task_004__wcPsB6n": 0,
+            "task_004__p6VwenA": 1,
+            "task_004__YYgLrAB": 1,
+            "task_004__bPXARcH": 1,
+            "task_004__cCCjn3M": 1
+          },
+          "expected_reward": 0.625,
+          "n_tied": 8
+        },
+        "cross_baseline_split_assertion_only": {
+          "picked": [
+            "task_004__Vyqf2nh",
+            "task_004__eZiFoMd",
+            "task_004__QP4HDQL",
+            "task_004__WFRcyWQ",
+            "task_004__p6VwenA",
+            "task_004__YYgLrAB",
+            "task_004__bPXARcH",
+            "task_004__cCCjn3M"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_004__wcPsB6n"
+          ],
+          "scores": {
+            "task_004__Vyqf2nh": 1,
+            "task_004__eZiFoMd": 1,
+            "task_004__QP4HDQL": 1,
+            "task_004__WFRcyWQ": 1,
+            "task_004__p6VwenA": 1,
+            "task_004__YYgLrAB": 1,
+            "task_004__bPXARcH": 1,
+            "task_004__cCCjn3M": 1
+          },
+          "vote_counts": {
+            "task_004__Vyqf2nh": 1,
+            "task_004__eZiFoMd": 1,
+            "task_004__QP4HDQL": 1,
+            "task_004__WFRcyWQ": 1,
+            "task_004__wcPsB6n": 0,
+            "task_004__p6VwenA": 1,
+            "task_004__YYgLrAB": 1,
+            "task_004__bPXARcH": 1,
+            "task_004__cCCjn3M": 1
+          },
+          "expected_reward": 0.625,
+          "n_tied": 8
+        },
+        "vote_including_self": {
+          "picked": [
+            "task_004__Vyqf2nh",
+            "task_004__eZiFoMd",
+            "task_004__QP4HDQL",
+            "task_004__WFRcyWQ",
+            "task_004__wcPsB6n",
+            "task_004__p6VwenA",
+            "task_004__YYgLrAB",
+            "task_004__bPXARcH",
+            "task_004__cCCjn3M"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_004__wcPsB6n"
+          ],
+          "scores": {
+            "task_004__Vyqf2nh": 1,
+            "task_004__eZiFoMd": 1,
+            "task_004__QP4HDQL": 1,
+            "task_004__WFRcyWQ": 1,
+            "task_004__wcPsB6n": 1,
+            "task_004__p6VwenA": 1,
+            "task_004__YYgLrAB": 1,
+            "task_004__bPXARcH": 1,
+            "task_004__cCCjn3M": 1
+          },
+          "vote_counts": {
+            "task_004__Vyqf2nh": 1,
+            "task_004__eZiFoMd": 1,
+            "task_004__QP4HDQL": 1,
+            "task_004__WFRcyWQ": 1,
+            "task_004__wcPsB6n": 1,
+            "task_004__p6VwenA": 1,
+            "task_004__YYgLrAB": 1,
+            "task_004__bPXARcH": 1,
+            "task_004__cCCjn3M": 1
+          },
+          "expected_reward": 0.6666666666666666,
+          "n_tied": 9
+        }
+      }
+    },
+    "007": {
+      "n_candidates": 6,
+      "n_correct": 2,
+      "n_suites": 1,
+      "oracle_pool_ceiling": 1,
+      "methods": {
+        "random": {
+          "picked": [
+            "task_007__JK3D5f6",
+            "task_007__UrVp9Z4",
+            "task_007__w8hM2a5",
+            "task_007__Z8RzauG",
+            "task_007__pvFExqE",
+            "task_007__QEUmhok"
+          ],
+          "decision": "random",
+          "expected_reward": 0.3333333333333333,
+          "n_tied": 6
+        },
+        "public_random": {
+          "picked": [
+            "task_007__JK3D5f6",
+            "task_007__UrVp9Z4",
+            "task_007__w8hM2a5",
+            "task_007__Z8RzauG",
+            "task_007__pvFExqE",
+            "task_007__QEUmhok"
+          ],
+          "decision": "public_random",
+          "expected_reward": 0.3333333333333333,
+          "n_tied": 6
+        },
+        "first_public": {
+          "picked": [
+            "task_007__JK3D5f6"
+          ],
+          "decision": "first_public",
+          "expected_reward": 0,
+          "n_tied": 1
+        },
+        "cross_vote": {
+          "picked": [
+            "task_007__UrVp9Z4",
+            "task_007__Z8RzauG",
+            "task_007__pvFExqE"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_007__w8hM2a5"
+          ],
+          "scores": {
+            "task_007__JK3D5f6": 0,
+            "task_007__UrVp9Z4": 1,
+            "task_007__Z8RzauG": 1,
+            "task_007__pvFExqE": 1,
+            "task_007__QEUmhok": 0
+          },
+          "vote_counts": {
+            "task_007__JK3D5f6": 1,
+            "task_007__UrVp9Z4": 1,
+            "task_007__w8hM2a5": 0,
+            "task_007__Z8RzauG": 1,
+            "task_007__pvFExqE": 1,
+            "task_007__QEUmhok": 1
+          },
+          "expected_reward": 0.6666666666666666,
+          "n_tied": 3
+        },
+        "cross_baseline_split": {
+          "picked": [
+            "task_007__UrVp9Z4",
+            "task_007__Z8RzauG",
+            "task_007__pvFExqE"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_007__w8hM2a5"
+          ],
+          "scores": {
+            "task_007__JK3D5f6": 0,
+            "task_007__UrVp9Z4": 1,
+            "task_007__Z8RzauG": 1,
+            "task_007__pvFExqE": 1,
+            "task_007__QEUmhok": 0
+          },
+          "vote_counts": {
+            "task_007__JK3D5f6": 1,
+            "task_007__UrVp9Z4": 1,
+            "task_007__w8hM2a5": 0,
+            "task_007__Z8RzauG": 1,
+            "task_007__pvFExqE": 1,
+            "task_007__QEUmhok": 1
+          },
+          "expected_reward": 0.6666666666666666,
+          "n_tied": 3
+        },
+        "cross_baseline_split_assertion_only": {
+          "picked": [
+            "task_007__JK3D5f6",
+            "task_007__UrVp9Z4",
+            "task_007__w8hM2a5",
+            "task_007__Z8RzauG",
+            "task_007__pvFExqE",
+            "task_007__QEUmhok"
+          ],
+          "decision": "public_random_fallback",
+          "eligible_suites": [],
+          "scores": {},
+          "vote_counts": {
+            "task_007__JK3D5f6": 0,
+            "task_007__UrVp9Z4": 0,
+            "task_007__w8hM2a5": 0,
+            "task_007__Z8RzauG": 0,
+            "task_007__pvFExqE": 0,
+            "task_007__QEUmhok": 0
+          },
+          "expected_reward": 0.3333333333333333,
+          "n_tied": 6
+        },
+        "vote_including_self": {
+          "picked": [
+            "task_007__UrVp9Z4",
+            "task_007__w8hM2a5",
+            "task_007__Z8RzauG",
+            "task_007__pvFExqE"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_007__w8hM2a5"
+          ],
+          "scores": {
+            "task_007__JK3D5f6": 0,
+            "task_007__UrVp9Z4": 1,
+            "task_007__w8hM2a5": 1,
+            "task_007__Z8RzauG": 1,
+            "task_007__pvFExqE": 1,
+            "task_007__QEUmhok": 0
+          },
+          "vote_counts": {
+            "task_007__JK3D5f6": 1,
+            "task_007__UrVp9Z4": 1,
+            "task_007__w8hM2a5": 1,
+            "task_007__Z8RzauG": 1,
+            "task_007__pvFExqE": 1,
+            "task_007__QEUmhok": 1
+          },
+          "expected_reward": 0.5,
+          "n_tied": 4
+        }
+      }
+    },
+    "008": {
+      "n_candidates": 12,
+      "n_correct": 0,
+      "n_suites": 4,
+      "oracle_pool_ceiling": 0,
+      "methods": {
+        "random": {
+          "picked": [
+            "task_008__H8WNTwy",
+            "task_008__zTxVMQN",
+            "task_008__FGLWoS2",
+            "task_008__3YwxiSL",
+            "task_008__XYwTW2g",
+            "task_008__vyH2KyH",
+            "task_008__BDiTEru",
+            "task_008__HknCXXE",
+            "task_008__eg9haqQ",
+            "task_008__PRgkzcU",
+            "task_008__Sc9aatu",
+            "task_008__cxrWzXi"
+          ],
+          "decision": "random",
+          "expected_reward": 0,
+          "n_tied": 12
+        },
+        "public_random": {
+          "picked": [
+            "task_008__H8WNTwy",
+            "task_008__zTxVMQN",
+            "task_008__FGLWoS2",
+            "task_008__3YwxiSL",
+            "task_008__XYwTW2g",
+            "task_008__vyH2KyH",
+            "task_008__BDiTEru",
+            "task_008__HknCXXE",
+            "task_008__eg9haqQ",
+            "task_008__PRgkzcU",
+            "task_008__Sc9aatu",
+            "task_008__cxrWzXi"
+          ],
+          "decision": "public_random",
+          "expected_reward": 0,
+          "n_tied": 12
+        },
+        "first_public": {
+          "picked": [
+            "task_008__H8WNTwy"
+          ],
+          "decision": "first_public",
+          "expected_reward": 0,
+          "n_tied": 1
+        },
+        "cross_vote": {
+          "picked": [
+            "task_008__H8WNTwy",
+            "task_008__3YwxiSL",
+            "task_008__BDiTEru",
+            "task_008__cxrWzXi"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_008__3YwxiSL",
+            "task_008__FGLWoS2",
+            "task_008__Sc9aatu",
+            "task_008__cxrWzXi"
+          ],
+          "scores": {
+            "task_008__H8WNTwy": 1,
+            "task_008__zTxVMQN": 0.75,
+            "task_008__FGLWoS2": 0.6666666666666666,
+            "task_008__3YwxiSL": 1,
+            "task_008__XYwTW2g": 0.75,
+            "task_008__vyH2KyH": 0.75,
+            "task_008__BDiTEru": 1,
+            "task_008__HknCXXE": 0.75,
+            "task_008__eg9haqQ": 0.75,
+            "task_008__PRgkzcU": 0.25,
+            "task_008__Sc9aatu": 0.6666666666666666,
+            "task_008__cxrWzXi": 1
+          },
+          "vote_counts": {
+            "task_008__H8WNTwy": 4,
+            "task_008__zTxVMQN": 4,
+            "task_008__FGLWoS2": 3,
+            "task_008__3YwxiSL": 3,
+            "task_008__XYwTW2g": 4,
+            "task_008__vyH2KyH": 4,
+            "task_008__BDiTEru": 4,
+            "task_008__HknCXXE": 4,
+            "task_008__eg9haqQ": 4,
+            "task_008__PRgkzcU": 4,
+            "task_008__Sc9aatu": 3,
+            "task_008__cxrWzXi": 3
+          },
+          "expected_reward": 0,
+          "n_tied": 4
+        },
+        "cross_baseline_split": {
+          "picked": [
+            "task_008__H8WNTwy",
+            "task_008__3YwxiSL",
+            "task_008__BDiTEru",
+            "task_008__cxrWzXi"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_008__3YwxiSL",
+            "task_008__Sc9aatu",
+            "task_008__cxrWzXi"
+          ],
+          "scores": {
+            "task_008__H8WNTwy": 1,
+            "task_008__zTxVMQN": 0.6666666666666666,
+            "task_008__FGLWoS2": 0.6666666666666666,
+            "task_008__3YwxiSL": 1,
+            "task_008__XYwTW2g": 0.6666666666666666,
+            "task_008__vyH2KyH": 0.6666666666666666,
+            "task_008__BDiTEru": 1,
+            "task_008__HknCXXE": 0.6666666666666666,
+            "task_008__eg9haqQ": 0.6666666666666666,
+            "task_008__PRgkzcU": 0,
+            "task_008__Sc9aatu": 0.5,
+            "task_008__cxrWzXi": 1
+          },
+          "vote_counts": {
+            "task_008__H8WNTwy": 3,
+            "task_008__zTxVMQN": 3,
+            "task_008__FGLWoS2": 3,
+            "task_008__3YwxiSL": 2,
+            "task_008__XYwTW2g": 3,
+            "task_008__vyH2KyH": 3,
+            "task_008__BDiTEru": 3,
+            "task_008__HknCXXE": 3,
+            "task_008__eg9haqQ": 3,
+            "task_008__PRgkzcU": 3,
+            "task_008__Sc9aatu": 2,
+            "task_008__cxrWzXi": 2
+          },
+          "expected_reward": 0,
+          "n_tied": 4
+        },
+        "cross_baseline_split_assertion_only": {
+          "picked": [
+            "task_008__H8WNTwy",
+            "task_008__3YwxiSL",
+            "task_008__BDiTEru",
+            "task_008__cxrWzXi"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_008__3YwxiSL",
+            "task_008__Sc9aatu",
+            "task_008__cxrWzXi"
+          ],
+          "scores": {
+            "task_008__H8WNTwy": 1,
+            "task_008__zTxVMQN": 0.6666666666666666,
+            "task_008__FGLWoS2": 0.6666666666666666,
+            "task_008__3YwxiSL": 1,
+            "task_008__XYwTW2g": 0.6666666666666666,
+            "task_008__vyH2KyH": 0.6666666666666666,
+            "task_008__BDiTEru": 1,
+            "task_008__HknCXXE": 0.6666666666666666,
+            "task_008__eg9haqQ": 0.6666666666666666,
+            "task_008__PRgkzcU": 0,
+            "task_008__Sc9aatu": 0.5,
+            "task_008__cxrWzXi": 1
+          },
+          "vote_counts": {
+            "task_008__H8WNTwy": 3,
+            "task_008__zTxVMQN": 3,
+            "task_008__FGLWoS2": 3,
+            "task_008__3YwxiSL": 2,
+            "task_008__XYwTW2g": 3,
+            "task_008__vyH2KyH": 3,
+            "task_008__BDiTEru": 3,
+            "task_008__HknCXXE": 3,
+            "task_008__eg9haqQ": 3,
+            "task_008__PRgkzcU": 3,
+            "task_008__Sc9aatu": 2,
+            "task_008__cxrWzXi": 2
+          },
+          "expected_reward": 0,
+          "n_tied": 4
+        },
+        "vote_including_self": {
+          "picked": [
+            "task_008__H8WNTwy",
+            "task_008__3YwxiSL",
+            "task_008__BDiTEru",
+            "task_008__cxrWzXi"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_008__3YwxiSL",
+            "task_008__FGLWoS2",
+            "task_008__Sc9aatu",
+            "task_008__cxrWzXi"
+          ],
+          "scores": {
+            "task_008__H8WNTwy": 1,
+            "task_008__zTxVMQN": 0.75,
+            "task_008__FGLWoS2": 0.75,
+            "task_008__3YwxiSL": 1,
+            "task_008__XYwTW2g": 0.75,
+            "task_008__vyH2KyH": 0.75,
+            "task_008__BDiTEru": 1,
+            "task_008__HknCXXE": 0.75,
+            "task_008__eg9haqQ": 0.75,
+            "task_008__PRgkzcU": 0.25,
+            "task_008__Sc9aatu": 0.75,
+            "task_008__cxrWzXi": 1
+          },
+          "vote_counts": {
+            "task_008__H8WNTwy": 4,
+            "task_008__zTxVMQN": 4,
+            "task_008__FGLWoS2": 4,
+            "task_008__3YwxiSL": 4,
+            "task_008__XYwTW2g": 4,
+            "task_008__vyH2KyH": 4,
+            "task_008__BDiTEru": 4,
+            "task_008__HknCXXE": 4,
+            "task_008__eg9haqQ": 4,
+            "task_008__PRgkzcU": 4,
+            "task_008__Sc9aatu": 4,
+            "task_008__cxrWzXi": 4
+          },
+          "expected_reward": 0,
+          "n_tied": 4
+        }
+      }
+    },
+    "017": {
+      "n_candidates": 11,
+      "n_correct": 5,
+      "n_suites": 1,
+      "oracle_pool_ceiling": 1,
+      "methods": {
+        "random": {
+          "picked": [
+            "task_017__i5i7A9T",
+            "task_017__nUVrWTJ",
+            "task_017__hANAXmF",
+            "task_017__8mXU3UV",
+            "task_017__FrjZ3rp",
+            "task_017__UPtqLmx",
+            "task_017__6XbRAV2",
+            "task_017__6XiDBX3",
+            "task_017__XqVqT5G",
+            "task_017__dUSnYPP",
+            "task_017__hYov9RR"
+          ],
+          "decision": "random",
+          "expected_reward": 0.45454545454545453,
+          "n_tied": 11
+        },
+        "public_random": {
+          "picked": [
+            "task_017__i5i7A9T",
+            "task_017__nUVrWTJ",
+            "task_017__hANAXmF",
+            "task_017__8mXU3UV",
+            "task_017__FrjZ3rp",
+            "task_017__UPtqLmx",
+            "task_017__6XbRAV2",
+            "task_017__6XiDBX3",
+            "task_017__XqVqT5G",
+            "task_017__dUSnYPP",
+            "task_017__hYov9RR"
+          ],
+          "decision": "public_random",
+          "expected_reward": 0.45454545454545453,
+          "n_tied": 11
+        },
+        "first_public": {
+          "picked": [
+            "task_017__i5i7A9T"
+          ],
+          "decision": "first_public",
+          "expected_reward": 1,
+          "n_tied": 1
+        },
+        "cross_vote": {
+          "picked": [
+            "task_017__i5i7A9T",
+            "task_017__nUVrWTJ"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_017__hANAXmF"
+          ],
+          "scores": {
+            "task_017__i5i7A9T": 1,
+            "task_017__nUVrWTJ": 1,
+            "task_017__8mXU3UV": 0,
+            "task_017__FrjZ3rp": 0,
+            "task_017__UPtqLmx": 0,
+            "task_017__6XbRAV2": 0,
+            "task_017__6XiDBX3": 0,
+            "task_017__XqVqT5G": 0,
+            "task_017__dUSnYPP": 0,
+            "task_017__hYov9RR": 0
+          },
+          "vote_counts": {
+            "task_017__i5i7A9T": 1,
+            "task_017__nUVrWTJ": 1,
+            "task_017__hANAXmF": 0,
+            "task_017__8mXU3UV": 1,
+            "task_017__FrjZ3rp": 1,
+            "task_017__UPtqLmx": 1,
+            "task_017__6XbRAV2": 1,
+            "task_017__6XiDBX3": 1,
+            "task_017__XqVqT5G": 1,
+            "task_017__dUSnYPP": 1,
+            "task_017__hYov9RR": 1
+          },
+          "expected_reward": 1,
+          "n_tied": 2
+        },
+        "cross_baseline_split": {
+          "picked": [
+            "task_017__i5i7A9T",
+            "task_017__nUVrWTJ"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_017__hANAXmF"
+          ],
+          "scores": {
+            "task_017__i5i7A9T": 1,
+            "task_017__nUVrWTJ": 1,
+            "task_017__8mXU3UV": 0,
+            "task_017__FrjZ3rp": 0,
+            "task_017__UPtqLmx": 0,
+            "task_017__6XbRAV2": 0,
+            "task_017__6XiDBX3": 0,
+            "task_017__XqVqT5G": 0,
+            "task_017__dUSnYPP": 0,
+            "task_017__hYov9RR": 0
+          },
+          "vote_counts": {
+            "task_017__i5i7A9T": 1,
+            "task_017__nUVrWTJ": 1,
+            "task_017__hANAXmF": 0,
+            "task_017__8mXU3UV": 1,
+            "task_017__FrjZ3rp": 1,
+            "task_017__UPtqLmx": 1,
+            "task_017__6XbRAV2": 1,
+            "task_017__6XiDBX3": 1,
+            "task_017__XqVqT5G": 1,
+            "task_017__dUSnYPP": 1,
+            "task_017__hYov9RR": 1
+          },
+          "expected_reward": 1,
+          "n_tied": 2
+        },
+        "cross_baseline_split_assertion_only": {
+          "picked": [
+            "task_017__i5i7A9T",
+            "task_017__nUVrWTJ"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_017__hANAXmF"
+          ],
+          "scores": {
+            "task_017__i5i7A9T": 1,
+            "task_017__nUVrWTJ": 1,
+            "task_017__8mXU3UV": 0,
+            "task_017__FrjZ3rp": 0,
+            "task_017__UPtqLmx": 0,
+            "task_017__6XbRAV2": 0,
+            "task_017__6XiDBX3": 0,
+            "task_017__XqVqT5G": 0,
+            "task_017__dUSnYPP": 0,
+            "task_017__hYov9RR": 0
+          },
+          "vote_counts": {
+            "task_017__i5i7A9T": 1,
+            "task_017__nUVrWTJ": 1,
+            "task_017__hANAXmF": 0,
+            "task_017__8mXU3UV": 1,
+            "task_017__FrjZ3rp": 1,
+            "task_017__UPtqLmx": 1,
+            "task_017__6XbRAV2": 1,
+            "task_017__6XiDBX3": 1,
+            "task_017__XqVqT5G": 1,
+            "task_017__dUSnYPP": 1,
+            "task_017__hYov9RR": 1
+          },
+          "expected_reward": 1,
+          "n_tied": 2
+        },
+        "vote_including_self": {
+          "picked": [
+            "task_017__i5i7A9T",
+            "task_017__nUVrWTJ",
+            "task_017__hANAXmF"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_017__hANAXmF"
+          ],
+          "scores": {
+            "task_017__i5i7A9T": 1,
+            "task_017__nUVrWTJ": 1,
+            "task_017__hANAXmF": 1,
+            "task_017__8mXU3UV": 0,
+            "task_017__FrjZ3rp": 0,
+            "task_017__UPtqLmx": 0,
+            "task_017__6XbRAV2": 0,
+            "task_017__6XiDBX3": 0,
+            "task_017__XqVqT5G": 0,
+            "task_017__dUSnYPP": 0,
+            "task_017__hYov9RR": 0
+          },
+          "vote_counts": {
+            "task_017__i5i7A9T": 1,
+            "task_017__nUVrWTJ": 1,
+            "task_017__hANAXmF": 1,
+            "task_017__8mXU3UV": 1,
+            "task_017__FrjZ3rp": 1,
+            "task_017__UPtqLmx": 1,
+            "task_017__6XbRAV2": 1,
+            "task_017__6XiDBX3": 1,
+            "task_017__XqVqT5G": 1,
+            "task_017__dUSnYPP": 1,
+            "task_017__hYov9RR": 1
+          },
+          "expected_reward": 1,
+          "n_tied": 3
+        }
+      }
+    },
+    "024": {
+      "n_candidates": 5,
+      "n_correct": 5,
+      "n_suites": 1,
+      "oracle_pool_ceiling": 1,
+      "methods": {
+        "random": {
+          "picked": [
+            "task_024__QAsvL2g",
+            "task_024__wZdqjtj",
+            "task_024__xXCASWp",
+            "task_024__2DsCh55",
+            "task_024__GP6Nz7k"
+          ],
+          "decision": "random",
+          "expected_reward": 1,
+          "n_tied": 5
+        },
+        "public_random": {
+          "picked": [
+            "task_024__QAsvL2g",
+            "task_024__wZdqjtj",
+            "task_024__xXCASWp",
+            "task_024__2DsCh55",
+            "task_024__GP6Nz7k"
+          ],
+          "decision": "public_random",
+          "expected_reward": 1,
+          "n_tied": 5
+        },
+        "first_public": {
+          "picked": [
+            "task_024__QAsvL2g"
+          ],
+          "decision": "first_public",
+          "expected_reward": 1,
+          "n_tied": 1
+        },
+        "cross_vote": {
+          "picked": [
+            "task_024__QAsvL2g",
+            "task_024__wZdqjtj",
+            "task_024__2DsCh55",
+            "task_024__GP6Nz7k"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_024__xXCASWp"
+          ],
+          "scores": {
+            "task_024__QAsvL2g": 1,
+            "task_024__wZdqjtj": 1,
+            "task_024__2DsCh55": 1,
+            "task_024__GP6Nz7k": 1
+          },
+          "vote_counts": {
+            "task_024__QAsvL2g": 1,
+            "task_024__wZdqjtj": 1,
+            "task_024__xXCASWp": 0,
+            "task_024__2DsCh55": 1,
+            "task_024__GP6Nz7k": 1
+          },
+          "expected_reward": 1,
+          "n_tied": 4
+        },
+        "cross_baseline_split": {
+          "picked": [
+            "task_024__QAsvL2g",
+            "task_024__wZdqjtj",
+            "task_024__xXCASWp",
+            "task_024__2DsCh55",
+            "task_024__GP6Nz7k"
+          ],
+          "decision": "public_random_fallback",
+          "eligible_suites": [],
+          "scores": {},
+          "vote_counts": {
+            "task_024__QAsvL2g": 0,
+            "task_024__wZdqjtj": 0,
+            "task_024__xXCASWp": 0,
+            "task_024__2DsCh55": 0,
+            "task_024__GP6Nz7k": 0
+          },
+          "expected_reward": 1,
+          "n_tied": 5
+        },
+        "cross_baseline_split_assertion_only": {
+          "picked": [
+            "task_024__QAsvL2g",
+            "task_024__wZdqjtj",
+            "task_024__xXCASWp",
+            "task_024__2DsCh55",
+            "task_024__GP6Nz7k"
+          ],
+          "decision": "public_random_fallback",
+          "eligible_suites": [],
+          "scores": {},
+          "vote_counts": {
+            "task_024__QAsvL2g": 0,
+            "task_024__wZdqjtj": 0,
+            "task_024__xXCASWp": 0,
+            "task_024__2DsCh55": 0,
+            "task_024__GP6Nz7k": 0
+          },
+          "expected_reward": 1,
+          "n_tied": 5
+        },
+        "vote_including_self": {
+          "picked": [
+            "task_024__QAsvL2g",
+            "task_024__wZdqjtj",
+            "task_024__xXCASWp",
+            "task_024__2DsCh55",
+            "task_024__GP6Nz7k"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_024__xXCASWp"
+          ],
+          "scores": {
+            "task_024__QAsvL2g": 1,
+            "task_024__wZdqjtj": 1,
+            "task_024__xXCASWp": 1,
+            "task_024__2DsCh55": 1,
+            "task_024__GP6Nz7k": 1
+          },
+          "vote_counts": {
+            "task_024__QAsvL2g": 1,
+            "task_024__wZdqjtj": 1,
+            "task_024__xXCASWp": 1,
+            "task_024__2DsCh55": 1,
+            "task_024__GP6Nz7k": 1
+          },
+          "expected_reward": 1,
+          "n_tied": 5
+        }
+      }
+    },
+    "039": {
+      "n_candidates": 5,
+      "n_correct": 0,
+      "n_suites": 1,
+      "oracle_pool_ceiling": 0,
+      "methods": {
+        "random": {
+          "picked": [
+            "task_039__WG9oLVj",
+            "task_039__d3JZUgJ",
+            "task_039__hfX6Zee",
+            "task_039__n65ftps",
+            "task_039__oeiaShG"
+          ],
+          "decision": "random",
+          "expected_reward": 0,
+          "n_tied": 5
+        },
+        "public_random": {
+          "picked": [
+            "task_039__WG9oLVj",
+            "task_039__d3JZUgJ",
+            "task_039__hfX6Zee",
+            "task_039__n65ftps",
+            "task_039__oeiaShG"
+          ],
+          "decision": "public_random",
+          "expected_reward": 0,
+          "n_tied": 5
+        },
+        "first_public": {
+          "picked": [
+            "task_039__WG9oLVj"
+          ],
+          "decision": "first_public",
+          "expected_reward": 0,
+          "n_tied": 1
+        },
+        "cross_vote": {
+          "picked": [
+            "task_039__n65ftps"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_039__d3JZUgJ"
+          ],
+          "scores": {
+            "task_039__WG9oLVj": 0,
+            "task_039__hfX6Zee": 0,
+            "task_039__n65ftps": 1,
+            "task_039__oeiaShG": 0
+          },
+          "vote_counts": {
+            "task_039__WG9oLVj": 1,
+            "task_039__d3JZUgJ": 0,
+            "task_039__hfX6Zee": 1,
+            "task_039__n65ftps": 1,
+            "task_039__oeiaShG": 1
+          },
+          "expected_reward": 0,
+          "n_tied": 1
+        },
+        "cross_baseline_split": {
+          "picked": [
+            "task_039__n65ftps"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_039__d3JZUgJ"
+          ],
+          "scores": {
+            "task_039__WG9oLVj": 0,
+            "task_039__hfX6Zee": 0,
+            "task_039__n65ftps": 1,
+            "task_039__oeiaShG": 0
+          },
+          "vote_counts": {
+            "task_039__WG9oLVj": 1,
+            "task_039__d3JZUgJ": 0,
+            "task_039__hfX6Zee": 1,
+            "task_039__n65ftps": 1,
+            "task_039__oeiaShG": 1
+          },
+          "expected_reward": 0,
+          "n_tied": 1
+        },
+        "cross_baseline_split_assertion_only": {
+          "picked": [
+            "task_039__n65ftps"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_039__d3JZUgJ"
+          ],
+          "scores": {
+            "task_039__WG9oLVj": 0,
+            "task_039__hfX6Zee": 0,
+            "task_039__n65ftps": 1,
+            "task_039__oeiaShG": 0
+          },
+          "vote_counts": {
+            "task_039__WG9oLVj": 1,
+            "task_039__d3JZUgJ": 0,
+            "task_039__hfX6Zee": 1,
+            "task_039__n65ftps": 1,
+            "task_039__oeiaShG": 1
+          },
+          "expected_reward": 0,
+          "n_tied": 1
+        },
+        "vote_including_self": {
+          "picked": [
+            "task_039__n65ftps"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_039__d3JZUgJ"
+          ],
+          "scores": {
+            "task_039__WG9oLVj": 0,
+            "task_039__d3JZUgJ": 0,
+            "task_039__hfX6Zee": 0,
+            "task_039__n65ftps": 1,
+            "task_039__oeiaShG": 0
+          },
+          "vote_counts": {
+            "task_039__WG9oLVj": 1,
+            "task_039__d3JZUgJ": 1,
+            "task_039__hfX6Zee": 1,
+            "task_039__n65ftps": 1,
+            "task_039__oeiaShG": 1
+          },
+          "expected_reward": 0,
+          "n_tied": 1
+        }
+      }
+    },
+    "094": {
+      "n_candidates": 15,
+      "n_correct": 0,
+      "n_suites": 10,
+      "oracle_pool_ceiling": 0,
+      "methods": {
+        "random": {
+          "picked": [
+            "task_094__MSMSAnS",
+            "task_094__TibAamV",
+            "task_094__jnfsFMg",
+            "task_094__XdmRDJs",
+            "task_094__Y3ayaxi",
+            "task_094__b4Gx2uA",
+            "task_094__m6b2Ttu",
+            "task_094__6eUYK2C",
+            "task_094__A9mNLHR",
+            "task_094__GBmugDX",
+            "task_094__JN4vDqQ",
+            "task_094__M2XmK2y",
+            "task_094__ps5hT2o",
+            "task_094__t9CBPnZ",
+            "task_094__kQPXNaj"
+          ],
+          "decision": "random",
+          "expected_reward": 0,
+          "n_tied": 15
+        },
+        "public_random": {
+          "picked": [
+            "task_094__MSMSAnS",
+            "task_094__TibAamV",
+            "task_094__jnfsFMg",
+            "task_094__XdmRDJs",
+            "task_094__Y3ayaxi",
+            "task_094__b4Gx2uA",
+            "task_094__m6b2Ttu",
+            "task_094__6eUYK2C",
+            "task_094__A9mNLHR",
+            "task_094__GBmugDX",
+            "task_094__JN4vDqQ",
+            "task_094__M2XmK2y",
+            "task_094__ps5hT2o",
+            "task_094__t9CBPnZ",
+            "task_094__kQPXNaj"
+          ],
+          "decision": "public_random",
+          "expected_reward": 0,
+          "n_tied": 15
+        },
+        "first_public": {
+          "picked": [
+            "task_094__MSMSAnS"
+          ],
+          "decision": "first_public",
+          "expected_reward": 0,
+          "n_tied": 1
+        },
+        "cross_vote": {
+          "picked": [
+            "task_094__MSMSAnS",
+            "task_094__TibAamV",
+            "task_094__jnfsFMg",
+            "task_094__XdmRDJs",
+            "task_094__Y3ayaxi",
+            "task_094__b4Gx2uA",
+            "task_094__m6b2Ttu",
+            "task_094__6eUYK2C",
+            "task_094__A9mNLHR",
+            "task_094__GBmugDX",
+            "task_094__JN4vDqQ",
+            "task_094__M2XmK2y",
+            "task_094__ps5hT2o",
+            "task_094__t9CBPnZ",
+            "task_094__kQPXNaj"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_094__6eUYK2C",
+            "task_094__JN4vDqQ",
+            "task_094__M2XmK2y",
+            "task_094__XdmRDJs",
+            "task_094__Y3ayaxi",
+            "task_094__b4Gx2uA",
+            "task_094__kQPXNaj",
+            "task_094__m6b2Ttu",
+            "task_094__ps5hT2o",
+            "task_094__t9CBPnZ"
+          ],
+          "scores": {
+            "task_094__MSMSAnS": 1,
+            "task_094__TibAamV": 1,
+            "task_094__jnfsFMg": 1,
+            "task_094__XdmRDJs": 1,
+            "task_094__Y3ayaxi": 1,
+            "task_094__b4Gx2uA": 1,
+            "task_094__m6b2Ttu": 1,
+            "task_094__6eUYK2C": 1,
+            "task_094__A9mNLHR": 1,
+            "task_094__GBmugDX": 1,
+            "task_094__JN4vDqQ": 1,
+            "task_094__M2XmK2y": 1,
+            "task_094__ps5hT2o": 1,
+            "task_094__t9CBPnZ": 1,
+            "task_094__kQPXNaj": 1
+          },
+          "vote_counts": {
+            "task_094__MSMSAnS": 10,
+            "task_094__TibAamV": 10,
+            "task_094__jnfsFMg": 10,
+            "task_094__XdmRDJs": 9,
+            "task_094__Y3ayaxi": 9,
+            "task_094__b4Gx2uA": 9,
+            "task_094__m6b2Ttu": 9,
+            "task_094__6eUYK2C": 9,
+            "task_094__A9mNLHR": 10,
+            "task_094__GBmugDX": 10,
+            "task_094__JN4vDqQ": 9,
+            "task_094__M2XmK2y": 9,
+            "task_094__ps5hT2o": 9,
+            "task_094__t9CBPnZ": 9,
+            "task_094__kQPXNaj": 9
+          },
+          "expected_reward": 0,
+          "n_tied": 15
+        },
+        "cross_baseline_split": {
+          "picked": [
+            "task_094__MSMSAnS",
+            "task_094__TibAamV",
+            "task_094__jnfsFMg",
+            "task_094__XdmRDJs",
+            "task_094__Y3ayaxi",
+            "task_094__b4Gx2uA",
+            "task_094__m6b2Ttu",
+            "task_094__6eUYK2C",
+            "task_094__A9mNLHR",
+            "task_094__GBmugDX",
+            "task_094__JN4vDqQ",
+            "task_094__M2XmK2y",
+            "task_094__ps5hT2o",
+            "task_094__t9CBPnZ",
+            "task_094__kQPXNaj"
+          ],
+          "decision": "public_random_fallback",
+          "eligible_suites": [],
+          "scores": {},
+          "vote_counts": {
+            "task_094__MSMSAnS": 0,
+            "task_094__TibAamV": 0,
+            "task_094__jnfsFMg": 0,
+            "task_094__XdmRDJs": 0,
+            "task_094__Y3ayaxi": 0,
+            "task_094__b4Gx2uA": 0,
+            "task_094__m6b2Ttu": 0,
+            "task_094__6eUYK2C": 0,
+            "task_094__A9mNLHR": 0,
+            "task_094__GBmugDX": 0,
+            "task_094__JN4vDqQ": 0,
+            "task_094__M2XmK2y": 0,
+            "task_094__ps5hT2o": 0,
+            "task_094__t9CBPnZ": 0,
+            "task_094__kQPXNaj": 0
+          },
+          "expected_reward": 0,
+          "n_tied": 15
+        },
+        "cross_baseline_split_assertion_only": {
+          "picked": [
+            "task_094__MSMSAnS",
+            "task_094__TibAamV",
+            "task_094__jnfsFMg",
+            "task_094__XdmRDJs",
+            "task_094__Y3ayaxi",
+            "task_094__b4Gx2uA",
+            "task_094__m6b2Ttu",
+            "task_094__6eUYK2C",
+            "task_094__A9mNLHR",
+            "task_094__GBmugDX",
+            "task_094__JN4vDqQ",
+            "task_094__M2XmK2y",
+            "task_094__ps5hT2o",
+            "task_094__t9CBPnZ",
+            "task_094__kQPXNaj"
+          ],
+          "decision": "public_random_fallback",
+          "eligible_suites": [],
+          "scores": {},
+          "vote_counts": {
+            "task_094__MSMSAnS": 0,
+            "task_094__TibAamV": 0,
+            "task_094__jnfsFMg": 0,
+            "task_094__XdmRDJs": 0,
+            "task_094__Y3ayaxi": 0,
+            "task_094__b4Gx2uA": 0,
+            "task_094__m6b2Ttu": 0,
+            "task_094__6eUYK2C": 0,
+            "task_094__A9mNLHR": 0,
+            "task_094__GBmugDX": 0,
+            "task_094__JN4vDqQ": 0,
+            "task_094__M2XmK2y": 0,
+            "task_094__ps5hT2o": 0,
+            "task_094__t9CBPnZ": 0,
+            "task_094__kQPXNaj": 0
+          },
+          "expected_reward": 0,
+          "n_tied": 15
+        },
+        "vote_including_self": {
+          "picked": [
+            "task_094__MSMSAnS",
+            "task_094__TibAamV",
+            "task_094__jnfsFMg",
+            "task_094__XdmRDJs",
+            "task_094__Y3ayaxi",
+            "task_094__b4Gx2uA",
+            "task_094__m6b2Ttu",
+            "task_094__6eUYK2C",
+            "task_094__A9mNLHR",
+            "task_094__GBmugDX",
+            "task_094__JN4vDqQ",
+            "task_094__M2XmK2y",
+            "task_094__ps5hT2o",
+            "task_094__t9CBPnZ",
+            "task_094__kQPXNaj"
+          ],
+          "decision": "vote",
+          "eligible_suites": [
+            "task_094__6eUYK2C",
+            "task_094__JN4vDqQ",
+            "task_094__M2XmK2y",
+            "task_094__XdmRDJs",
+            "task_094__Y3ayaxi",
+            "task_094__b4Gx2uA",
+            "task_094__kQPXNaj",
+            "task_094__m6b2Ttu",
+            "task_094__ps5hT2o",
+            "task_094__t9CBPnZ"
+          ],
+          "scores": {
+            "task_094__MSMSAnS": 1,
+            "task_094__TibAamV": 1,
+            "task_094__jnfsFMg": 1,
+            "task_094__XdmRDJs": 1,
+            "task_094__Y3ayaxi": 1,
+            "task_094__b4Gx2uA": 1,
+            "task_094__m6b2Ttu": 1,
+            "task_094__6eUYK2C": 1,
+            "task_094__A9mNLHR": 1,
+            "task_094__GBmugDX": 1,
+            "task_094__JN4vDqQ": 1,
+            "task_094__M2XmK2y": 1,
+            "task_094__ps5hT2o": 1,
+            "task_094__t9CBPnZ": 1,
+            "task_094__kQPXNaj": 1
+          },
+          "vote_counts": {
+            "task_094__MSMSAnS": 10,
+            "task_094__TibAamV": 10,
+            "task_094__jnfsFMg": 10,
+            "task_094__XdmRDJs": 10,
+            "task_094__Y3ayaxi": 10,
+            "task_094__b4Gx2uA": 10,
+            "task_094__m6b2Ttu": 10,
+            "task_094__6eUYK2C": 10,
+            "task_094__A9mNLHR": 10,
+            "task_094__GBmugDX": 10,
+            "task_094__JN4vDqQ": 10,
+            "task_094__M2XmK2y": 10,
+            "task_094__ps5hT2o": 10,
+            "task_094__t9CBPnZ": 10,
+            "task_094__kQPXNaj": 10
+          },
+          "expected_reward": 0,
+          "n_tied": 15
+        }
+      }
+    }
+  },
+  "matrix_path": "/home/lukina/selfverify-swe-science/analysis/crosscheck/matrix.json",
+  "matrix_sha256": "701f1a8f9d2504d6f20d23515ff3c36972d1e68d7722d8254b452689bf0141b9"
+}
